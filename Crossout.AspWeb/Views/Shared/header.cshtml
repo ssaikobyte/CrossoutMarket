@@ -98,6 +98,8 @@
         Cookies.set('language', this.dataset.lang, { expires: 365 });
         location.reload();
     });
+
+    adjustSearchBarSize();
     
     // Keep search bars in sync
     $('#searchBar, #searchBarMobile').keyup(function () {
@@ -116,6 +118,11 @@
             location.href = '/#search=' + this.value + '.';
         }
     });
+
+    function adjustSearchBarSize() {
+        if (lang === 'ru')
+            $('#searchBar').attr('size', 10);
+    }
 
     // Disable logo on small devices while search
     //$('#searchBarMobile').on('focus focusout', function () {
