@@ -91,7 +91,7 @@ function updateLocationHash(table) {
             if (!newHash.includes('preset=')) {
                 newHash += 'preset=';
             }
-            var targetString = $(this).text().toLowerCase();
+            var targetString = $(this).attr('data-locationhashname').toLowerCase();
             targetString = cleanUpString(targetString);
             newHash += targetString + ',';
         }
