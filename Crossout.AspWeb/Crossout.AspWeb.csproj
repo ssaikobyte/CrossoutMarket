@@ -42,15 +42,20 @@
     <Content Remove="Resources\Events\KnightRiders\summersunset.json" />
     <Content Remove="Resources\Events\KnightRiders\warmtwilight.json" />
     <Content Remove="Resources\Info\arachnophobia.json" />
+    <Content Remove="Resources\PremiumPackages\adrenaline.json" />
+    <Content Remove="Resources\PremiumPackages\adrenalinedeluxe.json" />
     <Content Remove="Resources\PremiumPackages\assaultforcecharlie7.json" />
     <Content Remove="Resources\PremiumPackages\assaultforcetango1.json" />
     <Content Remove="Resources\PremiumPackages\bornfree.json" />
     <Content Remove="Resources\PremiumPackages\borntofly.json" />
     <Content Remove="Resources\PremiumPackages\dayofthedead.json" />
+    <Content Remove="Resources\PremiumPackages\explosivesanta.json" />
     <Content Remove="Resources\PremiumPackages\frostburndeluxe.json" />
     <Content Remove="Resources\PremiumPackages\horsemenofapocalypsepestilence.json" />
     <Content Remove="Resources\PremiumPackages\immortalwarrior.json" />
     <Content Remove="Resources\PremiumPackages\notowar.json" />
+    <Content Remove="Resources\PremiumPackages\phantom.json" />
+    <Content Remove="Resources\PremiumPackages\phantomdeluxe.json" />
     <Content Remove="Resources\PremiumPackages\polymorph.json" />
     <Content Remove="Views\edit.cshtml" />
     <Content Remove="Views\editpart.cshtml" />
@@ -539,6 +544,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Events\KnightRiders2019\teutonicstripes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\explosivesanta.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\phantomdeluxe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\phantom.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\adrenalinedeluxe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\adrenaline.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\PremiumPackages\assaultforcecharlie7.json">

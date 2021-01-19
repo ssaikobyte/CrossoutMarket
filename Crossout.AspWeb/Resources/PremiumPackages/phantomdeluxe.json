@@ -1,0 +1,9 @@
+﻿{
+  "Id": 36,
+  "Key": "phantomdeluxe",
+  "SteamAppID": 1437611,
+  "Name": "Phantom (Deluxe)",
+  "Description": "",
+  "MarketPartIDs": [ 1225, 1221, 1222, 1223, 1226, 1224, 1215, 6, 6, 6, 6, 6, 6, 131, 75, 531, 52, 142, 100, 1067, 1067, 83, 83, 218 ],
+  "RawCoins": 4000
+}
