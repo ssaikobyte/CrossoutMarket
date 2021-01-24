@@ -145,5 +145,18 @@
       "Added new items",
       "Added new pack"
     ]
+  },
+  {
+    "Id": 14,
+    "Name": "Update",
+    "Timestamp": "2021-01-24T11:20:00Z",
+    "Notes": [
+      "Updated item images",
+      "Added new high resolution item images",
+      "Removed old crafting recipes",
+      "Recategorized various items",
+      "Fixed an bug which caused filter presets to not get applied correctly in the russian version",
+      "Updated the official discord invite link"
+    ]
   }
 ]
