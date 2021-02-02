@@ -167,7 +167,7 @@ function drawTreeHeader(wrapper) {
         '</div>' +
         '</div>' +
         '</div>' +
-        '<div class="d-flex flex-row justify-content-between my-1 mx-1"><button class="btn btn-outline-secondary btn-sm optimal-route-btn"><span class="localization" data-locname="item.craftcalc.button.optimalroute">' + localizeSingle('item.craftcalc.button.optimalroute', 'Optimal Route') + '</span></button></div>';
+        '<div class="d-flex flex-row my-1 mx-1"><button class="btn btn-outline-secondary btn-sm optimal-route-btn mr-1"><span class="localization" data-locname="item.craftcalc.button.optimalroute">' + localizeSingle('item.craftcalc.button.optimalroute', 'Optimal Route') + '</span></button><button class="btn btn-outline-secondary btn-sm expand-all-btn"><span class="localization" data-locname="item.craftcalc.button.expandall">' + localizeSingle('item.craftcalc.button.expandall', 'Expand All') + '</span></button></div>';
     $(wrapper).append(html);
 }
 
@@ -436,6 +436,13 @@ function bindEvents() {
     $('.optimal-route-btn').click(function () {
         chooseOptimalRoute();
         drawCalculator();
+    });
+
+    $('.expand-all-btn').click(function () {
+        craftingCalc.tree.topToBottom.forEach(function (e, i) {
+            if (e.hasIngredients)
+                expandRecipe(e.uniqueId, true);
+        })
     });
 
     $('.create-snapshot-btn').click(function () {
