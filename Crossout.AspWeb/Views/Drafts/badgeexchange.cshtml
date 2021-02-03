@@ -8,6 +8,12 @@
 <partial name="header" model="@Model" />
 
 <div class="half-hd-container px-3">
+
+    @if (WebSettings.Settings.EnableAds)
+    {
+        <partial name="leaderboardad" />
+    }
+
     <div class="card my-1">
         <h4 class="card-title m-2"><loc model="Model.Localizations" category="badgeexchange" name="title">Badge Exchange</loc></h4>
 

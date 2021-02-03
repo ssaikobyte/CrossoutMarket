@@ -11,6 +11,12 @@
 <partial name="header" model="@Model" />
 
 <div class="half-hd-container px-3">
+
+    @if (WebSettings.Settings.EnableAds)
+    {
+        <partial name="leaderboardad" />
+    }
+
     <div class="card my-1">
         <h4 class="card-title m-2"><loc model="loc" category="sniper" name="title">Item Sniper</loc> <span data-toggle="collapse" data-target="#helpWrapper"><svg class="feather-help-circle"><use xlink:href="/icons/feather-sprite.svg#help-circle" /></svg></span></h4>
 
