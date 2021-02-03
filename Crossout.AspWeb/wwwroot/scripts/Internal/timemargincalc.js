@@ -24,8 +24,17 @@ function calculateTimeMargin() {
     var averageMargin = 0;
 
 
-    var fromTime = chart.rangeSelector.minInput.HCTime;
-    var toTime = chart.rangeSelector.maxInput.HCTime;
+    var fromTime = 0
+    var toTime = 0;
+
+    chart.series[1].data.forEach(function (e, i) {
+        if (e.isInside && fromTime === 0) {
+            fromTime = e.x;
+        }
+        if (e.isInside && fromTime !== 0) {
+            toTime = e.x;
+        }
+    });
 
     var counter = 0;
     chartData[0].forEach(function (e, i) {
