@@ -158,5 +158,14 @@
       "Fixed an bug which caused filter presets to not get applied correctly in the russian version",
       "Updated the official discord invite link"
     ]
+  },
+  {
+    "Id": 15,
+    "Name": "Update",
+    "Timestamp": "2021-02-08T09:00:00Z",
+    "Notes": [
+      "Added 'Expand All' button to crafting calculator",
+      "Fixed chart calculator"
+    ]
   }
 ]
