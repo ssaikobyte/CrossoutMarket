@@ -167,5 +167,16 @@
       "Added 'Expand All' button to crafting calculator",
       "Fixed chart calculator"
     ]
+  },
+  {
+    "Id": 16,
+    "Name": "Syndicate Update",
+    "Timestamp": "2021-02-12T12:00:00Z",
+    "Notes": [
+      "Added new faction",
+      "Added new items",
+      "Added new recipes",
+      "Added CO_Driver community link"
+    ]
   }
 ]
