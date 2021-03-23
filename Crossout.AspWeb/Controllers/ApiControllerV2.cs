@@ -314,6 +314,54 @@ namespace Crossout.AspWeb.Controllers
             return Json(ds);
         }
 
+        [Route("/api/v2/ocrstatitems")]
+        public IActionResult OCRStatItemsAction(bool onlynewest = true)
+        {
+            sql.Open(WebSettings.Settings.CreateDescription());
+            ApiDataService dataService = new ApiDataService(sql);
+
+            var model = dataService.GetOCRStats(onlynewest);
+
+            this.RegisterHit("/api/v2/ocrstatitems");
+            return Json(model);
+        }
+
+        [Route("/api/v2/ocrstatitem/{id:int}")]
+        public IActionResult OCRStatItemAction(int id, bool onlynewest = true)
+        {
+            sql.Open(WebSettings.Settings.CreateDescription());
+            ApiDataService dataService = new ApiDataService(sql);
+
+            var model = dataService.GetOCRStats(onlynewest, id);
+
+            this.RegisterHit("/api/v2/ocrstatitem");
+            return Json(model);
+        }
+
+        [Route("/api/v2/synergies")]
+        public IActionResult SynergiesAction()
+        {
+            sql.Open(WebSettings.Settings.CreateDescription());
+            ApiDataService dataService = new ApiDataService(sql);
+
+            var model = dataService.GetSynergies();
+
+            this.RegisterHit("/api/v2/synergies");
+            return Json(model);
+        }
+
+        [Route("/api/v2/synergy/{id:int}")]
+        public IActionResult SynergyAction(int id)
+        {
+            sql.Open(WebSettings.Settings.CreateDescription());
+            ApiDataService dataService = new ApiDataService(sql);
+
+            var model = dataService.GetSynergies(id);
+
+            this.RegisterHit("/api/v2/synergy");
+            return Json(model);
+        }
+
         private IActionResult RouteSearch(string searchQuery, int page, string rarity, string category, string faction, string removedItems, string metaItems, int id, int language)
         {
             if (searchQuery == null)

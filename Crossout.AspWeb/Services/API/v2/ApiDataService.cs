@@ -8,16 +8,21 @@ using Crossout.AspWeb.Models.API.v2;
 using Crossout.AspWeb.Models.Filter;
 using ZicoreConnector.Zicore.Connector.Base;
 using Crossout.Data.PremiumPackages;
+using Crossout.AspWeb.Pocos;
+using NPoco;
 
 namespace Crossout.AspWeb.Services.API.v2
 {
     public class ApiDataService
     {
         protected SqlConnector DB { get; set; }
+        protected IDatabase NPocoDB { get; set; }
 
         public ApiDataService(SqlConnector sql)
         {
             DB = sql;
+            NPocoDB = new Database(sql.CreateConnection());
+            NPocoDB.Connection.Open();
         }
 
         public List<T> CreateApiEntryBase<T>(List<object[]> ds) where T : ApiEntryBase, new()
@@ -103,6 +108,25 @@ namespace Crossout.AspWeb.Services.API.v2
                 list.Add(apiPackEntry);
             }
             return list;
+        }
+
+        public List<OCRStatItemPoco> GetOCRStats(bool onlynewest, int? id = null)
+        {
+            SqlBuilder sqlBuilder = new SqlBuilder();
+            if (id != null)
+                sqlBuilder.Where("t1.itemnumber = @0", id);
+            if (onlynewest)
+                sqlBuilder.Join("(SELECT itemnumber, MAX(timestamp) timestamp FROM ocrstats GROUP BY itemnumber) t2 ON t1.itemnumber = t2.itemnumber AND t1.timestamp = t2.timestamp");
+            var template = sqlBuilder.AddTemplate("SELECT t1.* FROM crossout.ocrstats t1 /**join**/ WHERE /**where**/");
+            return NPocoDB.Fetch<OCRStatItemPoco>(template);
+        }
+
+        public List<SynergyPoco> GetSynergies(int? id = null)
+        {
+            if (id == null)
+                return NPocoDB.Fetch<SynergyPoco>();
+            else
+                return NPocoDB.Fetch<SynergyPoco>("WHERE itemnumber = @0", id);
         }
 
         public static ApiItemEntry CreateApiItem(object[] row)
