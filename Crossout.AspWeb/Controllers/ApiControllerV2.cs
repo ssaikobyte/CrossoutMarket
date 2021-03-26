@@ -430,6 +430,7 @@ namespace Crossout.AspWeb.Controllers
             foreach (var row in ds)
             {
                 Item item = Item.Create(row);
+                item.SetImageExists(pathProvider);
                 CrossoutDataService.Instance.AddData(item);
                 searchResult.Add(item);
             }
