@@ -118,7 +118,9 @@ namespace Crossout.AspWeb.Services.API.v2
             if (onlynewest)
                 sqlBuilder.Join("(SELECT itemnumber, MAX(timestamp) timestamp FROM ocrstats GROUP BY itemnumber) t2 ON t1.itemnumber = t2.itemnumber AND t1.timestamp = t2.timestamp");
             var template = sqlBuilder.AddTemplate("SELECT t1.* FROM crossout.ocrstats t1 /**join**/ WHERE /**where**/");
-            return NPocoDB.Fetch<OCRStatItemPoco>(template);
+            var ocrStatItems = NPocoDB.Fetch<OCRStatItemPoco>(template);
+            ocrStatItems.ForEach(x => x.CreateDisplayStats());
+            return ocrStatItems;
         }
 
         public List<SynergyPoco> GetSynergies(int? id = null)

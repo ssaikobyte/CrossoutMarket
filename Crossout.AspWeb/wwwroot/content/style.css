@@ -543,3 +543,28 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
 .table-compact tr th {
     padding: 0px;
 }
+
+.w-70 {
+    width: 70%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.item-tag {
+    font-size: 14px !important;
+    line-height: 18px !important;
+}
+
+.faction-icon-white {
+    filter: invert(1);
+}
+
+.stat-name-col {
+    width: 30%;
+}
+
+.stat-value-col {
+    width: 70%;
+}

@@ -46,6 +46,11 @@ namespace Crossout.AspWeb.Services
 
             var ds = DB.SelectDataSet(query, parmeter);
 
+            NPoco.Connection.Open();
+            itemModel.OCRStatItems = NPoco.Fetch<OCRStatItemPoco>("WHERE itemnumber = @0", id);
+            itemModel.OCRStatItems.ForEach(x => x.CreateDisplayStats());
+            NPoco.Connection.Close();
+
             var item = Item.Create(ds[0]);
             if (addData)
             {

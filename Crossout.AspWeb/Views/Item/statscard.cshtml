@@ -1,0 +1,295 @@
+﻿@model Crossout.AspWeb.Pocos.OCRStatItemPoco
+
+@if (Model.Description != null)
+{
+    <p>@Model.Description</p>
+}
+@if (Model.Ps != null)
+{
+    <hr />
+    <div class="d-flex flex-row align-items-center">
+        <h4 class="mr-2">@Model.Ps</h4>
+        <h6>POWER SCORE</h6>
+    </div>
+    <hr />
+}
+<table class="table table-borderless table-sm">
+    <thead>
+        <tr class="d-none">
+            <th class="stat-name-col"></th>
+            <th class="stat-value-col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Damage != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Damage</b></td>
+                <td class="stat-value-col">
+                    <div class="progress progress-small">
+                        <div class="progress-bar" role="progressbar" style="width: @Model.FormatDamagePercent%" aria-valuenow="@Model.FormatDamage" aria-valuemin="0" aria-valuemax="10">
+                            @Model.FormatDamage
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (Model.FireRate != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Fire rate</b></td>
+                <td class="stat-value-col">
+                    <div class="progress progress-small">
+                        <div class="progress-bar" role="progressbar" style="width: @Model.FormatFireRatePercent%" aria-valuenow="@Model.FormatFireRate" aria-valuemin="0" aria-valuemax="10">
+                            @Model.FormatFireRate
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (Model.Range != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Range</b></td>
+                <td class="stat-value-col">
+                    <div class="progress progress-small">
+                        <div class="progress-bar" role="progressbar" style="width: @Model.FormatRangePercent%" aria-valuenow="@Model.FormatRange" aria-valuemin="0" aria-valuemax="10">
+                            @Model.FormatRange
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (Model.Accuracy != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Accuracy</b></td>
+                <td class="stat-value-col">
+                    <div class="progress progress-small">
+                        <div class="progress-bar" role="progressbar" style="width: @Model.FormatAccuracyPercent%" aria-valuenow="@Model.FormatAccuracy" aria-valuemin="0" aria-valuemax="10">
+                            @Model.FormatAccuracy
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (Model.CabinPower != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Power</b></td>
+                <td class="stat-value-col">
+                    <div class="progress progress-small">
+                        <div class="progress-bar" role="progressbar" style="width: @Model.FormatCabinPowerPercent%" aria-valuenow="@Model.FormatCabinPower" aria-valuemin="0" aria-valuemax="10">
+                            @Model.FormatCabinPower
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (Model.BlastPower != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Blast Power</b></td>
+                <td class="stat-value-col">
+                    <div class="progress progress-small">
+                        <div class="progress-bar" role="progressbar" style="width: @Model.FormatBlastPowerPercent%" aria-valuenow="@Model.FormatBlastPower" aria-valuemin="0" aria-valuemax="10">
+                            @Model.FormatBlastPower
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @if (Model.MaxAmmo != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Max. Ammo</b></td>
+                <td class="stat-value-col">
+                    @Model.MaxAmmo pcs.
+                </td>
+            </tr>
+        }
+        @if (Model.MaxCabinSpeed != null)
+        {
+            if (Model.Category == "Cabins")
+            {
+                <tr>
+                    <td class="stat-name-col pl-0"><b>Max. Cabin Speed</b></td>
+                    <td class="stat-value-col">
+                        @Model.MaxCabinSpeed km/h
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td class="stat-name-col pl-0"><b>Max. Cabin Speed</b></td>
+                    <td class="stat-value-col">
+                        +@Model.MaxCabinSpeed%
+                    </td>
+                </tr>
+            }
+        }
+        @if (Model.MaxChassisSpeed != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Max. Chassis Speed</b></td>
+                <td class="stat-value-col">
+                    @Model.MaxChassisSpeed km/h
+                </td>
+            </tr>
+        }
+        @if (Model.Tonnage != null)
+        {
+            if (Model.Category == "Cabins")
+            {
+                <tr>
+                    <td class="stat-name-col pl-0"><b>Tonnage</b></td>
+                    <td class="stat-value-col">
+                        @Model.Tonnage kg
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td class="stat-name-col pl-0"><b>Tonnage</b></td>
+                    <td class="stat-value-col">
+                        +@Model.Tonnage kg
+                    </td>
+                </tr>
+            }
+        }
+        @if (Model.Power != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Power</b></td>
+                <td class="stat-value-col">
+                    @Model.Power%
+                </td>
+            </tr>
+        }
+        @if (Model.FeatureBulletPercent != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Bullet Resistance</b></td>
+                <td class="stat-value-col">
+                    @Model.FeatureBulletPercent%
+                </td>
+            </tr>
+        }
+        @if (Model.FeatureMeleePercent != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Melee Resistance</b></td>
+                <td class="stat-value-col">
+                    @Model.FeatureMeleePercent%
+                </td>
+            </tr>
+        }
+        @if (Model.FeatureFirePercent != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Thermal Resistance</b></td>
+                <td class="stat-value-col">
+                    @Model.FeatureFirePercent%
+                </td>
+            </tr>
+        }
+        @if (Model.FeatureBlastPercent != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Blast Resistance</b></td>
+                <td class="stat-value-col">
+                    @Model.FeatureBlastPercent%
+                </td>
+            </tr>
+        }
+        @if (Model.FeaturePassthroughPercent != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Passthrough</b></td>
+                <td class="stat-value-col">
+                    @Model.FeaturePassthroughPercent%
+                </td>
+            </tr>
+        }
+        @if (Model.MassLimit != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Mass Limit</b></td>
+                <td class="stat-value-col">
+                    @Model.MassLimit kg
+                </td>
+            </tr>
+        }
+        @if (Model.AddsEnergy != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Adds Energy</b></td>
+                <td class="stat-value-col">
+                    @Model.AddsEnergy pts.
+                </td>
+            </tr>
+        }
+        @if (Model.FuelReserves != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Fuel Reserves</b></td>
+                <td class="stat-value-col">
+                    @Model.FuelReserves pts.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+<table class="table table-borderless table-sm">
+    <thead>
+        <tr class="d-none">
+            <th class="stat-name-col"></th>
+            <th class="stat-value-col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Durability != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Durability</b></td>
+                <td class="stat-value-col">
+                    @Model.Durability pts.
+                </td>
+            </tr>
+        }
+        @if (Model.EnergyDrain != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Energy Drain</b></td>
+                <td class="stat-value-col">
+                    @Model.EnergyDrain pts.
+                </td>
+            </tr>
+        }
+        @if (Model.Mass != null)
+        {
+            <tr>
+                <td class="stat-name-col pl-0"><b>Mass</b></td>
+                <td class="stat-value-col">
+                    @Model.Mass kg
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Perks != null)
+{
+    <hr />
+    <p>@Model.Perks</p>
+}
+
+<div class="alert alert-info">
+    <span>Crossout version <b>@Model.XoVer</b>.</span>
+    <br />
+    <span>These stats were gathered using SilentNyte's OCR tool.</span>
+    <br />
+    <span>Tool operation and validation by <b>@Model.Author</b>.</span>
+</div>

@@ -7,6 +7,7 @@ using Crossout.AspWeb.Models.General;
 using Crossout.AspWeb.Models.Recipes;
 using Crossout.AspWeb.Models.View;
 using Newtonsoft.Json;
+using Crossout.AspWeb.Pocos;
 
 namespace Crossout.AspWeb.Models.Items
 {
@@ -17,6 +18,9 @@ namespace Crossout.AspWeb.Models.Items
 
         [JsonProperty("recipe")]
         public RecipeModel Recipe { get; set; } = new RecipeModel();
+
+        [JsonIgnore]
+        public List<OCRStatItemPoco> OCRStatItems { get; set; } = new List<OCRStatItemPoco>();
 
         [JsonIgnore]
         public StatusModel Status { get; set; } = new StatusModel();
