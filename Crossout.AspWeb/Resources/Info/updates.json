@@ -178,5 +178,19 @@
       "Added new recipes",
       "Added CO_Driver community link"
     ]
+  },
+  {
+    "Id": 17,
+    "Name": "Dronapocalypse Update",
+    "Timestamp": "2021-03-30T14:45:00Z",
+    "Notes": [
+      "Added new items",
+      "Added new packs",
+      "Added new stats data",
+      "Added new API endpoints to retrieve the new stats",
+      "Reworked item page",
+      "Fixed API not showing the correct item image path",
+      "Fixed chart margin calculator"
+    ]
   }
 ]
