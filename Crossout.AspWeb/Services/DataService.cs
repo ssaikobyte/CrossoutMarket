@@ -48,6 +48,7 @@ namespace Crossout.AspWeb.Services
 
             NPoco.Connection.Open();
             itemModel.OCRStatItems = NPoco.Fetch<OCRStatItemPoco>("WHERE itemnumber = @0", id);
+            itemModel.OCRStatItems.Sort(OCRStatItemPoco.CompareDateTimeDesc);
             itemModel.OCRStatItems.ForEach(x => x.CreateDisplayStats());
             NPoco.Connection.Close();
 

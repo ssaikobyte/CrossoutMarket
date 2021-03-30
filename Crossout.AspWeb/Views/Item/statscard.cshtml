@@ -2,7 +2,7 @@
 
 @if (Model.Description != null)
 {
-    <p>@Model.Description</p>
+    <p style="white-space: pre-line">@(Model.UnformattedDescription)</p>
 }
 @if (Model.Ps != null)
 {
@@ -283,7 +283,7 @@
 @if (Model.Perks != null)
 {
     <hr />
-    <p>@Model.Perks</p>
+    <p style="white-space: pre-line">@Model.UnformattedPerks</p>
 }
 
 <div class="alert alert-info">

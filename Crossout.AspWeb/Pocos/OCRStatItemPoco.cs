@@ -66,6 +66,10 @@ namespace Crossout.AspWeb.Pocos
         [Column("description")]
         public string Description { get; set; }
 
+        [JsonIgnore]
+        [Ignore]
+        public string UnformattedDescription { get => Description.Replace("\n", " "); }
+
         [JsonProperty("increasesDurability")]
         [Column("increasesdurability")]
         public int? IncreasesDurability { get; set; }
@@ -88,11 +92,11 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonIgnore]
         [Ignore]
-        public string FormatDamagePercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Damage * 10m); }
+        public string FormatDamagePercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Damage * 10m); }
 
         [JsonIgnore]
         [Ignore]
-        public string FormatDamage { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Damage); }
+        public string FormatDamage { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Damage); }
 
         [JsonProperty("fireRate")]
         [Column("firerate")]
@@ -100,11 +104,11 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonIgnore]
         [Ignore]
-        public string FormatFireRatePercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", FireRate * 10m); }
+        public string FormatFireRatePercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", FireRate * 10m); }
 
         [JsonIgnore]
         [Ignore]
-        public string FormatFireRate { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", FireRate); }
+        public string FormatFireRate { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", FireRate); }
 
         [JsonProperty("range")]
         [Column("range")]
@@ -112,11 +116,11 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonIgnore]
         [Ignore]
-        public string FormatRangePercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Range * 10m); }
+        public string FormatRangePercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Range * 10m); }
 
         [JsonIgnore]
         [Ignore]
-        public string FormatRange { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Range); }
+        public string FormatRange { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Range); }
 
         [JsonProperty("accuracy")]
         [Column("accuracy")]
@@ -124,11 +128,11 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonIgnore]
         [Ignore]
-        public string FormatAccuracyPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Accuracy * 10m); }
+        public string FormatAccuracyPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Accuracy * 10m); }
 
         [JsonIgnore]
         [Ignore]
-        public string FormatAccuracy { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Accuracy); }
+        public string FormatAccuracy { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", Accuracy); }
 
         [JsonProperty("timeToOverheating")]
         [Column("timetooverheating")]
@@ -136,11 +140,11 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonIgnore]
         [Ignore]
-        public string FormatTimeToOverheatingPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", TimeToOverheating * 10m); }
+        public string FormatTimeToOverheatingPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", TimeToOverheating * 10m); }
 
         [JsonIgnore]
         [Ignore]
-        public string FormatTimeToOverheating { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", TimeToOverheating); }
+        public string FormatTimeToOverheating { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", TimeToOverheating); }
 
         [JsonProperty("maxAmmo")]
         [Column("maxammo")]
@@ -152,11 +156,11 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonIgnore]
         [Ignore]
-        public string FormatBlastPowerPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", BlastPower * 10m); }
+        public string FormatBlastPowerPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", BlastPower * 10m); }
 
         [JsonIgnore]
         [Ignore]
-        public string FormatBlastPower { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", BlastPower); }
+        public string FormatBlastPower { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", BlastPower); }
 
         [JsonProperty("addsEnergy")]
         [Column("addsenergy")]
@@ -188,11 +192,11 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonIgnore]
         [Ignore]
-        public string FormatCabinPowerPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", CabinPower * 10m); }
+        public string FormatCabinPowerPercent { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", CabinPower * 10m); }
 
         [JsonIgnore]
         [Ignore]
-        public string FormatCabinPower { get => string.Format(CultureInfo.InvariantCulture, "{0:0.00}", CabinPower); }
+        public string FormatCabinPower { get => string.Format(CultureInfo.InvariantCulture, "{0:0.0}", CabinPower); }
 
         [JsonProperty("fuelReserves")]
         [Column("fuelreserves")]
@@ -233,6 +237,10 @@ namespace Crossout.AspWeb.Pocos
         [JsonProperty("perks")]
         [Column("perks")]
         public string Perks { get; set; }
+
+        [JsonIgnore]
+        [Ignore]
+        public string UnformattedPerks { get => Perks.Replace("\n", " "); }
 
         [JsonProperty("displayStats")]
         [Ignore]
@@ -287,6 +295,11 @@ namespace Crossout.AspWeb.Pocos
         public int CompareOrder(OCRDisplayStat x, OCRDisplayStat y)
         {
             return x.Order.CompareTo(y.Order);
+        }
+
+        public static int CompareDateTimeDesc(OCRStatItemPoco x, OCRStatItemPoco y)
+        {
+            return y.Timestamp.CompareTo(x.Timestamp);
         }
     }
 }
