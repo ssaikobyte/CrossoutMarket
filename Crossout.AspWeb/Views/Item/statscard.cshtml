@@ -21,8 +21,10 @@
         </tr>
     </thead>
     <tbody>
+        @{int i = 0;}
         @if (Model.Damage != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Damage</b></td>
                 <td class="stat-value-col">
@@ -36,6 +38,7 @@
         }
         @if (Model.FireRate != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Fire rate</b></td>
                 <td class="stat-value-col">
@@ -49,6 +52,7 @@
         }
         @if (Model.Range != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Range</b></td>
                 <td class="stat-value-col">
@@ -62,6 +66,7 @@
         }
         @if (Model.Accuracy != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Accuracy</b></td>
                 <td class="stat-value-col">
@@ -75,6 +80,7 @@
         }
         @if (Model.CabinPower != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Power</b></td>
                 <td class="stat-value-col">
@@ -88,6 +94,7 @@
         }
         @if (Model.BlastPower != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Blast Power</b></td>
                 <td class="stat-value-col">
@@ -101,6 +108,7 @@
         }
         @if (Model.MaxAmmo != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Max. Ammo</b></td>
                 <td class="stat-value-col">
@@ -112,6 +120,7 @@
         {
             if (Model.Category == "Cabins")
             {
+                i++;
                 <tr>
                     <td class="stat-name-col pl-0"><b>Max. Cabin Speed</b></td>
                     <td class="stat-value-col">
@@ -121,6 +130,7 @@
             }
             else
             {
+                i++;
                 <tr>
                     <td class="stat-name-col pl-0"><b>Max. Cabin Speed</b></td>
                     <td class="stat-value-col">
@@ -131,6 +141,7 @@
         }
         @if (Model.MaxChassisSpeed != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Max. Chassis Speed</b></td>
                 <td class="stat-value-col">
@@ -142,6 +153,7 @@
         {
             if (Model.Category == "Cabins")
             {
+                i++;
                 <tr>
                     <td class="stat-name-col pl-0"><b>Tonnage</b></td>
                     <td class="stat-value-col">
@@ -151,6 +163,7 @@
             }
             else
             {
+                i++;
                 <tr>
                     <td class="stat-name-col pl-0"><b>Tonnage</b></td>
                     <td class="stat-value-col">
@@ -161,6 +174,7 @@
         }
         @if (Model.Power != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Power</b></td>
                 <td class="stat-value-col">
@@ -170,6 +184,7 @@
         }
         @if (Model.FeatureBulletPercent != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Bullet Resistance</b></td>
                 <td class="stat-value-col">
@@ -179,6 +194,7 @@
         }
         @if (Model.FeatureMeleePercent != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Melee Resistance</b></td>
                 <td class="stat-value-col">
@@ -188,6 +204,7 @@
         }
         @if (Model.FeatureFirePercent != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Thermal Resistance</b></td>
                 <td class="stat-value-col">
@@ -197,6 +214,7 @@
         }
         @if (Model.FeatureBlastPercent != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Blast Resistance</b></td>
                 <td class="stat-value-col">
@@ -206,6 +224,7 @@
         }
         @if (Model.FeaturePassthroughPercent != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Passthrough</b></td>
                 <td class="stat-value-col">
@@ -215,6 +234,7 @@
         }
         @if (Model.MassLimit != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Mass Limit</b></td>
                 <td class="stat-value-col">
@@ -224,6 +244,7 @@
         }
         @if (Model.AddsEnergy != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Adds Energy</b></td>
                 <td class="stat-value-col">
@@ -233,6 +254,7 @@
         }
         @if (Model.FuelReserves != null)
         {
+            i++;
             <tr>
                 <td class="stat-name-col pl-0"><b>Fuel Reserves</b></td>
                 <td class="stat-value-col">
@@ -240,9 +262,22 @@
                 </td>
             </tr>
         }
+        @if (Model.IncreasesReputationPercent != null)
+        {
+            i++;
+            <tr>
+                <td class="stat-name-col pl-0"><b>Reputation Gain</b></td>
+                <td class="stat-value-col">
+                    +@(Model.IncreasesReputationPercent)%
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-<hr />
+@if (i > 0)
+{
+    <hr />
+}
 <table class="table table-borderless table-sm">
     <thead>
         <tr class="d-none">
