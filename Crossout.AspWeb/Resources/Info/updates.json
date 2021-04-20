@@ -192,5 +192,14 @@
       "Fixed API not showing the correct item image path",
       "Fixed chart margin calculator"
     ]
+  },
+  {
+    "Id": 18,
+    "Name": "Update",
+    "Timestamp": "2021-04-20T11:00:00Z",
+    "Notes": [
+      "Added Arachnida pack",
+      "Improved item stats card"
+    ]
   }
 ]

@@ -44,6 +44,7 @@
     <Content Remove="Resources\Info\arachnophobia.json" />
     <Content Remove="Resources\PremiumPackages\adrenaline.json" />
     <Content Remove="Resources\PremiumPackages\adrenalinedeluxe.json" />
+    <Content Remove="Resources\PremiumPackages\arachnida.json" />
     <Content Remove="Resources\PremiumPackages\assaultforcecharlie7.json" />
     <Content Remove="Resources\PremiumPackages\assaultforcetango1.json" />
     <Content Remove="Resources\PremiumPackages\bornfree.json" />
@@ -546,6 +547,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Events\KnightRiders2019\teutonicstripes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\arachnida.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\PremiumPackages\triadthekeeperdeluxe.json">
