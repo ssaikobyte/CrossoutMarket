@@ -14,19 +14,19 @@ This is the Open Source Project for Crossout Market found here: http://crossoutd
 
 Screenshot of the main page: 
 
-![Crossout Market](http://i.imgur.com/a9ovo2O.png)
+![Crossout Market](https://i.imgur.com/npF58UT.png)
 
-Example of the Clarinet Tow item page: 
+Example of the Kaiju item page: 
 
-![Clarinet Tow Chart](http://i.imgur.com/pvOwYtU.png)
+![Clarinet Tow Chart](https://i.imgur.com/s5L5iwr.png)
+
+Example of market chart: 
+
+![Kaiju Chart](https://i.imgur.com/HF8tOqt.png)
 
 Example of recipe view: 
 
-![Armored track recipe](http://i.imgur.com/XwO7R2C.png)
-
-Example of stats view: 
-
-![Hurricane stats](http://i.imgur.com/9CfARj3.png)
+![Kaiju recipe](https://i.imgur.com/dR2s9Zb.png)
 
 Contributing
 ===
