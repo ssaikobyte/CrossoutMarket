@@ -186,7 +186,7 @@ function drawTreeEntry(displayIngredient, wrapper) {
     for (var i = 0; i < displayIngredient.depth; i++) {
         depthSpacer += '<div style="width: 24px;"></div>';
     }
-    var priceSelector = (displayIngredient.buyPriceZero ? '<div><svg width="18" height="18" stroke="red" stroke-width="2" fill-opacity="0.0" style="vertical-align:middle;margin:0px 5px"><use xlink:href="/icons/feather-sprite.svg#alert-triangle" /></svg>' : '') +
+    var priceSelector = (displayIngredient.buyPriceZero ? '<div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin:0px 5px"><use xlink:href="/icons/feather-sprite.svg#alert-triangle" /></svg>' : '') +
         '<div class="btn-group">' +
         '<button class="btn btn-sm btn-outline-secondary price-select-sell-btn ' + (displayIngredient.usedPrice === 'sell' ? 'active' : '') + '" data-recipeid="' + displayIngredient.recipeId + '">' + formatPrice(displayIngredient.sellPrice) + '<img class="ml-1" height = "14" src = "/img/Coin.png" /></button>' +
         '<button class="btn btn-sm btn-outline-secondary price-select-buy-btn ' + (displayIngredient.usedPrice === 'buy' ? 'active' : '') + '" data-recipeid="' + displayIngredient.recipeId + '">' + formatPrice(displayIngredient.buyPrice) + '<img class="ml-1" height = "14" src = "/img/Coin.png" /></button>' +
