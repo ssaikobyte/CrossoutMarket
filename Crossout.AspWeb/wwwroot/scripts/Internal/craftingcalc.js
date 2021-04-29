@@ -80,10 +80,12 @@ function mapIngredient(root, rootDisplayIngredient, ingredient, currentDepth) {
         rootDisplayIngredient: rootDisplayIngredient,
         craftVsBuy: ingredient.item.craftVsBuy,
         factionId: ingredient.ingredients.length > 0 ? ingredient.ingredients[0].factionNumber : 0,
-        factionName: ingredient.ingredients.length > 0 ? ingredient.ingredients[0].item.faction : ''
+        factionName: ingredient.ingredients.length > 0 ? ingredient.ingredients[0].item.faction : '',
+        buyPriceZero: false
     };
     var ingredients = ingredient.ingredients;
     if (ingredient.item.buyPrice == 0) {
+        displayIngredient.buyPriceZero = true;
         displayIngredient.usedPrice = 'sell';
     }
     if (ingredients.length > 0)
@@ -184,7 +186,8 @@ function drawTreeEntry(displayIngredient, wrapper) {
     for (var i = 0; i < displayIngredient.depth; i++) {
         depthSpacer += '<div style="width: 24px;"></div>';
     }
-    var priceSelector = '<div class="btn-group">' +
+    var priceSelector = (displayIngredient.buyPriceZero ? '<div><img height="18" style="vertical-align:middle;margin:0px 5px" src="/img/alert-triangle.svg" />' : '') +
+        '<div class="btn-group">' +
         '<button class="btn btn-sm btn-outline-secondary price-select-sell-btn ' + (displayIngredient.usedPrice === 'sell' ? 'active' : '') + '" data-recipeid="' + displayIngredient.recipeId + '">' + formatPrice(displayIngredient.sellPrice) + '<img class="ml-1" height = "14" src = "/img/Coin.png" /></button>' +
         '<button class="btn btn-sm btn-outline-secondary price-select-buy-btn ' + (displayIngredient.usedPrice === 'buy' ? 'active' : '') + '" data-recipeid="' + displayIngredient.recipeId + '">' + formatPrice(displayIngredient.buyPrice) + '<img class="ml-1" height = "14" src = "/img/Coin.png" /></button>' +
         '</div>';
