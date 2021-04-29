@@ -83,6 +83,9 @@ function mapIngredient(root, rootDisplayIngredient, ingredient, currentDepth) {
         factionName: ingredient.ingredients.length > 0 ? ingredient.ingredients[0].item.faction : ''
     };
     var ingredients = ingredient.ingredients;
+    if (ingredient.item.buyPrice == 0) {
+        displayIngredient.usedPrice = 'sell';
+    }
     if (ingredients.length > 0)
         displayIngredient.hasIngredients = true;
     craftingCalc.tree.topToBottom.push(displayIngredient);
@@ -93,9 +96,13 @@ function mapIngredient(root, rootDisplayIngredient, ingredient, currentDepth) {
 
 // Optimal Route Calculator
 function buyOrCraftDecider(itemObject) {
+    var formatPrice = itemObject.item.formatBuyPrice;
+    if (formatPrice == 0) {
+        formatPrice = itemObject.item.formatSellPrice;
+    }
     if (itemObject.item.craftingResultAmount == 0) {
         itemObject.item.craftVsBuy = "buy";
-        itemObject.itemCost = toFixed(parseFloat(itemObject.item.formatBuyPrice) / (itemObject.item.amount < 1 ? 1 : itemObject.item.amount) * itemObject.number);
+        itemObject.itemCost = toFixed(parseFloat(formatPrice) / (itemObject.item.amount < 1 ? 1 : itemObject.item.amount) * itemObject.number);
     }
     else {
         if (itemObject.ingredients == null || itemObject.ingredients.length < 1) {
@@ -114,7 +121,7 @@ function buyOrCraftDecider(itemObject) {
             var craftOrg = craftCost;
             craftCost = toFixed(craftCost / itemObject.item.craftingResultAmount);
 
-            itemObject.itemCost = parseFloat(itemObject.item.formatBuyPrice);
+            itemObject.itemCost = parseFloat(formatPrice);
             if (itemObject.itemCost <= craftCost) {
                 itemObject.item.craftVsBuy = "buy";
             }
@@ -541,7 +548,11 @@ function calculateAdvice(uniqueId) {
     });
 
     var ingredientSum = calculateSum(ingredients, true);
-    return recipe.buyPrice * recipe.craftResultAmount <= ingredientSum ? 'Buy' : 'Craft';
+    var price = recipe.buyPrice;
+    if (price == 0) {
+        price = recipe.sellPrice;
+    }
+    return price * recipe.craftResultAmount <= ingredientSum ? 'Buy' : 'Craft';
 }
 
 function calculateRecipeSum(uniqueId) {
