@@ -80,9 +80,14 @@ function mapIngredient(root, rootDisplayIngredient, ingredient, currentDepth) {
         rootDisplayIngredient: rootDisplayIngredient,
         craftVsBuy: ingredient.item.craftVsBuy,
         factionId: ingredient.ingredients.length > 0 ? ingredient.ingredients[0].factionNumber : 0,
-        factionName: ingredient.ingredients.length > 0 ? ingredient.ingredients[0].item.faction : ''
+        factionName: ingredient.ingredients.length > 0 ? ingredient.ingredients[0].item.faction : '',
+        buyPriceZero: false
     };
     var ingredients = ingredient.ingredients;
+    if (ingredient.item.buyPrice == 0) {
+        displayIngredient.buyPriceZero = true;
+        displayIngredient.usedPrice = 'sell';
+    }
     if (ingredients.length > 0)
         displayIngredient.hasIngredients = true;
     craftingCalc.tree.topToBottom.push(displayIngredient);
@@ -93,9 +98,13 @@ function mapIngredient(root, rootDisplayIngredient, ingredient, currentDepth) {
 
 // Optimal Route Calculator
 function buyOrCraftDecider(itemObject) {
+    var formatPrice = itemObject.item.formatBuyPrice;
+    if (formatPrice == 0) {
+        formatPrice = itemObject.item.formatSellPrice;
+    }
     if (itemObject.item.craftingResultAmount == 0) {
         itemObject.item.craftVsBuy = "buy";
-        itemObject.itemCost = toFixed(parseFloat(itemObject.item.formatBuyPrice) / (itemObject.item.amount < 1 ? 1 : itemObject.item.amount) * itemObject.number);
+        itemObject.itemCost = toFixed(parseFloat(formatPrice) / (itemObject.item.amount < 1 ? 1 : itemObject.item.amount) * itemObject.number);
     }
     else {
         if (itemObject.ingredients == null || itemObject.ingredients.length < 1) {
@@ -114,7 +123,7 @@ function buyOrCraftDecider(itemObject) {
             var craftOrg = craftCost;
             craftCost = toFixed(craftCost / itemObject.item.craftingResultAmount);
 
-            itemObject.itemCost = parseFloat(itemObject.item.formatBuyPrice);
+            itemObject.itemCost = parseFloat(formatPrice);
             if (itemObject.itemCost <= craftCost) {
                 itemObject.item.craftVsBuy = "buy";
             }
@@ -177,10 +186,11 @@ function drawTreeEntry(displayIngredient, wrapper) {
     for (var i = 0; i < displayIngredient.depth; i++) {
         depthSpacer += '<div style="width: 24px;"></div>';
     }
-    var priceSelector = '<div class="btn-group">' +
+    var priceSelector = (displayIngredient.buyPriceZero ? '<div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin:0px 5px"><use xlink:href="/icons/feather-sprite.svg#alert-triangle" /></svg>' : '') +
+        '<div class="btn-group">' +
         '<button class="btn btn-sm btn-outline-secondary price-select-sell-btn ' + (displayIngredient.usedPrice === 'sell' ? 'active' : '') + '" data-recipeid="' + displayIngredient.recipeId + '">' + formatPrice(displayIngredient.sellPrice) + '<img class="ml-1" height = "14" src = "/img/Coin.png" /></button>' +
         '<button class="btn btn-sm btn-outline-secondary price-select-buy-btn ' + (displayIngredient.usedPrice === 'buy' ? 'active' : '') + '" data-recipeid="' + displayIngredient.recipeId + '">' + formatPrice(displayIngredient.buyPrice) + '<img class="ml-1" height = "14" src = "/img/Coin.png" /></button>' +
-        '</div>';
+        '</div></div>';
     var rootItemSelector = '<div class="d-flex flex-row justify-content-between w-50">' +
         '<div class="d-flex flex-row">' +
         '<div><span class="localization" data-locname="item.craftcalc.label.resultsin">' + localizeSingle('item.craftcalc.label.resultsin', 'Results in') + '</span> ' + displayIngredient.craftResultAmount + '</div>' +
@@ -541,7 +551,11 @@ function calculateAdvice(uniqueId) {
     });
 
     var ingredientSum = calculateSum(ingredients, true);
-    return recipe.buyPrice * recipe.craftResultAmount <= ingredientSum ? 'Buy' : 'Craft';
+    var price = recipe.buyPrice;
+    if (price == 0) {
+        price = recipe.sellPrice;
+    }
+    return price * recipe.craftResultAmount <= ingredientSum ? 'Buy' : 'Craft';
 }
 
 function calculateRecipeSum(uniqueId) {
