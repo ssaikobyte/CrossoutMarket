@@ -64,7 +64,7 @@
     $(function () {
         var seriesOptions = [],
             seriesCounter = 0,
-            names = [{name:'Sell',type:0}, {name:'Buy',type:0}, {name:'SellOffers',type:1},{name:'BuyOrders',type:1}];
+            names = [{ name: 'Sell', type: 0 }, { name: 'Buy', type: 0 }, { name: 'SellOffers', type: 1 }, { name: 'BuyOrders', type: 1 }];
 
         var buttons = [{
             type: 'hour',
@@ -179,15 +179,13 @@
         var toggle = false;
         $('#grouping-button').on('click', function (e) {
             var inThirtyDays = new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000);
-            if (toggle)
-            {
+            if (toggle) {
                 createChart(buttons);
                 $(this).text("Disable Data Grouping");
                 toggle = false;
                 writeSetting('data-grouping', true);
             }
-            else
-            {
+            else {
                 createChart(buttonsDisabledGrouping);
                 $(this).text("Enable Data Grouping");
                 toggle = true;
@@ -237,7 +235,7 @@
                         value: 0,
                         width: 2
                     }]
-                },{
+                }, {
                     title: {
                         text: 'Volumes'
                     },
@@ -250,7 +248,7 @@
                         value: 0,
                         width: 2
                     }],
-                    opposite :false
+                    opposite: false
                 }],
 
                 tooltip: {
@@ -298,27 +296,27 @@
                             color = '#939393';
                         }
                         series =
-                            {
-                                name: names[i].name,
-                                yAxis: 1,
-                                data: data,
-                                type: 'column',
-                                zIndex: 1,
-                                color: color
-                            };
+                        {
+                            name: names[i].name,
+                            yAxis: 1,
+                            data: data,
+                            type: 'column',
+                            zIndex: 1,
+                            color: color
+                        };
                     } else {
                         var color = '#32C922';
                         if (names[i].name === 'Sell') {
                             color = '#FF3D23';
                         }
                         series =
-                            {
-                                name: names[i].name,
-                                data: data,
-                                type: 'line',
-                                zIndex: 2,
-                                color: color
-                            };
+                        {
+                            name: names[i].name,
+                            data: data,
+                            type: 'line',
+                            zIndex: 2,
+                            color: color
+                        };
                     }
 
                     seriesOptions[i] = series;
@@ -331,12 +329,10 @@
                 $('#container').removeClass('d-none');
                 $('#timeMarginWrapper').removeClass('d-none');
 
-                if (!readSetting('data-grouping'))
-                {
+                if (!readSetting('data-grouping')) {
                     createChart(buttonsDisabledGrouping);
                 }
-                else
-                {
+                else {
                     createChart(buttons);
                 }
 
@@ -347,10 +343,10 @@
                 $('#csv-button').removeClass('hidden');
             });
         }
-
+        initHighcharts();
         loadData();
 
-        $(document).ready(function() {
+        function initHighcharts() {
             // Load the fonts
             Highcharts.createElement('link', {
                 href: 'https://fonts.googleapis.com/css?family=Dosis:400,600',
@@ -359,7 +355,7 @@
             }, null, document.getElementsByTagName('head')[0]);
 
             Highcharts.theme = {
-                colors: ["#7cb5ec", "#f7a35c", "#90ee7e", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee","#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+                colors: ["#7cb5ec", "#f7a35c", "#90ee7e", "#7798BF", "#aaeeee", "#ff0066", "#eeaaee", "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
                 chart: {
                     backgroundColor: null,
                     style: {
@@ -437,7 +433,7 @@
                 $(this).attr('href', 'data:text/csv;charset=utf-8,' + escape(chart.getCSV()));
                 $(this).attr('download', "@(Model.Item.Id)-data.csv");
             });
-        });
+        }
     });
 </script>
 
