@@ -1,0 +1,9 @@
+﻿{
+  "Id": 41,
+  "Key": "freshblooddeluxe",
+  "SteamAppID": 1584790,
+  "Name": "Fresh Blood (Deluxe)",
+  "Description": "",
+  "MarketPartIDs": [ 150, 1303, 942, 42, 42, 943, 1295, 1296, 1296, 1294, 65, 142, 134, 134, 948, 948, 945, 376, 68, 69, 165, 188, 188, 193, 399, 180, 180, 396, 396 ],
+  "RawCoins": 4000
+}

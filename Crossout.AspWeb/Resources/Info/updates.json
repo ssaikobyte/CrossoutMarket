@@ -201,5 +201,16 @@
       "Added Arachnida pack",
       "Improved item stats card"
     ]
+  },
+  {
+    "Id": 19,
+    "Name": "Update",
+    "Timestamp": "2021-05-12T12:00:00Z",
+    "Notes": [
+      "Added new items",
+      "Added 4 new packs",
+      "Crafting calculator now uses the sell price as default if there is no buy price",
+      "Fixed chart not having correct styling when loaded in background"
+    ]
   }
 ]
