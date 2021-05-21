@@ -6,6 +6,7 @@
 @using Crossout.Web
 @using Crossout.AspWeb.Models
 @using Crossout.Data.KnightRiders
+@using System.Globalization
 @model Crossout.AspWeb.Models.General.KnightRidersModel
 
 <partial name="header" model="@Model" />
@@ -181,10 +182,10 @@
                             <tr>
                                 <td>in <a href="~/item/114">Coupons x10</a>: @(item.Talers * 11 / 10)</td>
                                 <td>
-                                    <span style="color: red">@(Math.Truncate(Model.ContainedItems[114].SellPrice * item.Talers * 11 / 100) / 100)</span> <img src="~/img/Coin.png" height="14" />
+                                    <span style="color: red">@((Model.ContainedItems[114].SellPrice * item.Talers * 11 / 100 / 100).ToString("0.00", CultureInfo.InvariantCulture))</span> <img src="~/img/Coin.png" height="14" />
                                 </td>
                                 <td>
-                                    <span style="color: green">@(Math.Truncate(Model.ContainedItems[114].BuyPrice * item.Talers * 11 / 100) / 100)</span> <img src="~/img/Coin.png" height="14" />
+                                    <span style="color: green">@((Model.ContainedItems[114].BuyPrice * item.Talers * 11 / 100 / 100).ToString("0.00", CultureInfo.InvariantCulture))</span> <img src="~/img/Coin.png" height="14" />
                                 </td>
                             </tr>
                             <tr>
