@@ -63,6 +63,7 @@ namespace Crossout.AspWeb.Controllers
                         containedItemIDs.Add((int)item.Id);
                     }
                 }
+                containedItemIDs.Add(114);
                 knightRidersModel.ContainedItems = db.SelectListOfItems(containedItemIDs, lang.Id);
                 foreach (var item in knightRidersModel.ContainedItems)
                 {

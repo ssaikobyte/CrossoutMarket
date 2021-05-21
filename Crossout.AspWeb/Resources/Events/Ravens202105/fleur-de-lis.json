@@ -1,0 +1,28 @@
+﻿{
+  "Id": "839",
+  "Key": "Fleur-de-lis",
+  "Name": "Fleur-de-lis",
+  "Talers": 300,
+  "Ingredients": [
+    /* Scrap x100 */
+    {
+      "Id": 53,
+      "Amount": 500
+    },
+    /* Wires x100 */
+    {
+      "Id": 85,
+      "Amount": 200
+    },
+    /* Copper x100 */
+    {
+      "Id": 43,
+      "Amount": 550
+    },
+    /* Plastic x100 */
+    {
+      "Id": 785,
+      "Amount": 100
+    }
+  ]
+}

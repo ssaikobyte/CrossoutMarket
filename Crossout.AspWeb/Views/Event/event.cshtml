@@ -13,6 +13,10 @@
 
 <div class="half-hd-container">
 
+    <div class="row justify-content-center">
+        <img src="https://i.imgur.com/ft44vl8.png" />
+    </div>
+
     <div class="row">
         <div class="col-md-6 col-sm-12 d-flex flex-row align-items-center justify-content-center">
             <div class="m-2">
@@ -170,12 +174,21 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Badges</td>
+                                <td>Talers</td>
                                 <td>@item.Talers</td>
                                 <td>@item.Talers</td>
                             </tr>
                             <tr>
-                                <td><b>Profit</b></td>
+                                <td>in <a href="~/item/114">Coupons x10</a>: @(item.Talers * 11 / 10)</td>
+                                <td>
+                                    <span style="color: red">@(Math.Truncate(Model.ContainedItems[114].SellPrice * item.Talers * 11 / 100) / 100)</span> <img src="~/img/Coin.png" height="14" />
+                                </td>
+                                <td>
+                                    <span style="color: green">@(Math.Truncate(Model.ContainedItems[114].BuyPrice * item.Talers * 11 / 100) / 100)</span> <img src="~/img/Coin.png" height="14" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Profit</b> <i>(Coupons NOT included)</i></td>
                                 @if (item.Id != null)
                                 {
                                     <td>
