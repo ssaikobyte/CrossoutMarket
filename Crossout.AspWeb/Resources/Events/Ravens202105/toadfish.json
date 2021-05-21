@@ -1,0 +1,40 @@
+﻿{
+  "Id": "1133",
+  "Key": "toadfish",
+  "Name": "Toadfish",
+  "Talers": 500,
+  "Ingredients": [
+    /* Scrap x100 */
+    {
+      "Id": 53,
+      "Amount": 1350
+    },
+    /* Electronics x10 */
+    {
+      "Id": 201,
+      "Amount": 800
+    },
+    /* Copper x100 */
+    {
+      "Id": 43,
+      "Amount": 1350
+    },
+    /* Batteries x10 */
+    {
+      "Id": 783,
+      "Amount": 800
+    },
+    {
+      "Id": 609,
+      "Amount": 2
+    },
+    {
+      "Id": 136,
+      "Amount": 2
+    },
+    {
+      "Id": 1012,
+      "Amount": 1
+    }
+  ]
+}
