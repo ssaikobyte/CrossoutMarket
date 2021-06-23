@@ -1,0 +1,40 @@
+﻿{
+  "Id": "1313",
+  "Key": "ac80stillwind",
+  "Name": "AC80 Stillwind",
+  "Talers": 0,
+  "Ingredients": [
+    /* Scrap x100 */
+    {
+      "Id": 53,
+      "Amount": 100
+    },
+    /* Copper x100 */
+    {
+      "Id": 43,
+      "Amount": 550
+    },
+    /* Electronics x100 */
+    {
+      "Id": 168,
+      "Amount": 550
+    },
+    /* Batteries x100 */
+    {
+      "Id": 784,
+      "Amount": 550
+    },
+    {
+      "Id": 32,
+      "Amount": 2
+    },
+    {
+      "Id": 1314,
+      "Amount": 1
+    },
+    {
+      "Id": 1311,
+      "Amount": 1
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+﻿{
+  "Id": "1315",
+  "Key": "m-32vindicator",
+  "Name": "M-32 Vindicator",
+  "Talers": 300,
+  "Ingredients": [
+    /* Scrap x100 */
+    {
+      "Id": 53,
+      "Amount": 100
+    },
+    /* Copper x100 */
+    {
+      "Id": 43,
+      "Amount": 550
+    },
+    /* Electronics x100 */
+    {
+      "Id": 168,
+      "Amount": 550
+    },
+    /* Batteries x100 */
+    {
+      "Id": 784,
+      "Amount": 550
+    },
+    {
+      "Id": 928,
+      "Amount": 2
+    },
+    {
+      "Id": 1316,
+      "Amount": 1
+    },
+    {
+      "Id": 1314,
+      "Amount": 1
+    }
+  ]
+}

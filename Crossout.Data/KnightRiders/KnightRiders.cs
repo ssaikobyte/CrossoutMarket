@@ -27,6 +27,7 @@ namespace Crossout.Data.KnightRiders
         public string FormatBuyPrice;
         public int Talers;
         public int? Id;
+        public string ImageOverridePath;
         public List<Ingredient> Ingredients;
         public string FormatSellSum;
         public string FormatBuySum;

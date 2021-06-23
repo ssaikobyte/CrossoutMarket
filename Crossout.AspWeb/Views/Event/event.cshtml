@@ -15,13 +15,13 @@
 <div class="half-hd-container">
 
     <div class="row justify-content-center">
-        <img src="https://i.imgur.com/ft44vl8.png" />
+        <img src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/26076615/4d242166b46ee3b7d4f831a22ca5bc30e61c4b03_960x311.jpg" />
     </div>
 
     <div class="row">
         <div class="col-md-6 col-sm-12 d-flex flex-row align-items-center justify-content-center">
             <div class="m-2">
-                Buy Resources for:
+                Buy Ingredients for:
                 <div class="btn-group">
                     <button class="btn btn-outline-secondary btn-radio-prices" id="buyResorucesForSell">Sell Price</button>
                     <button class="btn btn-outline-secondary btn-radio-prices active" id="buyResorucesForBuy">Buy Price</button>
@@ -49,7 +49,11 @@
                             <div class="mr-1">
                                 @if (item.Id != null)
                                 {
-                                    @if (Model.ContainedItems[(int)item.Id].ImageExists)
+                                    @if (item.ImageOverridePath != null)
+                                    {
+                                        <a href="~/item/@(item.Id)"><img class="item-image-search" src="@(item.ImageOverridePath)" /></a>
+                                    }
+                                    else if (Model.ContainedItems[(int)item.Id].ImageExists)
                                     {
                                         <a href="~/item/@(item.Id)"><img class="item-image-search" src="~/img/items/@(item.Id).png" /></a>
                                     }
@@ -60,7 +64,14 @@
                                 }
                                 else
                                 {
-                                    <img class="item-image-search" src="~/img/event/@(item.Key).png" />
+                                    @if (item.ImageOverridePath != null)
+                                    {
+                                        <img class="item-image-search" src="@(item.ImageOverridePath)" />
+                                    }
+                                    else
+                                    {
+                                        <img class="item-image-search" src="~/img/event/@(item.Key).png" />
+                                    }
                                 }
                             </div>
 
@@ -142,29 +153,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Price</td>
-                                <td>
-                                    @if (item.Id != null)
-                                    {
-                                        <span style="color: red">@item.FormatSellPrice</span> <img src="~/img/Coin.png" height="14" />
-                                    }
-                                    else
-                                    {
-                                        <span>Untradeable</span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (item.Id != null)
-                                    {
-                                        <span style="color: green">@item.FormatBuyPrice</span> <img src="~/img/Coin.png" height="14" />
-                                    }
-                                    else
-                                    {
-                                        <span>Untradeable</span>
-                                    }
-                                </td>
-                            </tr>
+                            @if (item.Id != null)
+                            {
+                                <tr>
+                                    <td>Price</td>
+                                    <td>
+                                        @if (item.Id != null)
+                                        {
+                                            <span style="color: red">@item.FormatSellPrice</span> <img src="~/img/Coin.png" height="14" />
+                                        }
+                                        else
+                                        {
+                                            <span>Untradeable</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Id != null)
+                                        {
+                                            <span style="color: green">@item.FormatBuyPrice</span> <img src="~/img/Coin.png" height="14" />
+                                        }
+                                        else
+                                        {
+                                            <span>Untradeable</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
                             <tr>
                                 <td>Ingredient Sum</td>
                                 <td>
@@ -174,39 +188,42 @@
                                     <span style="color: green">@item.FormatBuySum</span> <img src="~/img/Coin.png" height="14" />
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Talers</td>
-                                <td>@item.Talers</td>
-                                <td>@item.Talers</td>
-                            </tr>
-                            <tr>
-                                <td>in <a href="~/item/114">Coupons x10</a>: @(item.Talers * 11 / 10)</td>
-                                <td>
-                                    <span style="color: red">@((Model.ContainedItems[114].SellPrice * item.Talers * 11 / 100 / 100).ToString("0.00", CultureInfo.InvariantCulture))</span> <img src="~/img/Coin.png" height="14" />
-                                </td>
-                                <td>
-                                    <span style="color: green">@((Model.ContainedItems[114].BuyPrice * item.Talers * 11 / 100 / 100).ToString("0.00", CultureInfo.InvariantCulture))</span> <img src="~/img/Coin.png" height="14" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><b>Profit</b> <i>(Coupons NOT included)</i></td>
-                                @if (item.Id != null)
-                                {
+                            @*<tr>
+                                    <td>Talers</td>
+                                    <td>@item.Talers</td>
+                                    <td>@item.Talers</td>
+                                </tr>
+                                <tr>
+                                    <td>in <a href="~/item/114">Coupons x10</a>: @(item.Talers * 11 / 10)</td>
                                     <td>
-                                        <div class="d-flex flex-row align-items-center">
-                                            <div data-sellprice="@item.SellPrice" data-buyprice="@item.BuyPrice" data-sellsum="@item.TotalSellSum" data-buysum="@item.TotalBuySum" class="profit-value mr-1">
-
-                                            </div>
-                                            <img src="~/img/Coin.png" height="14" />
-                                        </div>
+                                        <span style="color: red">@((Model.ContainedItems[114].SellPrice * item.Talers * 11 / 100 / 100).ToString("0.00", CultureInfo.InvariantCulture))</span> <img src="~/img/Coin.png" height="14" />
                                     </td>
-                                }
-                                else
-                                {
+                                    <td>
+                                        <span style="color: green">@((Model.ContainedItems[114].BuyPrice * item.Talers * 11 / 100 / 100).ToString("0.00", CultureInfo.InvariantCulture))</span> <img src="~/img/Coin.png" height="14" />
+                                    </td>
+                                </tr>*@
+                            @if (item.Id != null)
+                            {
+                                <tr>
+                                    <td><b>Profit</b>@* <i>(Coupons NOT included)</i>*@</td>
+                                    @if (item.Id != null)
+                                    {
+                                        <td>
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div data-sellprice="@item.SellPrice" data-buyprice="@item.BuyPrice" data-sellsum="@item.TotalSellSum" data-buysum="@item.TotalBuySum" class="profit-value mr-1">
+
+                                                </div>
+                                                <img src="~/img/Coin.png" height="14" />
+                                            </div>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
                                     <td></td>
-                                }
-                                <td></td>
-                            </tr>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

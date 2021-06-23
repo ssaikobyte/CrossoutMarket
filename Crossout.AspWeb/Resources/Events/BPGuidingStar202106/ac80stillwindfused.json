@@ -1,0 +1,33 @@
+﻿{
+  "Id": null,
+  "ImageOverridePath": "/img/items/1313.png",
+  "Key": "ac80stillwindfused",
+  "Name": "AC80 Stillwind (Fused)",
+  "Talers": 0,
+  "Ingredients": [
+    /* Wires x100 */
+    {
+      "Id": 85,
+      "Amount": 1800
+    },
+    /* Electronics x100 */
+    {
+      "Id": 168,
+      "Amount": 1100
+    },
+    /* Batteries x100 */
+    {
+      "Id": 784,
+      "Amount": 1600
+    },
+    /* Plastic x100 */
+    {
+      "Id": 785,
+      "Amount": 1450
+    },
+    {
+      "Id": 1313,
+      "Amount": 2
+    }
+  ]
+}

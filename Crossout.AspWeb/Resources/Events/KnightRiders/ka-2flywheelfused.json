@@ -1,0 +1,33 @@
+﻿{
+  "Id": null,
+  "ImageOverridePath": "/img/items/1311.png",
+  "Key": "ka-2flywheelfused",
+  "Name": "KA-2 Flywheel (Fused)",
+  "Talers": 0,
+  "Ingredients": [
+    /* Wires x100 */
+    {
+      "Id": 85,
+      "Amount": 750
+    },
+    /* Copper x100 */
+    {
+      "Id": 43,
+      "Amount": 900
+    },
+    /* Batteries x100 */
+    {
+      "Id": 784,
+      "Amount": 450
+    },
+    /* Plastic x100 */
+    {
+      "Id": 785,
+      "Amount": 300
+    },
+    {
+      "Id": 1311,
+      "Amount": 2
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+﻿{
+  "Id": null,
+  "ImageOverridePath": "/img/items/1318.png",
+  "Key": "buggywheelfused",
+  "Name": "Buggy Wheel (Fused)",
+  "Talers": 0,
+  "Ingredients": [
+    /* Wires x100 */
+    {
+      "Id": 85,
+      "Amount": 750
+    },
+    /* Copper x100 */
+    {
+      "Id": 43,
+      "Amount": 900
+    },
+    /* Batteries x100 */
+    {
+      "Id": 784,
+      "Amount": 450
+    },
+    /* Plastic x100 */
+    {
+      "Id": 785,
+      "Amount": 300
+    },
+    {
+      "Id": 1318,
+      "Amount": 2
+    }
+  ]
+}

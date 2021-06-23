@@ -1,13 +1,14 @@
 ﻿{
-  "Id": "1146",
-  "Key": "martins-helmet",
-  "Name": "Martin's helmet",
-  "Talers": 300,
+  "Id": null,
+  "ImageOverridePath": "/img/items/1312.png",
+  "Key": "ka-1dischargerfused",
+  "Name": "KA-1 Discharger (Fused)",
+  "Talers": 0,
   "Ingredients": [
     /* Scrap x100 */
     {
       "Id": 53,
-      "Amount": 500
+      "Amount": 550
     },
     /* Wires x100 */
     {
@@ -17,12 +18,16 @@
     /* Copper x100 */
     {
       "Id": 43,
-      "Amount": 550
+      "Amount": 600
     },
     /* Plastic x100 */
     {
       "Id": 785,
-      "Amount": 100
+      "Amount": 50
+    },
+    {
+      "Id": 1312,
+      "Amount": 2
     }
   ]
 }
