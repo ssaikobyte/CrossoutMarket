@@ -19,7 +19,7 @@ using Crossout.AspWeb.Models.API.v2;
 namespace Crossout.AspWeb.Controllers
 {
     [AddHeader("Access-Control-Allow-Origin", "*")]
-    [AddHeader("Access-Control-Allow-Methods", "POST,GET")]
+    [AddHeader("Access-Control-Allow-Methods", "POST, GET")]
     [AddHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type")]
     public class ApiControllerV2 : Controller
     {
@@ -51,7 +51,7 @@ namespace Crossout.AspWeb.Controllers
             this.RegisterHit("/api/v2/rarities");
             return Json(model);
         }
-        
+
         [Route("/api/v2/factions")]
         public IActionResult FactionsAction()
         {
@@ -189,7 +189,7 @@ namespace Crossout.AspWeb.Controllers
             sql.Open(WebSettings.Settings.CreateDescription());
 
             HashSet<string> validMarkets = new HashSet<string>() { "sellprice", "buyprice", "selloffers", "buyorders" };
-            
+
             string timestampColumn = "market.datetime";
 
             this.RegisterHit("/api/v2/market");
@@ -220,7 +220,7 @@ namespace Crossout.AspWeb.Controllers
         public IActionResult MarketAllAction(MarketAllRequest request)
         {
             sql.Open(WebSettings.Settings.CreateDescription());
-            
+
             var startTimestamp = request.StartTimestamp;
             var endTimestamp = request.EndTimestamp;
 
@@ -360,6 +360,35 @@ namespace Crossout.AspWeb.Controllers
 
             this.RegisterHit("/api/v2/synergy");
             return Json(model);
+        }
+
+        [Route("/api/v2/co_driver/upload_records/{uid:int}")]
+        public IActionResult GetUserUploadRecordsAction(int uid)
+        {
+            sql.Open(WebSettings.Settings.CreateDescription());
+            ApiDataService dataService = new ApiDataService(sql);
+
+            List<long> model = dataService.GetCodUploadRecords(uid).Select(x => x.match_id).ToList();
+
+            this.RegisterHit("/api/v2/co_driver/upload_records");
+            return Json(model);
+        }
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        [Route("/api/v2/co_driver/upload_matchs")]
+        public IActionResult UploadMatchAction([FromBody] List<Crossout.AspWeb.Models.API.v2.MatchEntry> matchs)
+        {
+            Console.WriteLine("uploading " + matchs.Count.ToString() + " matches");
+            sql.Open(WebSettings.Settings.CreateDescription());
+            ApiDataService dataService = new ApiDataService(sql);
+
+            int match_count = dataService.UploadMatchs(matchs);
+
+            Console.WriteLine("finished uploading " + matchs.Count.ToString() + " matches");
+
+            this.RegisterHit("/api/v2/co_driver/upload_matchs");
+            return Json(match_count);
         }
 
         private IActionResult RouteSearch(string searchQuery, int page, string rarity, string category, string faction, string removedItems, string metaItems, int id, int language)
