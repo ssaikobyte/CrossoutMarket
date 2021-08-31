@@ -138,42 +138,65 @@ namespace Crossout.AspWeb.Services.API.v2
 
         public int UploadMatchs(List<MatchEntry> match_list)
         {
-            int uploader_id = 0;
+            if (match_list.Count == 0)
+                return 0;
 
             foreach (MatchEntry match in match_list)
             {
-                if (NPocoDB.Fetch<UploadRecordPoco>("WHERE MATCH_ID=@0 AND UID=@1", match.match_id, match.uploader_uid).Any())
+                if (NPocoDB.Fetch<UploadRecordPoco>("WHERE MATCH_ID = @0 AND UID = @1", match.match_id, match.uploader_uid).Any())
                     continue;
 
-                uploader_id = match.uploader_uid;
-
-                string status = "I";
-
-                if (!ValidMatchUpload(match))
-                    status = "C";
-
-                Console.WriteLine("match_id:" + match.match_id.ToString());
-
-                UploadRecordPoco new_uploader = PopulateUploadPoco(match);
-                MatchRecordPoco new_match = PopulateMatchPoco(match, status);
-                List<RoundRecordPoco> new_rounds = PopulateRoundsPoco(match);
-
-                UploadUploadRecords(new_uploader);
-                UploadMatch(new_match);//test
-                UploadRounds(new_rounds, match);
-
-                List<PlayerRoundRecordPoco> new_players = PopulatePlayerRoundRecordPoco(match);
-                UploadPlayerRoundRecords(new_players);
+                UploadUploadRecords(match);
+                UploadMatch(match);
+                UploadRounds(match);
+                UploadPlayerRoundRecords(match);
             }
 
-            return NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", uploader_id);
+            return NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", match_list[0].uploader_uid);
         }
 
-        public void UploadMatch(MatchRecordPoco match)
+        public void UploadMatch(MatchEntry match)
         {
             try
             {
-                NPocoDB.Insert(match);
+                MatchRecordPoco poco_match = new MatchRecordPoco { };
+                poco_match.match_id = match.match_id;
+                poco_match.upload_status = "I";
+                poco_match.validation_count = 1;
+                poco_match.match_type = match.match_type;
+                poco_match.match_start = match.match_start;
+                poco_match.match_end = match.match_end;
+                poco_match.map_name = match.map_name;
+                poco_match.winning_team = match.winning_team;
+                poco_match.round_id_1 = 0;
+                poco_match.round_id_2 = 0;
+                poco_match.round_id_3 = 0;
+                poco_match.client_version = match.client_version;
+                poco_match.co_driver_version = match.co_driver_version;
+                poco_match.server_ip = match.game_server;
+
+                int min_power_score = int.MaxValue;
+                int max_power_score = int.MinValue;
+
+                foreach (RoundEntry round in match.rounds)
+                {
+                    foreach (MatchPlayerEntry player in round.players)
+                    {
+                        if (player.power_score == 0)
+                            continue;
+
+                        if (player.power_score < min_power_score)
+                            min_power_score = player.power_score;
+
+                        if (player.power_score > max_power_score)
+                            max_power_score = player.power_score;
+                    }
+                }
+
+                poco_match.min_power_score = min_power_score;
+                poco_match.max_power_score = max_power_score;
+
+                NPocoDB.Insert(poco_match);
             }
             catch (Exception ex)
             {
@@ -181,28 +204,30 @@ namespace Crossout.AspWeb.Services.API.v2
             }
         }
 
-        public void UploadRounds(List<RoundRecordPoco> rounds, MatchEntry match)
+        public void UploadRounds(MatchEntry match)
         {
             try
             {
-                foreach (RoundRecordPoco round in rounds)
-                    NPocoDB.Insert(round);
-
                 MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
-                List<RoundRecordPoco> poco_rounds = NPocoDB.Fetch<RoundRecordPoco>("WHERE MATCH_ID = @0", match.match_id);
 
-                foreach (RoundRecordPoco poco_round in poco_rounds)
+                foreach (RoundEntry round in match.rounds)
                 {
+                    RoundRecordPoco poco_round = new RoundRecordPoco { };
+                    poco_round.match_id = match.match_id;
+                    poco_round.round_start = round.round_start;
+                    poco_round.round_end = round.round_end;
+                    poco_round.winning_team = round.winning_team;
+                    NPocoDB.Insert(poco_round);
+
                     if (poco_match.round_id_1 == 0)
                         poco_match.round_id_1 = poco_round.round_id;
                     else
-                    if (poco_match.round_id_2 == 0)
+                   if (poco_match.round_id_2 == 0)
                         poco_match.round_id_2 = poco_round.round_id;
                     else
-                    if (poco_match.round_id_3 == 0)
+                   if (poco_match.round_id_3 == 0)
                         poco_match.round_id_3 = poco_round.round_id;
-                    else
-                        Console.WriteLine("populated 3 rounds");
+
                 }
 
                 NPocoDB.Update(poco_match);
@@ -213,11 +238,15 @@ namespace Crossout.AspWeb.Services.API.v2
             }
         }
 
-        public void UploadUploadRecords(UploadRecordPoco upload_record)
+        public void UploadUploadRecords(MatchEntry match)
         {
             try
             {
-                NPocoDB.Insert(upload_record);
+                UploadRecordPoco poco_upload = new UploadRecordPoco { };
+                poco_upload.match_id = match.match_id;
+                poco_upload.uid = match.uploader_uid;
+                poco_upload.upload_time = DateTime.Now.ToUniversalTime();
+                NPocoDB.Insert(poco_upload);
             }
             catch (Exception ex)
             {
@@ -225,187 +254,101 @@ namespace Crossout.AspWeb.Services.API.v2
             }
         }
 
-        public void UploadPlayerRoundRecords(List<PlayerRoundRecordPoco> players)
+        public void UploadPlayerRoundRecords(MatchEntry match)
         {
             try
             {
-                foreach (PlayerRoundRecordPoco player in players)
-                {
-                    if (player.uid == 0)
-                        continue;
+                MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
 
-                    NPocoDB.Insert(player);
+                foreach (RoundEntry round in match.rounds)
+                {
+                    foreach (MatchPlayerEntry player in round.players)
+                    {
+                        PlayerRoundRecordPoco poco_player = new PlayerRoundRecordPoco { };
+                        poco_player.match_id = match.match_id;
+                        poco_player.round_id = poco_match.round_id_1;
+                        poco_player.uid = player.uid;
+                        poco_player.nickname = player.nickname;
+                        poco_player.team = player.team;
+                        poco_player.build_hash = player.build_hash;
+                        poco_player.power_score = player.power_score;
+                        poco_player.kills = player.kills;
+                        poco_player.assists = player.assists;
+                        poco_player.drone_kills = player.drone_kills;
+                        poco_player.score = player.score;
+                        poco_player.damage = (float)player.damage;
+                        poco_player.damage_taken = (float)player.damage_taken;
+
+                        if (player.round_id == 1)
+                            poco_player.round_id = poco_match.round_id_2;
+                        else
+                        if (player.round_id == 2)
+                            poco_player.round_id = poco_match.round_id_3;
+
+                        if (player.team == match.winning_team)
+                            poco_player.game_result = "W";
+                        else
+                        if (match.winning_team == 0)
+                            poco_player.game_result = "D";
+                        else
+                            poco_player.game_result = "L";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload player error:" + ex.Message);
-
-                foreach (PlayerRoundRecordPoco player in players)
-                    Console.WriteLine(string.Format("{0},{1},{2},{3}", player.nickname, player.uid, player.round_id, player.match_id));
-
+                Console.WriteLine("db upload record error:" + ex.Message);
             }
         }
 
-        public MatchRecordPoco PopulateMatchPoco(MatchEntry match, string status)
+        public string ValidMatchUpload(MatchEntry match)
         {
-            MatchRecordPoco poco_match = new MatchRecordPoco { };
-            poco_match.match_id = match.match_id;
-            poco_match.upload_status = status;
-            poco_match.validation_count = 1;
-            poco_match.match_type = match.match_type;
-            poco_match.match_start = match.match_start;
-            poco_match.match_end = match.match_end;
-            poco_match.map_name = match.map_name;
-            poco_match.winning_team = match.winning_team;
-            poco_match.round_id_1 = 0;
-            poco_match.round_id_2 = 0;
-            poco_match.round_id_3 = 0;
-            poco_match.client_version = match.client_version;
-            poco_match.co_driver_version = match.co_driver_version;
-            poco_match.server_ip = match.game_server;
+            string upload_error = "";
 
-            int min_power_score = int.MaxValue;
-            int max_power_score = int.MinValue;
-
-            foreach (RoundEntry round in match.rounds)
-            {
-                foreach (MatchPlayerEntry player in round.players)
-                {
-                    if (player.power_score == 0)
-                        continue;
-
-                    if (player.power_score < min_power_score)
-                        min_power_score = player.power_score;
-
-                    if (player.power_score > max_power_score)
-                        max_power_score = player.power_score;
-                }
-            }
-
-            poco_match.min_power_score = min_power_score;
-            poco_match.max_power_score = max_power_score;
-
-            return poco_match;
-        }
-
-        public List<RoundRecordPoco> PopulateRoundsPoco(MatchEntry match)
-        {
-            List<RoundRecordPoco> poco_rounds = new List<RoundRecordPoco> { };
-
-            foreach (RoundEntry round in match.rounds)
-            {
-                RoundRecordPoco poco_round = new RoundRecordPoco { };
-                poco_round.match_id = match.match_id;
-                poco_round.round_start = round.round_start;
-                poco_round.round_end = round.round_end;
-                poco_round.winning_team = round.winning_team;
-                poco_rounds.Add(poco_round);
-            }
-
-            return poco_rounds;
-        }
-
-        public UploadRecordPoco PopulateUploadPoco(MatchEntry match)
-        {
-            UploadRecordPoco poco_upload = new UploadRecordPoco { };
-            poco_upload.match_id = match.match_id;
-            poco_upload.uid = match.uploader_uid;
-            poco_upload.upload_time = DateTime.Now.ToUniversalTime();
-            return poco_upload;
-        }
-
-        public List<PlayerRoundRecordPoco> PopulatePlayerRoundRecordPoco(MatchEntry match)
-        {
-            List<PlayerRoundRecordPoco> poco_players = new List<PlayerRoundRecordPoco> { };
-            MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
-
-            foreach (RoundEntry round in match.rounds)
-            {
-                foreach (MatchPlayerEntry player in round.players)
-                {
-                    PlayerRoundRecordPoco poco_player = new PlayerRoundRecordPoco { };
-                    poco_player.match_id = match.match_id;
-                    poco_player.round_id = poco_match.round_id_1;
-                    poco_player.uid = player.uid;
-                    poco_player.nickname = player.nickname;
-                    poco_player.team = player.team;
-                    poco_player.build_hash = player.build_hash;
-                    poco_player.power_score = player.power_score;
-                    poco_player.kills = player.kills;
-                    poco_player.assists = player.assists;
-                    poco_player.drone_kills = player.drone_kills;
-                    poco_player.score = player.score;
-                    poco_player.damage = (float)player.damage;
-                    poco_player.damage_taken = (float)player.damage_taken;
-
-                    if (player.round_id == 1)
-                        poco_player.round_id = poco_match.round_id_2;
-                    else
-                    if (player.round_id == 2)
-                        poco_player.round_id = poco_match.round_id_3;
-
-                    if (player.team == match.winning_team)
-                        poco_player.game_result = "W";
-                    else
-                    if (match.winning_team == 0)
-                        poco_player.game_result = "D";
-                    else
-                        poco_player.game_result = "L";
-
-                    poco_players.Add(poco_player);
-                }
-            }
-
-            return poco_players;
-        }
-
-        public bool ValidMatchUpload(MatchEntry match)
-        {
             try
             {
                 if (match.match_id <= 0)
-                    return false;
+                    upload_error += string.Format("invalid match id '{0}'", match.match_id);
 
                 if (match.uploader_uid <= 0)
-                    return false;
+                    upload_error += string.Format("invalid uploader id '{0}'", match.uploader_uid);
 
                 if (match.match_start < new DateTime(2015, 4, 5))
-                    return false;
+                    upload_error += string.Format("invalid match start '{0}'", match.match_start);
 
                 if (match.match_start > DateTime.Today.AddDays(3))
-                    return false;
+                    upload_error += string.Format("invalid match start '{0}'", match.match_start);
 
                 if (match.match_end < new DateTime(2015, 4, 5))
-                    return false;
+                    upload_error += string.Format("invalid match end '{0}'", match.match_end);
 
                 if (match.match_end > DateTime.Today.AddDays(3))
-                    return false;
+                    upload_error += string.Format("invalid match end '{0}'", match.match_end);
 
                 if (String.IsNullOrWhiteSpace(match.map_name))
-                    return false;
+                    upload_error += string.Format("invalid map name '{0}'", match.map_name);
 
                 if (match.winning_team < -1)
-                    return false;
+                    upload_error += string.Format("invalid winning team '{0}'", match.winning_team);
 
                 if (match.win_conidtion < 0)
-                    return false;
+                    upload_error += string.Format("invalid win condition '{0}'", match.win_conidtion);
 
                 if (String.IsNullOrWhiteSpace(match.client_version))
-                    return false;
+                    upload_error += string.Format("invalid client version '{0}'", match.client_version);
 
                 if (String.IsNullOrWhiteSpace(match.co_driver_version))
-                    return false;
+                    upload_error += string.Format("invalid co_driver version '{0}'", match.co_driver_version);
 
                 if (String.IsNullOrWhiteSpace(match.game_server))
-                    return false;
+                    upload_error += string.Format("invalid server '{0}'", match.game_server);
             }
             catch (Exception ex)
             {
-                return false;
+                upload_error += string.Format("unknown error with match");
             }
 
-            return true;
+            return upload_error;
         }
 
         public static ApiItemEntry CreateApiItem(object[] row)
