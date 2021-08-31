@@ -146,6 +146,11 @@ namespace Crossout.AspWeb.Services.API.v2
                 if (NPocoDB.Fetch<UploadRecordPoco>("WHERE MATCH_ID = @0 AND UID = @1", match.match_id, match.uploader_uid).Any())
                     continue;
 
+                if (NPocoDB.Fetch<MatchRecordPoco>("WHERE MATCH_ID = @0", match.match_id).Any())
+                {
+
+                }
+                
                 UploadUploadRecords(match);
                 UploadMatch(match);
                 UploadRounds(match);
@@ -153,6 +158,38 @@ namespace Crossout.AspWeb.Services.API.v2
             }
 
             return NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", match_list[0].uploader_uid);
+        }
+
+        public bool ValidMatch(MatchEntry match)
+        {
+            bool valid_match = true;
+            try
+            {
+                MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
+
+                if (match.map_name != poco_match.map_name)
+                    valid_match = false;
+
+                if (match.match_type != poco_match.match_type)
+                    valid_match = false;
+
+                if (match.match_start != poco_match.match_start)
+                    valid_match = false;
+
+                if (match.match_end != poco_match.match_end)
+                    valid_match = false;
+
+                if (match.winning_team != poco_match.winning_team)
+                    valid_match = false;
+
+                if (match.winning_team != poco_match.winning_team)
+                    valid_match = false;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return valid_match;
         }
 
         public void UploadMatch(MatchEntry match)
