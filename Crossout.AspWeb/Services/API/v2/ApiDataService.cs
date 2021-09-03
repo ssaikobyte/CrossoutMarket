@@ -143,10 +143,10 @@ namespace Crossout.AspWeb.Services.API.v2
 
             foreach (MatchEntry match in match_list)
             {
-                if (NPocoDB.Fetch<UploadRecordPoco>("WHERE MATCH_ID = @0 AND UID = @1", match.match_id, match.uploader_uid).Any())
+                if (UploadExists(match.match_id, match.uploader_uid))
                     continue;
 
-                if (NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id) != null)
+                if (MatchExists(match.match_id))
                 {
                     ValidateMatch(match);
                     continue;
@@ -159,6 +159,40 @@ namespace Crossout.AspWeb.Services.API.v2
             }
 
             return NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", match_list[0].uploader_uid);
+        }
+
+        public bool UploadExists(long match_id, int uploader_uid)
+        {
+            bool upload_exists = false;
+
+            try
+            {
+                if (NPocoDB.Fetch<UploadRecordPoco>("WHERE MATCH_ID = @0 AND UID = @1", match_id, uploader_uid).Any())
+                    upload_exists = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db upload existance error:" + ex.Message);
+            }
+
+            return upload_exists;
+        }
+
+        public bool MatchExists(long match_id)
+        {
+            bool match_exists = false;
+
+            try
+            {
+                if (NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match_id) != null)
+                    match_exists = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db match existance error:" + ex.Message);
+            }
+
+            return match_exists;
         }
 
         public void ValidateMatch(MatchEntry match)
@@ -228,7 +262,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine("db match validation error:" + ex.Message);
             }
         }
 
@@ -274,7 +308,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine("db player validation error:" + ex.Message);
             }
 
             return valid_players;
@@ -293,7 +327,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine("db round validation error:" + ex.Message);
             }
 
             return valid_round;
