@@ -146,9 +146,10 @@ namespace Crossout.AspWeb.Services.API.v2
                 if (NPocoDB.Fetch<UploadRecordPoco>("WHERE MATCH_ID = @0 AND UID = @1", match.match_id, match.uploader_uid).Any())
                     continue;
 
-                if (NPocoDB.Fetch<MatchRecordPoco>("WHERE MATCH_ID = @0", match.match_id).Any())
+                if (NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id) != null)
                 {
-
+                    ValidateMatch(match);
+                    continue;
                 }
                 
                 UploadUploadRecords(match);
@@ -160,7 +161,7 @@ namespace Crossout.AspWeb.Services.API.v2
             return NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", match_list[0].uploader_uid);
         }
 
-        public bool ValidMatch(MatchEntry match)
+        public void ValidateMatch(MatchEntry match)
         {
             bool valid_match = true;
             try
@@ -184,13 +185,120 @@ namespace Crossout.AspWeb.Services.API.v2
 
                 if (match.winning_team != poco_match.winning_team)
                     valid_match = false;
+
+                if (match.rounds.ElementAtOrDefault(0) != null)
+                {
+                    if (!ValidRound(match.rounds[0], poco_match.round_id_1))
+                        valid_match = false;
+
+                    if (!ValidPlayers(match.rounds[0].players, poco_match.match_id, poco_match.round_id_1))
+                        valid_match = false;
+                }
+
+                if (match.rounds.ElementAtOrDefault(1) != null)
+                {
+                    if (!ValidRound(match.rounds[1], poco_match.round_id_2))
+                        valid_match = false;
+
+                    if (!ValidPlayers(match.rounds[1].players, poco_match.match_id, poco_match.round_id_2))
+                        valid_match = false;
+                }
+
+                if (match.rounds.ElementAtOrDefault(2) != null)
+                {
+                    if (!ValidRound(match.rounds[2], poco_match.round_id_3))
+                        valid_match = false;
+
+                    if (!ValidPlayers(match.rounds[2].players, poco_match.match_id, poco_match.round_id_3))
+                        valid_match = false;
+                }
+
+                if (valid_match)
+                {
+                    Console.WriteLine("Validating Match");
+                    poco_match.validation_count += 1;
+                }
+                else
+                {
+                    Console.WriteLine("Match Conflict");
+                    poco_match.upload_status = "C";
+                }
+
+                NPocoDB.Update(poco_match);
             }
             catch (Exception ex)
             {
 
             }
-            return valid_match;
         }
+
+        public bool ValidPlayers(List<MatchPlayerEntry> players, long match_id, int round_id)
+        {
+            bool valid_players = true;
+
+            try
+            {
+                List<PlayerRoundRecordPoco> poco_players = NPocoDB.Fetch<PlayerRoundRecordPoco>("WHERE MATCH_ID = @0 AND ROUND_ID = @1", match_id, round_id);
+
+                foreach (PlayerRoundRecordPoco poco_player in poco_players)
+                {
+                    MatchPlayerEntry player = players.SingleOrDefault(x => x.uid == poco_player.uid);
+
+                    if (player == null)
+                        valid_players = false;
+
+                    if (!valid_players)
+                        break;
+
+                    if (player.build_hash != poco_player.build_hash)
+                        valid_players = false;
+
+                    if (player.team != poco_player.team)
+                        valid_players = false;
+
+                    if (player.nickname != poco_player.nickname)
+                        valid_players = false;
+
+                    if (player.damage != poco_player.damage)
+                        valid_players = false;
+
+                    if (player.damage_taken != poco_player.damage_taken)
+                        valid_players = false;
+
+                    if (player.kills != poco_player.kills)
+                        valid_players = false;
+
+                    if (player.assists != poco_player.assists)
+                        valid_players = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return valid_players;
+        }
+
+        public bool ValidRound(RoundEntry round, int round_id)
+        {
+            bool valid_round = true;
+
+            try
+            {
+                RoundRecordPoco poco_round = NPocoDB.SingleOrDefaultById<RoundRecordPoco>(round_id);
+
+                if (round.winning_team != poco_round.winning_team)
+                    valid_round = false;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return valid_round;
+        }
+
 
         public void UploadMatch(MatchEntry match)
         {
