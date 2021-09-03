@@ -148,17 +148,36 @@ namespace Crossout.AspWeb.Services.API.v2
 
                 if (MatchExists(match.match_id))
                 {
+                    Console.WriteLine("Validating existing match:" + match.match_id);
                     ValidateMatch(match);
                     continue;
                 }
+
+                Console.WriteLine("Uploading new match:" + match.match_id);
                 
                 UploadUploadRecords(match);
                 UploadMatch(match);
                 UploadRounds(match);
                 UploadPlayerRoundRecords(match);
             }
+            return GetUploadCount(match_list[0].uploader_uid);
+        }
 
-            return NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", match_list[0].uploader_uid);
+        public int GetUploadCount(int uploader_uid)
+        {
+            int upload_count = 0;
+
+            try
+            {
+                upload_count = NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", uploader_uid);
+                Console.WriteLine("Found {0} matchs for user {1}", upload_count, uploader_uid);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db upload count error:" + ex.Message);
+            }
+
+            return upload_count;
         }
 
         public bool UploadExists(long match_id, int uploader_uid)
