@@ -490,6 +490,8 @@ namespace Crossout.AspWeb.Services.API.v2
                             poco_player.game_result = "D";
                         else
                             poco_player.game_result = "L";
+
+                        NPocoDB.Insert(poco_player);
                     }
                 }
             }
