@@ -146,6 +146,8 @@ namespace Crossout.AspWeb.Services.API.v2
                 if (UploadExists(match.match_id, match.uploader_uid))
                     continue;
 
+                UploadUploadRecords(match);
+
                 if (MatchExists(match.match_id))
                 {
                     Console.WriteLine("Validating existing match:" + match.match_id);
@@ -155,7 +157,6 @@ namespace Crossout.AspWeb.Services.API.v2
 
                 Console.WriteLine("Uploading new match:" + match.match_id);
                 
-                UploadUploadRecords(match);
                 UploadMatch(match);
                 UploadRounds(match);
                 UploadPlayerRoundRecords(match);
@@ -222,53 +223,83 @@ namespace Crossout.AspWeb.Services.API.v2
                 MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
 
                 if (match.map_name != poco_match.map_name)
+                {
+                    Console.WriteLine(string.Format("map_name discrepency ({0})-({1})", match.map_name, poco_match.map_name));
                     valid_match = false;
+                }
 
                 if (match.match_type != poco_match.match_type)
+                {
+                    Console.WriteLine(string.Format("match_type discrepency ({0})-({1})", match.match_type, poco_match.match_type));
                     valid_match = false;
+                }
 
-                if (match.match_start != poco_match.match_start)
+                if (match.match_start.Date != poco_match.match_start.Date)
+                {
+                    Console.WriteLine(string.Format("match_start discrepency ({0})-({1})", match.match_start, poco_match.match_start));
                     valid_match = false;
+                }
 
-                if (match.match_end != poco_match.match_end)
+                if (match.match_end.Date != poco_match.match_end.Date)
+                {
+                    Console.WriteLine(string.Format("match_end discrepency ({0})-({1})", match.match_end, poco_match.match_end));
                     valid_match = false;
+                }
 
                 if (match.winning_team != poco_match.winning_team)
+                {
+                    Console.WriteLine(string.Format("winning_team discrepency ({0})-({1})", match.winning_team, poco_match.winning_team));
                     valid_match = false;
-
-                if (match.winning_team != poco_match.winning_team)
-                    valid_match = false;
+                }
 
                 if (match.rounds.ElementAtOrDefault(0) != null)
                 {
                     if (!ValidRound(match.rounds[0], poco_match.round_id_1))
+                    {
+                        Console.WriteLine(string.Format("round validation discrepency on {0},{1}", match.match_id, poco_match.round_id_1));
                         valid_match = false;
+                    }
 
                     if (!ValidPlayers(match.rounds[0].players, poco_match.match_id, poco_match.round_id_1))
+                    {
+                        Console.WriteLine(string.Format("player validation discrepency on {0},{1}", match.match_id, poco_match.round_id_1));
                         valid_match = false;
+                    }
                 }
 
                 if (match.rounds.ElementAtOrDefault(1) != null)
                 {
                     if (!ValidRound(match.rounds[1], poco_match.round_id_2))
+                    {
+                        Console.WriteLine(string.Format("round validation discrepency on {0},{1}", match.match_id, poco_match.round_id_1));
                         valid_match = false;
+                    }
 
                     if (!ValidPlayers(match.rounds[1].players, poco_match.match_id, poco_match.round_id_2))
+                    {
+                        Console.WriteLine(string.Format("player validation discrepency on {0},{1}", match.match_id, poco_match.round_id_1));
                         valid_match = false;
+                    }
                 }
 
                 if (match.rounds.ElementAtOrDefault(2) != null)
                 {
                     if (!ValidRound(match.rounds[2], poco_match.round_id_3))
+                    {
+                        Console.WriteLine(string.Format("round validation discrepency on {0},{1}", match.match_id, poco_match.round_id_1));
                         valid_match = false;
+                    }
 
                     if (!ValidPlayers(match.rounds[2].players, poco_match.match_id, poco_match.round_id_3))
+                    {
+                        Console.WriteLine(string.Format("player validation discrepency on {0},{1}", match.match_id, poco_match.round_id_1));
                         valid_match = false;
+                    }
                 }
 
                 if (valid_match)
                 {
-                    Console.WriteLine("Validating Match");
+                    Console.WriteLine("Valid Match");
                     poco_match.validation_count += 1;
                 }
                 else
@@ -298,31 +329,55 @@ namespace Crossout.AspWeb.Services.API.v2
                     MatchPlayerEntry player = players.SingleOrDefault(x => x.uid == poco_player.uid);
 
                     if (player == null)
+                    {
+                        Console.WriteLine(string.Format("unable to find player {0},{1}", poco_player.nickname, poco_player.uid));
                         valid_players = false;
+                    }
 
                     if (!valid_players)
                         break;
 
                     if (player.build_hash != poco_player.build_hash)
+                    {
+                        Console.WriteLine(string.Format("build hash disagreement ({0},{1})-({2},{3})", player.nickname, player.build_hash, poco_player.nickname, poco_player.build_hash));
                         valid_players = false;
+                    }
 
                     if (player.team != poco_player.team)
+                    {
+                        Console.WriteLine(string.Format("team disagreement ({0},{1})-({2},{3})", player.nickname, player.team, poco_player.nickname, poco_player.team));
                         valid_players = false;
+                    }
 
                     if (player.nickname != poco_player.nickname)
+                    {
+                        Console.WriteLine(string.Format("team disagreement ({0},{1})-({2},{3})", player.nickname, player.uid, poco_player.nickname, poco_player.uid));
                         valid_players = false;
+                    }
 
-                    if (player.damage != poco_player.damage)
+                    if (Math.Round(player.damage,0) != Math.Round(poco_player.damage,0))
+                    {
+                        Console.WriteLine(string.Format("damage disagreement ({0},{1})-({2},{3})", player.nickname, Math.Round(player.damage, 0), poco_player.nickname, Math.Round(poco_player.damage, 0)));
                         valid_players = false;
+                    }
 
-                    if (player.damage_taken != poco_player.damage_taken)
+                    if (Math.Round(player.damage_taken,0) != Math.Round(poco_player.damage_taken,0))
+                    {
+                        Console.WriteLine(string.Format("damage taken disagreement ({0},{1})-({2},{3})", player.nickname, Math.Round(player.damage_taken, 0), poco_player.nickname, Math.Round(poco_player.damage_taken, 0)));
                         valid_players = false;
+                    }
 
                     if (player.kills != poco_player.kills)
+                    {
+                        Console.WriteLine(string.Format("kills disagreement ({0},{1})-({2},{3})", player.nickname, player.kills, poco_player.nickname, poco_player.kills));
                         valid_players = false;
+                    }
 
                     if (player.assists != poco_player.assists)
+                    {
+                        Console.WriteLine(string.Format("assists disagreement ({0},{1})-({2},{3})", player.nickname, player.assists, poco_player.nickname, poco_player.assists));
                         valid_players = false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -342,7 +397,10 @@ namespace Crossout.AspWeb.Services.API.v2
                 RoundRecordPoco poco_round = NPocoDB.SingleOrDefaultById<RoundRecordPoco>(round_id);
 
                 if (round.winning_team != poco_round.winning_team)
+                {
+                    Console.WriteLine(string.Format("winning_team disagreement ({0})-({1})", round.winning_team, poco_round.winning_team));
                     valid_round = false;
+                }
             }
             catch (Exception ex)
             {
