@@ -63,8 +63,12 @@
     <Content Remove="Resources\PremiumPackages\phantom.json" />
     <Content Remove="Resources\PremiumPackages\phantomdeluxe.json" />
     <Content Remove="Resources\PremiumPackages\polymorph.json" />
+    <Content Remove="Resources\PremiumPackages\thecreation.json" />
     <Content Remove="Resources\PremiumPackages\triadthekeeper.json" />
     <Content Remove="Resources\PremiumPackages\triadthekeeperdeluxe.json" />
+    <Content Remove="Resources\PremiumPackages\triadthepatron.json" />
+    <Content Remove="Resources\PremiumPackages\triadthepatrondeluxe.json" />
+    <Content Remove="Resources\PremiumPackages\triadthepatronlite.json" />
     <Content Remove="Views\edit.cshtml" />
     <Content Remove="Views\editpart.cshtml" />
     <Content Remove="Views\NotMigrated\admin.cshtml" />
@@ -450,6 +454,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Events\KnightRiders2019\teutonicstripes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\thecreation.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\triadthepatrondeluxe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\triadthepatronlite.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\triadthepatron.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\PremiumPackages\assaultforcebravo6deluxe.json">

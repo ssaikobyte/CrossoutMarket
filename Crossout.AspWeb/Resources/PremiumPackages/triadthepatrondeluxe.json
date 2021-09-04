@@ -1,0 +1,9 @@
+﻿{
+  "Id": 47,
+  "Key": "triadthepatrondeluxe",
+  "SteamAppID": 1637472,
+  "Name": "Triad: The Patron (Deluxe)",
+  "Description": "",
+  "MarketPartIDs": [ 1339, 1339, 1338, 1338, 1337, 1352, 1349, 1348, 1334, 490, 1131, 1340, 1340, 1340, 1340, 1336, 1337 ],
+  "RawCoins": 4000
+}
