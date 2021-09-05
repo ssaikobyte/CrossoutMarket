@@ -156,7 +156,8 @@ namespace Crossout.AspWeb.Services.API.v2
                 }
 
                 Console.WriteLine("Uploading new match:" + match.match_id);
-                
+
+                UploadMap(match);
                 UploadMatch(match);
                 UploadRounds(match);
                 UploadPlayerRoundRecords(match);
@@ -213,6 +214,32 @@ namespace Crossout.AspWeb.Services.API.v2
             }
 
             return match_exists;
+        }
+
+        public void UploadMap(MatchEntry match)
+        {
+            try
+            {
+                MapPoco map = NPocoDB.SingleOrDefaultById<MapPoco>(match.map_name);
+
+                if (map == null)
+                {
+                    map = new MapPoco { };
+                    map.map_name = match.map_name;
+                    map.map_display_name = match.map_display_name;
+                    NPocoDB.Insert(map);
+                }
+                else
+                if (map.map_name == map.map_display_name && match.map_name != match.map_display_name)
+                {
+                    map.map_display_name = match.map_display_name;
+                    NPocoDB.Update(map);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db upload map error:" + ex.Message);
+            }
         }
 
         public void UploadMatch(MatchEntry match)

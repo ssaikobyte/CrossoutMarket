@@ -127,4 +127,15 @@ namespace Crossout.AspWeb.Pocos
         public float damage_taken { get; set; }
     }
 
+    [TableName("cod_maps")]
+    [PrimaryKey("map_name", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class MapPoco
+    {
+        [Column("map_name")]
+        public string map_name { get; set; }
+        [Column("map_display_name")]
+        public string map_display_name { get; set; }
+    }
+
 }
