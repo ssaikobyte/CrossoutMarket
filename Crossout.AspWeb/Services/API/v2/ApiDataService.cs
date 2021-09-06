@@ -161,6 +161,7 @@ namespace Crossout.AspWeb.Services.API.v2
                 UploadMatch(match);
                 UploadRounds(match);
                 UploadPlayerRoundRecords(match);
+                UploadDamageRecords(match);
             }
             return GetUploadCount(match_list[0].uploader_uid);
         }
@@ -239,6 +240,30 @@ namespace Crossout.AspWeb.Services.API.v2
             catch (Exception ex)
             {
                 Console.WriteLine("db upload map error:" + ex.Message);
+            }
+        }
+
+        public void UploadDamageRecords(MatchEntry match)
+        {
+            try
+            {
+                foreach (RoundEntry round in match.rounds)
+                {
+                    foreach(RoundDamageEntry damage_record in round.damage_records)
+                    {
+                        RoundDamageRecordPoco damage_record_poco = new RoundDamageRecordPoco { };
+                        damage_record_poco.match_id = match.match_id;
+                        damage_record_poco.round_id = round.round_id;
+                        damage_record_poco.uid = damage_record.uid;
+                        damage_record_poco.weapon = damage_record.weapon;
+                        damage_record_poco.damage = (float)damage_record.damage;
+                        NPocoDB.Insert(damage_record_poco);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db upload damage error:" + ex.Message);
             }
         }
 
