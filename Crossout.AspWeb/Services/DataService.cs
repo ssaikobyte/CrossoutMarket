@@ -477,6 +477,17 @@ namespace Crossout.AspWeb.Services
             return locs;
         }
 
+        public List<MatchRecordPoco> SelectMatchRecords(DateTime matchStartFrom, DateTime matchStartTo, string[] types, string[] maps, int powerScore)
+        {
+            var typesString = types.Length > 0 ? "AND match_type IN (@2)" : "";
+            var mapsString = maps.Length > 0 ? "AND map_name IN (@3)" : "";
+            var powerScoreString = powerScore > 0 ? "AND min_power_score < @4 AND max_power_score > @4" : "";
+            NPoco.Connection.Open();
+            var matchRecords = NPoco.Fetch<MatchRecordPoco>($"WHERE match_start >= @0 AND match_start <= @1 {typesString} {mapsString} {powerScoreString}", matchStartFrom, matchStartTo, types, maps, powerScore);
+            NPoco.Connection.Close();
+            return matchRecords;
+        }
+
         public string TranslateFieldName(string toTranslate)
         {
             switch (toTranslate)

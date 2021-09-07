@@ -1,0 +1,289 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@using Crossout.AspWeb.Models.Cod
+@model MatchHistory
+@{
+    var loc = Model.Localizations;
+}
+
+<partial name="header" model="@Model" />
+
+<div class="half-hd-container px-3">
+
+    @if (WebSettings.Settings.EnableAds)
+    {
+        <partial name="leaderboardad" />
+    }
+
+    <div class="card my-1">
+        <h4 class="card-title m-2">Match History <span data-toggle="collapse" data-target="#helpWrapper"><svg class="feather-help-circle"><use xlink:href="/icons/feather-sprite.svg#help-circle" /></svg></span></h4>
+
+        <div id="helpWrapper" class="collapse">
+            <h5 class="m-2"><loc model="loc" category="shared" name="title.howitworks">How it works</loc></h5>
+
+        </div>
+
+        <div class="m-2">
+            <div class="d-flex justify-content-center row" id="dropdownFilter">
+                <div class="btn-group btn-group-sm align-self-start col my-1" role="group">
+                    <button id="typeDropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Type
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="typeDropdown">
+                        <a class="dropdown-item" data-keyname="8v8">8v8</a>
+                        <a class="dropdown-item" data-keyname="Patrol">Patrol</a>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start col my-1" role="group">
+                    <button id="mapDropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Map
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="mapDropdown">
+                        <a class="dropdown-item" data-keyname="powerplant">powerplant</a>
+                        <a class="dropdown-item" data-keyname="rockcity_2bases">rockcity_2bases</a>
+                        <a class="dropdown-item" data-keyname="rockcity">rockcity</a>
+                        <a class="dropdown-item" data-keyname="tower">tower</a>
+                        <a class="dropdown-item" data-keyname="factory">factory</a>
+                        <a class="dropdown-item" data-keyname="building_yard3">building_yard3</a>
+                        <a class="dropdown-item" data-keyname="arizona_silo">arizona_silo</a>
+                        <a class="dropdown-item" data-keyname="conflagration">conflagration</a>
+                        <a class="dropdown-item" data-keyname="geopp">geopp</a>
+                        <a class="dropdown-item" data-keyname="bridge">bridge</a>
+                        <a class="dropdown-item" data-keyname="sand_valley">sand_valley</a>
+                        <a class="dropdown-item" data-keyname="sand_crater">sand_crater</a>
+                        <a class="dropdown-item" data-keyname="iron_way_center">iron_way_center</a>
+                        <a class="dropdown-item" data-keyname="island">island</a>
+                        <a class="dropdown-item" data-keyname="holes">holes</a>
+                    </div>
+                </div>
+                <div class="align-self-start col my-1">
+                    <input type="text" class="form-control" id="powerScoreFilter" name="powerScoreFilter" aria-label="Power Score" placeholder="Power Score">
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-outline-secondary" onclick="applyFilter()">Apply Filter</button>
+            </div>
+        </div>
+
+        <div id="loadingIcon" class="d-flex justify-content-center"><img height="200" width="200" src="~/icons/Spinner-1s-400px.svg" /></div>
+
+        <div id="table-wrapper" class="d-none">
+            <table class="table table-striped table-borderless table-hover dt-responsive" id="MatchHistoryTable">
+                <thead>
+                    <tr>
+                        <th class="dt-col" id="matchCol">
+                            Match
+                        </th>
+                        <th class="dt-col" id="typeCol">
+                            Type
+                        </th>
+                        <th class="dt-col" id="mapCol">
+                            Map
+                        </th>
+                        <th class="dt-col never" id="minPowerScoreCol">
+                            Min Power Score
+                        </th>
+                        <th class="dt-col never" id="maxPowerScoreCol">
+                            Max Power Score
+                        </th>
+                        <th class="dt-col never" id="powerScoreRangeCol">
+                            Power Score Range
+                        </th>
+                        <th class="dt-col never" id="startCol">
+                            Start
+                        </th>
+                        <th class="dt-col never" id="endCol">
+                            End
+                        </th>
+                        <th class="dt-col never" id="durationCol">
+                            Duration
+                        </th>
+                        <th class="dt-col" id="summaryCol">
+                            Summary
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var domOption =
+        "<'row m-1'<'d-inline-flex justify-content-start'p><'d-inline-flex ml-auto text-secondary'l>>" +
+        "<tr>" +
+        "<'row m-1'<'d-inline-flex justify-content-start'p><'d-none d-sm-inline-flex ml-auto text-secondary'i>>";
+
+    $.fn.DataTable.ext.pager.numbers_length = 5;
+
+    var order;
+    var table;
+    var cellWidth = '15%'
+    var language = Cookies.get('language');
+    $(document).ready(function () {
+        order = [[getColumnIndexesById(['matchCol'])[0], "desc"]];
+        table = $('#MatchHistoryTable').DataTable({
+            ajax: '/data/matches?from=0&to=1630793568&l=' + language,
+            deferRender: true,
+            dataSrc: 'data',
+            columns: [
+                { data: 'matchId' },
+                { data: 'matchType' },
+                { data: 'mapName' },
+                { data: 'minPowerScore' },
+                { data: 'maxPowerScore' },
+                { data: 'powerScoreRange' },
+                { data: 'start' },
+                { data: 'end' },
+                { data: 'duration' }
+            ],
+            columnDefs: [
+                {
+                    'targets': getColumnIndexesById(['matchCol']),
+                    'render': function (data, type, row, meta) {
+                        var start = getAdjustedTimestamp(row.start);
+                        var timestamp = moment(row.start).unix();
+                        var relative = moment(row.start).fromNow();
+                        return '<div class="d-none>' + timestamp + '</div><div class=" d-flex flex-nowrap align-items-center"><a href="' + window.origin + '/match/' + data + '">' + start + '</a></div><div>(' + relative + ')</div>';
+                    },
+                    'width': '20%'
+                },
+                {
+                    'targets': getColumnIndexesById(['summaryCol']),
+                    'render': function (data, type, row, meta) {
+                        var minPowerScore = row.minPowerScore;
+                        var maxPowerScore = row.maxPowerScore;
+                        var powerScoreRange = row.powerScoreRange;
+                        var start = getAdjustedTimestamp(row.start);
+                        var end = getAdjustedTimestamp(row.end);
+                        var duration = row.duration;
+                        var psDisplay = '<div class="d-flex flex-column"><div><div class="font-weight-bold">Min. Power Score: </div>' + minPowerScore + '</div><div><div class="font-weight-bold">Max. Power Score: </div>' + maxPowerScore + '</div><div><div class="font-weight-bold">Power Score Range: </div>' + powerScoreRange + '</div></div>';
+                        var timeDisplay = '<div class="d-flex flex-column"><div><div class="font-weight-bold">Start: </div>' + start + '</div><div><div class="font-weight-bold">End: </div>' + end + '</div><div><div class="font-weight-bold">Duration: </div>' + duration + '</div></div>';
+                        return '<div class="d-flex justify-content-between">' + psDisplay + timeDisplay + '</div>';
+                    },
+                    'width': '50%'
+                },
+                {
+                    'targets': '_all',
+                    'width': cellWidth
+                }
+            ],
+            order: order,
+            lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
+            pagingType: "simple_numbers",
+            dom: domOption,
+            paging: true,
+            searching: true,
+            search: {
+                smart: false,
+                regex: false
+            },
+            autoWidth: false,
+
+            responsive: {
+                details: {
+                    type: 'inline',
+                    renderer: function (api, rowIdx, columns) {
+                        var data = $.map(columns, function (col, i) {
+                            return col.hidden ?
+                                '<div class="d-inline-flex flex-column card p-1 px-2 m-2" data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                '<div class="font-weight-bold">' + col.title + '' + '</div> ' +
+                                '<div>' + col.data + '</div>' +
+                                '</div>' :
+                                '';
+                        }).join('');
+
+                        return data ?
+                            $('<div/>').append(data) :
+                            false;
+                    }
+                }
+            },
+            drawCallback: function () { }
+        });
+        table.on('xhr.dt', function () {
+            onXhr();
+        });
+        table.on('draw.dt', function () {
+            onDraw();
+        });
+        table.on('select deselect', function (e, dt, type, indexes) {
+            onSelect();
+        });
+
+        onDraw();
+    });
+
+    var firedOnce = false;
+    var selectedList = [];
+    function onDraw() {
+        lazyLoadInstance.update();
+
+        $('table tbody td').addClass('align-middle');
+
+        // Make table a bit prettier
+        $('.dataTables_paginate > .pagination').addClass('pagination-sm');
+    }
+
+    function onXhr() {
+        $('table tbody td').addClass('align-middle');
+
+        $('#loadingIcon').removeClass('d-flex').addClass('d-none');
+        $('#table-wrapper').removeClass('d-none');
+    }
+
+    function applyFilter() {
+        var ajaxUrl = '/data/matches?from=0&to=1630793568&l=' + language;
+
+        $('#typeDropdown').next().children('.active').each(function (i, e) {
+            var key = e.dataset.keyname;
+            ajaxUrl += '&types=' + key;
+        });
+
+        $('#mapDropdown').next().children('.active').each(function (i, e) {
+            var key = e.dataset.keyname;
+            ajaxUrl += '&maps=' + key;
+        });
+
+        var psVal = parseInt($('#powerScoreFilter').val());
+        if (!isNaN(psVal)) {
+            ajaxUrl += '&ps=' + psVal;
+        }
+
+        table.ajax.url(ajaxUrl);
+        table.ajax.reload();
+    }
+
+    function getColumnIndexesById(colIdArray) {
+        var index = [];
+        colIdArray.forEach(function (f, j) {
+            $('.dt-col').each(function (i, e) {
+                if ($(e).attr('id') === f) {
+                    index.push(i);
+                    return;
+                }
+            });
+        });
+        return index;
+    }
+
+    function olderThan(timestamp, minutes) {
+        return moment.utc().subtract(minutes, 'minutes') > moment.utc(timestamp, 'YYYY-MM-DD HH:mm:ss') ? 'item-older-than-' + minutes : '';
+    }
+
+    // Keep dropdown open after selection
+    $('.dropdown-menu').click(function (e) {
+        e.stopPropagation();
+    });
+
+    $('.dropdown-item').click(function (e) {
+        $(this).toggleClass('active');
+        e.preventDefault();
+    });
+</script>

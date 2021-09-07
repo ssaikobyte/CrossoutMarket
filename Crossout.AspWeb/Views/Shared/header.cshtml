@@ -41,12 +41,13 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="nav navbar-nav">
-                    <li role="presentation" class="my-1 my-lg-0 nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Packages" ? "active" : "")"><a class="nav-link" href="~/packs"><loc model="loc" category="shared" name="header.nav.packs">Packs</loc></a></li>
+                    <li role="presentation" class="my-1 my-lg-0 nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "MatchHistory" ? "active" : "")"><a class="nav-link" href="~/matches"><loc model="loc" category="shared" name="header.nav.matches">Matches</loc></a></li>
                     <li role="presentation" class="my-1 my-lg-0 nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="draftsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <loc model="loc" category="shared" name="header.nav.tools">Tools</loc>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="draftsDropdown">
+                            <a class="dropdown-item @(ViewContext.RouteData.Values["Action"].ToString() == "Packages" ? "active" : "")" href="~/packs"><loc model="loc" category="shared" name="header.nav.packs">Packs</loc></a>
                             <a class="dropdown-item @(ViewContext.RouteData.Values["Action"].ToString() == "BadgeExchange" ? "active" : "")" href="~/tools/badgeexchange"><loc model="loc" category="shared" name="header.nav.badgeexchange">Badge Exchange</loc></a>
                             <a class="dropdown-item @(ViewContext.RouteData.Values["Action"].ToString() == "Snipe" ? "active" : "")" href="~/tools/sniper"><loc model="loc" category="shared" name="header.nav.sniper">Item Sniper</loc></a>
                             <a class="dropdown-item @(ViewContext.RouteData.Values["Action"].ToString() == "Salvage" ? "active" : "")" href="~/tools/salvage"><loc model="loc" category="shared" name="header.nav.salvager">Salvager</loc></a>
