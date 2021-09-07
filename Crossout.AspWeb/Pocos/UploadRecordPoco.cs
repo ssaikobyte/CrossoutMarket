@@ -127,4 +127,32 @@ namespace Crossout.AspWeb.Pocos
         public float damage_taken { get; set; }
     }
 
+    [TableName("cod_player_round_damage_records")]
+    [PrimaryKey("match_id", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class RoundDamageRecordPoco
+    {
+        [Column("round_id")]
+        public int round_id { get; set; }
+        [Column("match_id")]
+        public long match_id { get; set; }
+        [Column("uid")]
+        public int uid { get; set; }
+        [Column("weapon")]
+        public string weapon { get; set; }
+        [Column("damage")]
+        public float damage { get; set; }
+    }
+
+    [TableName("cod_maps")]
+    [PrimaryKey("map_name", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class MapPoco
+    {
+        [Column("map_name")]
+        public string map_name { get; set; }
+        [Column("map_display_name")]
+        public string map_display_name { get; set; }
+    }
+
 }
