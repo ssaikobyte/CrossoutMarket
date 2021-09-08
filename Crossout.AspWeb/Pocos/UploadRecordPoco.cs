@@ -125,6 +125,11 @@ namespace Crossout.AspWeb.Pocos
         public float damage { get; set; }
         [Column("damage_taken")]
         public float damage_taken { get; set; }
+
+        public PlayerRoundRecordPoco ShallowCopy()
+        {
+            return (PlayerRoundRecordPoco)this.MemberwiseClone();
+        }
     }
 
     [TableName("cod_player_round_damage_records")]

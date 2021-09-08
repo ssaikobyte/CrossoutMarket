@@ -1,0 +1,93 @@
+﻿@using System.Globalization
+@model Crossout.AspWeb.Models.Cod.TeamTable
+
+<table class="table table-borderless table-hover" id="teamTable@(Model.Id)">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Damage Taken
+            </th>
+            <th>
+                Drone Kills
+            </th>
+            <th>
+                Assists
+            </th>
+            <th>
+                Kills
+            </th>
+            <th>
+                Damage
+            </th>
+            <th>
+                Score
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var teamPlayer in Model.Team)
+        {
+        <tr>
+            <td>
+                @teamPlayer.nickname
+            </td>
+            <td>
+                @teamPlayer.damage_taken.ToString("0", CultureInfo.InvariantCulture)
+            </td>
+            <td>
+                @teamPlayer.drone_kills
+            </td>
+            <td>
+                @teamPlayer.assists
+            </td>
+            <td>
+                @teamPlayer.kills
+            </td>
+            <td>
+                @teamPlayer.damage.ToString("0", CultureInfo.InvariantCulture)
+            </td>
+            <td>
+                @teamPlayer.score
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    var table@(Model.Id) = $('#teamTable@(Model.Id)').DataTable({
+        dom: '<tr>',
+        order: [[2, 'desc']],
+        searching: true,
+        lengthChange: false,
+        paging: false,
+        info: false,
+        autoWidth: false,
+        columnDefs: [
+            { width: '15%', targets: [0, 1, 5, 6] },
+            { width: '13.33%', targets: [2, 3, 4] }
+        ],
+        responsive: {
+            details: {
+                type: 'inline',
+                renderer: function (api, rowIdx, columns) {
+                    var data = $.map(columns, function (col, i) {
+                        return col.hidden ?
+                            '<div class="d-inline-flex flex-column card p-1 px-2 m-2" data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                            '<div class="font-weight-bold">' + col.title + '' + '</div> ' +
+                            '<div>' + col.data + '</div>' +
+                            '</div>' :
+                            '';
+                    }).join('');
+
+                    return data ?
+                        $('<div/>').append(data) :
+                        false;
+                }
+            }
+        }
+    });
+</script>

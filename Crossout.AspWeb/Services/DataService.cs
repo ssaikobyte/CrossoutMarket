@@ -21,6 +21,7 @@ using Crossout.AspWeb.Models.Drafts.Snipe;
 using Crossout.AspWeb.Pocos;
 using NPoco;
 using System.Data.Common;
+using Crossout.AspWeb.Models.Cod;
 
 namespace Crossout.AspWeb.Services
 {
@@ -493,6 +494,14 @@ namespace Crossout.AspWeb.Services
             return maps;
         }
 
+        public MapPoco SelectMap(string name)
+        {
+            NPoco.Connection.Open();
+            var map = NPoco.SingleById<MapPoco>(name);
+            NPoco.Connection.Close();
+            return map;
+        }
+
         public List<MatchHistoryEntryPoco> SelectMatchHistoryEntries(DateTime matchStartFrom, DateTime matchStartTo, string[] types, string[] maps, int powerScore)
         {
             var typesString = types.Length > 0 ? "AND match_type IN (@2)" : "";
@@ -502,6 +511,39 @@ namespace Crossout.AspWeb.Services
             var matchRecords = NPoco.Fetch<MatchHistoryEntryPoco>($"SELECT * FROM cod_match_records LEFT JOIN cod_maps ON cod_match_records.map_name = cod_maps.map_name WHERE match_start >= @0 AND match_start <= @1 {typesString} {mapsString} {powerScoreString} ORDER BY match_id DESC LIMIT 5000", matchStartFrom, matchStartTo, types, maps, powerScore);
             NPoco.Connection.Close();
             return matchRecords;
+        }
+
+        public MatchRecordPoco SelectMatchRecord(long id)
+        {
+            NPoco.Connection.Open();
+            var matchRecord = NPoco.SingleById<MatchRecordPoco>(id);
+            NPoco.Connection.Close();
+            return matchRecord;
+        }
+
+        public List<RoundRecordPoco> SelectRoundRecords(long matchId)
+        {
+            NPoco.Connection.Open();
+            var roundRecords = NPoco.Fetch<RoundRecordPoco>("WHERE match_id = @0", matchId);
+            NPoco.Connection.Close();
+            return roundRecords;
+        }
+
+
+        public List<RoundDamage> SelectRoundDamage(long matchId)
+        {
+            NPoco.Connection.Open();
+            var roundDamages = NPoco.Fetch<RoundDamage>("SELECT *, IFNULL(languagenumber, 0) as locavailable FROM crossout.cod_player_round_damage_records LEFT JOIN item ON cod_player_round_damage_records.weapon = item.externalKey LEFT JOIN itemlocalization ON item.id = itemlocalization.itemnumber WHERE match_id = 1612560728382002 AND (itemlocalization.languagenumber = 1 OR cod_player_round_damage_records.weapon = 'Ramming');", matchId);
+            NPoco.Connection.Close();
+            return roundDamages;
+        }
+
+        public List<PlayerRoundRecordPoco> SelectPlayerRoundRecords(long matchId)
+        {
+            NPoco.Connection.Open();
+            var playerRoundRecords = NPoco.Fetch<PlayerRoundRecordPoco>("WHERE match_id = @0", matchId);
+            NPoco.Connection.Close();
+            return playerRoundRecords;
         }
 
         public string TranslateFieldName(string toTranslate)
