@@ -11,12 +11,16 @@ namespace Crossout.AspWeb.Models.Cod
     public class MatchHistory : BaseViewModel, IViewTitle
     {
         public string Title => "Match History";
+
+        public List<MapPoco> Maps { get; set; }
+
+        public List<string> Types { get; set; }
     }
 
     public class MatchHistoryData
     {
         [JsonProperty("data")]
-        public List<MatchHistoryEntry> Data { get; set; } = new List<MatchHistoryEntry>();
+        public List<MatchHistoryEntryPoco> Data { get; set; } = new List<MatchHistoryEntryPoco>();
     }
 
     public class MatchHistoryEntry

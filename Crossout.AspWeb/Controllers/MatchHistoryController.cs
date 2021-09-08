@@ -28,6 +28,8 @@ namespace Crossout.AspWeb.Controllers
             MatchHistory model = new MatchHistory();
 
             model.Localizations = db.SelectFrontendLocalizations(lang.Id, "matchhistory");
+            model.Maps = db.SelectMaps();
+            model.Types = db.SelectMatchTypes();
 
             this.RegisterHit("Match History");
 
@@ -52,16 +54,7 @@ namespace Crossout.AspWeb.Controllers
 
             try
             {
-                var matcheEntries = new List<MatchHistoryEntry>();
-                var pocos = db.SelectMatchRecords(TimestampConverter.UnixTimeStampToDateTime(from), TimestampConverter.UnixTimeStampToDateTime(to), types, maps, ps);
-
-                foreach (var poco in pocos)
-                {
-                    var matchEntry = new MatchHistoryEntry(poco);
-                    matcheEntries.Add(matchEntry);
-                }
-
-                model.Data = matcheEntries;
+                model.Data = db.SelectMatchHistoryEntries(TimestampConverter.UnixTimeStampToDateTime(from), TimestampConverter.UnixTimeStampToDateTime(to), types, maps, ps);
 
                 return Json(model);
             }

@@ -477,13 +477,29 @@ namespace Crossout.AspWeb.Services
             return locs;
         }
 
-        public List<MatchRecordPoco> SelectMatchRecords(DateTime matchStartFrom, DateTime matchStartTo, string[] types, string[] maps, int powerScore)
+        public List<string> SelectMatchTypes()
+        {
+            NPoco.Connection.Open();
+            var types = NPoco.Fetch<string>("SELECT DISTINCT match_type FROM crossout.cod_match_records");
+            NPoco.Connection.Close();
+            return types;
+        }
+
+        public List<MapPoco> SelectMaps()
+        {
+            NPoco.Connection.Open();
+            var maps = NPoco.Fetch<MapPoco>();
+            NPoco.Connection.Close();
+            return maps;
+        }
+
+        public List<MatchHistoryEntryPoco> SelectMatchHistoryEntries(DateTime matchStartFrom, DateTime matchStartTo, string[] types, string[] maps, int powerScore)
         {
             var typesString = types.Length > 0 ? "AND match_type IN (@2)" : "";
-            var mapsString = maps.Length > 0 ? "AND map_name IN (@3)" : "";
+            var mapsString = maps.Length > 0 ? "AND cod_match_records.map_name IN (@3)" : "";
             var powerScoreString = powerScore > 0 ? "AND min_power_score < @4 AND max_power_score > @4" : "";
             NPoco.Connection.Open();
-            var matchRecords = NPoco.Fetch<MatchRecordPoco>($"WHERE match_start >= @0 AND match_start <= @1 {typesString} {mapsString} {powerScoreString}", matchStartFrom, matchStartTo, types, maps, powerScore);
+            var matchRecords = NPoco.Fetch<MatchHistoryEntryPoco>($"SELECT * FROM cod_match_records LEFT JOIN cod_maps ON cod_match_records.map_name = cod_maps.map_name WHERE match_start >= @0 AND match_start <= @1 {typesString} {mapsString} {powerScoreString} ORDER BY match_id DESC LIMIT 5000", matchStartFrom, matchStartTo, types, maps, powerScore);
             NPoco.Connection.Close();
             return matchRecords;
         }
