@@ -131,9 +131,9 @@ namespace Crossout.AspWeb.Services.API.v2
                 return NPocoDB.Fetch<SynergyPoco>("WHERE itemnumber = @0", id);
         }
 
-        public List<UploadRecordPoco> GetCodUploadRecords(int uid)
+        public List<UploadPoco> GetCodUploadRecords(int uid)
         {
-            return NPocoDB.Fetch<UploadRecordPoco>("WHERE uid = @0", uid);
+            return NPocoDB.Fetch<UploadPoco>("WHERE uid = @0", uid);
         }
 
         public int UploadMatchs(List<MatchEntry> match_list)
@@ -146,22 +146,30 @@ namespace Crossout.AspWeb.Services.API.v2
                 if (UploadExists(match.match_id, match.uploader_uid))
                     continue;
 
-                UploadUploadRecords(match);
+                UploadResources(match);
 
                 if (MatchExists(match.match_id))
                 {
                     Console.WriteLine("Validating existing match:" + match.match_id);
-                    ValidateMatch(match);
+
+                    if (ValidateMatch(match))
+                        UploadUploadRecord(match, "V");
+                    else
+                        UploadUploadRecord(match, "C");
+
                     continue;
                 }
 
                 Console.WriteLine("Uploading new match:" + match.match_id);
 
+                UploadUploadRecord(match, "I");
                 UploadMap(match);
                 UploadMatch(match);
                 UploadRounds(match);
                 UploadPlayerRoundRecords(match);
                 UploadDamageRecords(match);
+                UploadScores(match);
+                UploadMedals(match);
             }
             return GetUploadCount(match_list[0].uploader_uid);
         }
@@ -189,7 +197,7 @@ namespace Crossout.AspWeb.Services.API.v2
 
             try
             {
-                if (NPocoDB.Fetch<UploadRecordPoco>("WHERE MATCH_ID = @0 AND UID = @1", match_id, uploader_uid).Any())
+                if (NPocoDB.Fetch<UploadPoco>("WHERE MATCH_ID = @0 AND UID = @1", match_id, uploader_uid).Any())
                     upload_exists = true;
             }
             catch (Exception ex)
@@ -206,7 +214,7 @@ namespace Crossout.AspWeb.Services.API.v2
 
             try
             {
-                if (NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match_id) != null)
+                if (NPocoDB.SingleOrDefaultById<MatchPoco>(match_id) != null)
                     match_exists = true;
             }
             catch (Exception ex)
@@ -243,6 +251,86 @@ namespace Crossout.AspWeb.Services.API.v2
             }
         }
 
+        public void UploadScores(MatchEntry match)
+        {
+            try
+            {
+                foreach (RoundEntry round in match.rounds)
+                {
+                    foreach (MatchPlayerEntry player in round.players)
+                    {
+                        if (player.uid == 0)
+                            continue;
+
+                        foreach (ScoreEntry score in player.scores)
+                        {
+                            MatchScorePoco poco_score = new MatchScorePoco { };
+                            poco_score.match_id = match.match_id;
+                            poco_score.round_id = round.round_id;
+                            poco_score.uid = player.uid;
+                            poco_score.score_type = score.score_type;
+                            poco_score.score = score.points;
+                            NPocoDB.Insert(poco_score);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db upload score error:" + ex.Message);
+            }
+        }
+
+        public void UploadMedals(MatchEntry match)
+        {
+            try
+            {
+                foreach (RoundEntry round in match.rounds)
+                {
+                    foreach (MatchPlayerEntry player in round.players)
+                    {
+                        if (player.uid == 0)
+                            continue;
+
+                        foreach (MedalEntry medal in player.medals)
+                        {
+                            MatchMedalPoco poco_medal = new MatchMedalPoco { };
+                            poco_medal.match_id = match.match_id;
+                            poco_medal.round_id = round.round_id;
+                            poco_medal.uid = player.uid;
+                            poco_medal.medal = medal.medal;
+                            poco_medal.amount = medal.amount;
+                            NPocoDB.Insert(poco_medal);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db upload medal error:" + ex.Message);
+            }
+        }
+
+        public void UploadResources(MatchEntry match)
+        {
+            try
+            {
+                foreach (ResourceEntry resource in match.resources)
+                {
+                    MatchResourcePoco poco_resource = new MatchResourcePoco { };
+                    poco_resource.match_id = match.match_id;
+                    poco_resource.uid = match.uploader_uid;
+                    poco_resource.resource = resource.resource;
+                    poco_resource.amount = resource.amount;
+                    NPocoDB.Insert(poco_resource);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("db upload resource error:" + ex.Message);
+            }
+        }
+
         public void UploadDamageRecords(MatchEntry match)
         {
             try
@@ -251,7 +339,7 @@ namespace Crossout.AspWeb.Services.API.v2
                 {
                     foreach(RoundDamageEntry damage_record in round.damage_records)
                     {
-                        RoundDamageRecordPoco damage_record_poco = new RoundDamageRecordPoco { };
+                        RoundDamagePoco damage_record_poco = new RoundDamagePoco { };
                         damage_record_poco.match_id = match.match_id;
                         damage_record_poco.round_id = round.round_id;
                         damage_record_poco.uid = damage_record.uid;
@@ -271,10 +359,8 @@ namespace Crossout.AspWeb.Services.API.v2
         {
             try
             {
-                MatchRecordPoco poco_match = new MatchRecordPoco { };
+                MatchPoco poco_match = new MatchPoco { };
                 poco_match.match_id = match.match_id;
-                poco_match.upload_status = "I";
-                poco_match.validation_count = 1;
                 poco_match.match_type = match.match_type;
                 poco_match.match_start = match.match_start;
                 poco_match.match_end = match.match_end;
@@ -320,11 +406,11 @@ namespace Crossout.AspWeb.Services.API.v2
         {
             try
             {
-                MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
+                MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
 
                 foreach (RoundEntry round in match.rounds)
                 {
-                    RoundRecordPoco poco_round = new RoundRecordPoco { };
+                    RoundPoco poco_round = new RoundPoco { };
                     poco_round.match_id = match.match_id;
                     poco_round.round_start = round.round_start;
                     poco_round.round_end = round.round_end;
@@ -350,14 +436,15 @@ namespace Crossout.AspWeb.Services.API.v2
             }
         }
 
-        public void UploadUploadRecords(MatchEntry match)
+        public void UploadUploadRecord(MatchEntry match, string status)
         {
             try
             {
-                UploadRecordPoco poco_upload = new UploadRecordPoco { };
+                UploadPoco poco_upload = new UploadPoco { };
                 poco_upload.match_id = match.match_id;
                 poco_upload.uid = match.uploader_uid;
                 poco_upload.upload_time = DateTime.Now.ToUniversalTime();
+                poco_upload.status = status;
                 NPocoDB.Insert(poco_upload);
             }
             catch (Exception ex)
@@ -370,7 +457,7 @@ namespace Crossout.AspWeb.Services.API.v2
         {
             try
             {
-                MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
+                MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
 
                 foreach (RoundEntry round in match.rounds)
                 {
@@ -379,7 +466,7 @@ namespace Crossout.AspWeb.Services.API.v2
                         if (player.uid == 0)
                             continue;
 
-                        PlayerRoundRecordPoco poco_player = new PlayerRoundRecordPoco { };
+                        PlayerRoundPoco poco_player = new PlayerRoundPoco { };
                         poco_player.match_id = match.match_id;
                         poco_player.round_id = poco_match.round_id_1;
                         poco_player.uid = player.uid;
@@ -418,12 +505,12 @@ namespace Crossout.AspWeb.Services.API.v2
             }
         }
 
-        public void ValidateMatch(MatchEntry match)
+        public bool ValidateMatch(MatchEntry match)
         {
             bool valid_match = true;
             try
             {
-                MatchRecordPoco poco_match = NPocoDB.SingleOrDefaultById<MatchRecordPoco>(match.match_id);
+                MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
 
                 if (match.map_name != poco_match.map_name)
                 {
@@ -500,23 +587,14 @@ namespace Crossout.AspWeb.Services.API.v2
                     }
                 }
 
-                if (valid_match)
-                {
-                    Console.WriteLine("Valid Match");
-                    poco_match.validation_count += 1;
-                }
-                else
-                {
-                    Console.WriteLine("Match Conflict");
-                    poco_match.upload_status = "C";
-                }
-
                 NPocoDB.Update(poco_match);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("db match validation error:" + ex.Message);
             }
+
+            return valid_match;
         }
         public bool ValidPlayers(List<MatchPlayerEntry> players, long match_id, int round_id)
         {
@@ -524,9 +602,9 @@ namespace Crossout.AspWeb.Services.API.v2
 
             try
             {
-                List<PlayerRoundRecordPoco> poco_players = NPocoDB.Fetch<PlayerRoundRecordPoco>("WHERE MATCH_ID = @0 AND ROUND_ID = @1", match_id, round_id);
+                List<PlayerRoundPoco> poco_players = NPocoDB.Fetch<PlayerRoundPoco>("WHERE MATCH_ID = @0 AND ROUND_ID = @1", match_id, round_id);
 
-                foreach (PlayerRoundRecordPoco poco_player in poco_players)
+                foreach (PlayerRoundPoco poco_player in poco_players)
                 {
                     MatchPlayerEntry player = players.SingleOrDefault(x => x.uid == poco_player.uid);
 
@@ -596,7 +674,7 @@ namespace Crossout.AspWeb.Services.API.v2
 
             try
             {
-                RoundRecordPoco poco_round = NPocoDB.SingleOrDefaultById<RoundRecordPoco>(round_id);
+                RoundPoco poco_round = NPocoDB.SingleOrDefaultById<RoundPoco>(round_id);
 
                 if (round.winning_team != poco_round.winning_team)
                 {

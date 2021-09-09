@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 namespace Crossout.AspWeb.Pocos
 {
     [TableName("cod_upload_records")]
-    public class UploadRecordPoco
+    public class UploadPoco
     {
         [Column("uid")]
-        
         public int uid { get; set; }
 
         [Column("match_id")]
@@ -19,21 +18,17 @@ namespace Crossout.AspWeb.Pocos
 
         [Column("upload_time")]
         public DateTime upload_time { get; set; }
+        [Column("status")]
+        public string status { get; set; }
     }
 
     [TableName("cod_match_records")]
     [PrimaryKey("match_id", AutoIncrement = false)]
     [ExplicitColumns]
-    public class MatchRecordPoco
+    public class MatchPoco
     {
         [Column("match_id")]
         public long match_id { get; set; }
-
-        [Column("upload_status")]
-        public string upload_status { get; set; }
-
-        [Column("validation_count")]
-        public int validation_count { get; set; }
 
         [Column("match_type")]
         public string match_type { get; set; }
@@ -79,7 +74,7 @@ namespace Crossout.AspWeb.Pocos
     [TableName("cod_round_records")]
     [PrimaryKey("round_id", AutoIncrement = true)]
     [ExplicitColumns]
-    public class RoundRecordPoco
+    public class RoundPoco
     {
         [Column("round_id")]
         public int round_id { get; set; }
@@ -95,7 +90,7 @@ namespace Crossout.AspWeb.Pocos
 
     [TableName("cod_player_round_records")]
     [ExplicitColumns]
-    public class PlayerRoundRecordPoco
+    public class PlayerRoundPoco
     {
         [Column("round_id")]
         public int round_id { get; set; }
@@ -130,7 +125,7 @@ namespace Crossout.AspWeb.Pocos
     [TableName("cod_player_round_damage_records")]
     [PrimaryKey("match_id", AutoIncrement = false)]
     [ExplicitColumns]
-    public class RoundDamageRecordPoco
+    public class RoundDamagePoco
     {
         [Column("round_id")]
         public int round_id { get; set; }
@@ -142,6 +137,55 @@ namespace Crossout.AspWeb.Pocos
         public string weapon { get; set; }
         [Column("damage")]
         public float damage { get; set; }
+    }
+
+    [TableName("cod_player_match_resource_records")]
+    [PrimaryKey("match_id", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class MatchResourcePoco
+    {
+        [Column("match_id")]
+        public long match_id { get; set; }
+        [Column("uid")]
+        public int uid { get; set; }
+        [Column("resource")]
+        public string resource { get; set; }
+        [Column("amount")]
+        public int amount { get; set; }
+    }
+
+    [TableName("cod_player_match_score_records")]
+    [PrimaryKey("match_id", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class MatchScorePoco
+    {
+        [Column("match_id")]
+        public long match_id { get; set; }
+        [Column("round_id")]
+        public int round_id { get; set; }
+        [Column("uid")]
+        public int uid { get; set; }
+        [Column("score_type")]
+        public string score_type { get; set; }
+        [Column("score")]
+        public int score { get; set; }
+    }
+
+    [TableName("cod_player_match_medal_records")]
+    [PrimaryKey("match_id", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class MatchMedalPoco
+    {
+        [Column("match_id")]
+        public long match_id { get; set; }
+        [Column("round_id")]
+        public int round_id { get; set; }
+        [Column("uid")]
+        public int uid { get; set; }
+        [Column("medal")]
+        public string medal { get; set; }
+        [Column("amount")]
+        public int amount { get; set; }
     }
 
     [TableName("cod_maps")]
