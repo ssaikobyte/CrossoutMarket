@@ -513,18 +513,18 @@ namespace Crossout.AspWeb.Services
             return matchRecords;
         }
 
-        public MatchRecordPoco SelectMatchRecord(long id)
+        public MatchPoco SelectMatchRecord(long id)
         {
             NPoco.Connection.Open();
-            var matchRecord = NPoco.SingleById<MatchRecordPoco>(id);
+            var matchRecord = NPoco.SingleById<MatchPoco>(id);
             NPoco.Connection.Close();
             return matchRecord;
         }
 
-        public List<RoundRecordPoco> SelectRoundRecords(long matchId)
+        public List<RoundPoco> SelectRoundRecords(long matchId)
         {
             NPoco.Connection.Open();
-            var roundRecords = NPoco.Fetch<RoundRecordPoco>("WHERE match_id = @0", matchId);
+            var roundRecords = NPoco.Fetch<RoundPoco>("WHERE match_id = @0", matchId);
             NPoco.Connection.Close();
             return roundRecords;
         }
@@ -533,15 +533,15 @@ namespace Crossout.AspWeb.Services
         public List<RoundDamage> SelectRoundDamage(long matchId)
         {
             NPoco.Connection.Open();
-            var roundDamages = NPoco.Fetch<RoundDamage>("SELECT *, IFNULL(languagenumber, 0) as locavailable FROM crossout.cod_player_round_damage_records LEFT JOIN item ON cod_player_round_damage_records.weapon = item.externalKey LEFT JOIN itemlocalization ON item.id = itemlocalization.itemnumber WHERE match_id = 1612560728382002 AND (itemlocalization.languagenumber = 1 OR cod_player_round_damage_records.weapon = 'Ramming');", matchId);
+            var roundDamages = NPoco.Fetch<RoundDamage>("SELECT * FROM crossout.cod_player_round_damage_records LEFT JOIN item ON cod_player_round_damage_records.weapon = item.externalKey LEFT JOIN itemlocalization ON item.id = itemlocalization.itemnumber WHERE match_id = 1612560728382002 AND (itemlocalization.languagenumber = 1 OR cod_player_round_damage_records.weapon = 'Ramming');", matchId);
             NPoco.Connection.Close();
             return roundDamages;
         }
 
-        public List<PlayerRoundRecordPoco> SelectPlayerRoundRecords(long matchId)
+        public List<PlayerRoundPoco> SelectPlayerRoundRecords(long matchId)
         {
             NPoco.Connection.Open();
-            var playerRoundRecords = NPoco.Fetch<PlayerRoundRecordPoco>("WHERE match_id = @0", matchId);
+            var playerRoundRecords = NPoco.Fetch<PlayerRoundPoco>("WHERE match_id = @0", matchId);
             NPoco.Connection.Close();
             return playerRoundRecords;
         }

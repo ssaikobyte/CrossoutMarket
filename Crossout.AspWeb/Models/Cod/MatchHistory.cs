@@ -52,7 +52,7 @@ namespace Crossout.AspWeb.Models.Cod
         [JsonProperty("powerScoreRange")]
         public int PowerScoreRange { get; set; }
 
-        public MatchHistoryEntry(MatchRecordPoco poco)
+        public MatchHistoryEntry(MatchPoco poco)
         {
             MatchId = poco.match_id;
             Start = poco.match_start;

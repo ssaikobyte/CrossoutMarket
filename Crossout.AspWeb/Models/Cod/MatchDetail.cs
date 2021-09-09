@@ -11,27 +11,27 @@ namespace Crossout.AspWeb.Models.Cod
     {
         public string Title => "Match " + MatchRecord.match_id;
 
-        public MatchRecordPoco MatchRecord { get; set; }
+        public MatchPoco MatchRecord { get; set; }
 
         public MapPoco Map { get; set; }
 
-        public List<RoundRecordPoco> RoundRecords { get; set; }
+        public List<RoundPoco> RoundRecords { get; set; }
 
         public List<RoundDamage> RoundDamages { get; set; }
 
-        public List<PlayerRoundRecordPoco> PlayerRoundRecords { get; set; }
+        public List<PlayerRoundPoco> PlayerRoundRecords { get; set; }
 
         public TimeSpan Duration { get => MatchRecord.match_end.Subtract(MatchRecord.match_start); }
 
         public int PowerScoreRange { get => MatchRecord.max_power_score - MatchRecord.min_power_score; }
 
-        public List<PlayerRoundRecordPoco> Team1PlayersCombined { get => CombineRounds(PlayerRoundRecords.Where(x => x.team == 1).ToList()); }
+        public List<PlayerRoundPoco> Team1PlayersCombined { get => CombineRounds(PlayerRoundRecords.Where(x => x.team == 1).ToList()); }
 
-        public List<PlayerRoundRecordPoco> Team2PlayersCombined { get => CombineRounds(PlayerRoundRecords.Where(x => x.team == 2).ToList()); }
+        public List<PlayerRoundPoco> Team2PlayersCombined { get => CombineRounds(PlayerRoundRecords.Where(x => x.team == 2).ToList()); }
 
-        private List<PlayerRoundRecordPoco> CombineRounds(List<PlayerRoundRecordPoco> rounds)
+        private List<PlayerRoundPoco> CombineRounds(List<PlayerRoundPoco> rounds)
         {
-            var result = new Dictionary<int, PlayerRoundRecordPoco>();
+            var result = new Dictionary<int, PlayerRoundPoco>();
             foreach (var round in rounds)
             {
                 if (result.ContainsKey(round.uid))

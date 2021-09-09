@@ -10,7 +10,7 @@ namespace Crossout.AspWeb.Pocos
     public class MatchHistoryEntryPoco
     {
         [JsonIgnore]
-        public MatchRecordPoco MatchRecord { get; set; }
+        public MatchPoco MatchRecord { get; set; }
 
         [JsonIgnore]
         public MapPoco Map { get; set; }

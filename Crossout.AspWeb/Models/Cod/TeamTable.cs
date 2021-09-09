@@ -10,6 +10,6 @@ namespace Crossout.AspWeb.Models.Cod
     {
         public int Id { get; set; }
 
-        public List<PlayerRoundRecordPoco> Team { get; set; }
+        public List<PlayerRoundPoco> Team { get; set; }
     }
 }
