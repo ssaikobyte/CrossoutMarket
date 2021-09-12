@@ -199,4 +199,14 @@ namespace Crossout.AspWeb.Pocos
         public string map_display_name { get; set; }
     }
 
+    [TableName("cod_error_logs")]
+    [ExplicitColumns]
+    public class ErrorLogPoco
+    {
+        [Column("match_id")]
+        public long match_id { get; set; }
+        [Column("error_log")]
+        public string error_log { get; set; }
+    }
+
 }

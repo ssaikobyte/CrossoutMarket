@@ -136,33 +136,28 @@ namespace Crossout.AspWeb.Services.API.v2
             return NPocoDB.Fetch<UploadPoco>("WHERE uid = @0", uid);
         }
 
-        public int UploadMatchs(List<MatchEntry> match_list)
+        public int UploadMatchs(UploadEntry upload_entry)
         {
-            if (match_list.Count == 0)
+            if (upload_entry.match_list.Count == 0)
                 return 0;
 
-            foreach (MatchEntry match in match_list)
+            NPocoDB.BeginTransaction();
+
+            foreach (MatchEntry match in upload_entry.match_list)
             {
-                if (UploadExists(match.match_id, match.uploader_uid))
+                if (UploadExists(match.match_id, upload_entry.uploader_uid))
                     continue;
 
-                UploadResources(match);
+                UploadResources(match, upload_entry.uploader_uid);
 
                 if (MatchExists(match.match_id))
                 {
-                    Console.WriteLine("Validating existing match:" + match.match_id);
+                    UploadUploadRecord(match, ValidMatch(match) ? "V" : "C", upload_entry.uploader_uid);
 
-                    if (ValidateMatch(match))
-                        UploadUploadRecord(match, "V");
-                    else
-                        UploadUploadRecord(match, "C");
-
+                    NPocoDB.CompleteTransaction();
                     continue;
                 }
 
-                Console.WriteLine("Uploading new match:" + match.match_id);
-
-                UploadUploadRecord(match, "I");
                 UploadMap(match);
                 UploadMatch(match);
                 UploadRounds(match);
@@ -170,8 +165,14 @@ namespace Crossout.AspWeb.Services.API.v2
                 UploadDamageRecords(match);
                 UploadScores(match);
                 UploadMedals(match);
+                UploadUploadRecord(match, MatchContainsError(match.match_id) ? "C" : "I", upload_entry.uploader_uid);
             }
-            return GetUploadCount(match_list[0].uploader_uid);
+
+            int upload_count = GetUploadCount(upload_entry.uploader_uid);
+
+            NPocoDB.CompleteTransaction();
+
+            return upload_count;
         }
 
         public int GetUploadCount(int uploader_uid)
@@ -181,14 +182,30 @@ namespace Crossout.AspWeb.Services.API.v2
             try
             {
                 upload_count = NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_UPLOAD_RECORDS WHERE UID = @0", uploader_uid);
-                Console.WriteLine("Found {0} matchs for user {1}", upload_count, uploader_uid);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload count error:" + ex.Message);
+                WriteErrorLog(0,"db upload count error:" + ex.Message);
             }
 
             return upload_count;
+        }
+
+        public bool MatchContainsError(long match_id)
+        {
+            bool match_error = false;
+
+            try
+            {
+                if (NPocoDB.Fetch<UploadPoco>("WHERE MATCH_ID = @0", match_id).Any())
+                    match_error = true;
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog(match_id, "db match check error:" + ex.Message);
+            }
+
+            return match_error;
         }
 
         public bool UploadExists(long match_id, int uploader_uid)
@@ -202,7 +219,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload existance error:" + ex.Message);
+                WriteErrorLog(match_id, "db upload existance error:" + ex.Message);
             }
 
             return upload_exists;
@@ -219,7 +236,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db match existance error:" + ex.Message);
+                WriteErrorLog(match_id, "db match existance error:" + ex.Message);
             }
 
             return match_exists;
@@ -247,7 +264,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload map error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload map error:" + ex.Message);
             }
         }
 
@@ -277,7 +294,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload score error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload score error:" + ex.Message);
             }
         }
 
@@ -307,11 +324,11 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload medal error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload medal error:" + ex.Message);
             }
         }
 
-        public void UploadResources(MatchEntry match)
+        public void UploadResources(MatchEntry match, int uploader_uid)
         {
             try
             {
@@ -319,7 +336,7 @@ namespace Crossout.AspWeb.Services.API.v2
                 {
                     MatchResourcePoco poco_resource = new MatchResourcePoco { };
                     poco_resource.match_id = match.match_id;
-                    poco_resource.uid = match.uploader_uid;
+                    poco_resource.uid = uploader_uid;
                     poco_resource.resource = resource.resource;
                     poco_resource.amount = resource.amount;
                     NPocoDB.Insert(poco_resource);
@@ -327,7 +344,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload resource error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload resource error:" + ex.Message);
             }
         }
 
@@ -351,7 +368,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload damage error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload damage error:" + ex.Message);
             }
         }
 
@@ -398,7 +415,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload match error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload round error:" + ex.Message);
             }
         }
 
@@ -432,24 +449,24 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload round error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload round error:" + ex.Message);
             }
         }
 
-        public void UploadUploadRecord(MatchEntry match, string status)
+        public void UploadUploadRecord(MatchEntry match, string status, int uploader_uid)
         {
             try
             {
                 UploadPoco poco_upload = new UploadPoco { };
                 poco_upload.match_id = match.match_id;
-                poco_upload.uid = match.uploader_uid;
+                poco_upload.uid = uploader_uid;
                 poco_upload.upload_time = DateTime.Now.ToUniversalTime();
                 poco_upload.status = status;
                 NPocoDB.Insert(poco_upload);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload upload error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload upload error:" + ex.Message);
             }
         }
 
@@ -501,11 +518,11 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db upload record error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db upload record error:" + ex.Message);
             }
         }
 
-        public bool ValidateMatch(MatchEntry match)
+        public bool ValidMatch(MatchEntry match)
         {
             bool valid_match = true;
             try
@@ -591,7 +608,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db match validation error:" + ex.Message);
+                WriteErrorLog(match.match_id, "db match validation error:" + ex.Message);
             }
 
             return valid_match;
@@ -662,7 +679,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db player validation error:" + ex.Message);
+                WriteErrorLog(match_id, "db player validation error:" + ex.Message);
             }
 
             return valid_players;
@@ -684,11 +701,27 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine("db round validation error:" + ex.Message);
+                WriteErrorLog(round.match_id, "db round validation error:" + ex.Message);
             }
 
             return valid_round;
         }
+
+        public void WriteErrorLog(long match_id, string log)
+        {
+            try
+            {
+                ErrorLogPoco error_log = new ErrorLogPoco { };
+                error_log.match_id = match_id;
+                error_log.error_log = log;
+                NPocoDB.Insert(error_log);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(log);
+            }
+        }
+
         public static ApiItemEntry CreateApiItem(object[] row)
         {
             int i = 0;

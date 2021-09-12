@@ -377,15 +377,12 @@ namespace Crossout.AspWeb.Controllers
         [HttpPost]
         [DisableRequestSizeLimit]
         [Route("/api/v2/co_driver/upload_matchs")]
-        public IActionResult UploadMatchAction([FromBody] List<Crossout.AspWeb.Models.API.v2.MatchEntry> matchs)
+        public IActionResult UploadMatchAction([FromBody] UploadEntry upload_entry)
         {
-            Console.WriteLine("uploading " + matchs.Count.ToString() + " matches");
             sql.Open(WebSettings.Settings.CreateDescription());
             ApiDataService dataService = new ApiDataService(sql);
 
-            int match_count = dataService.UploadMatchs(matchs);
-
-            Console.WriteLine("finished uploading " + matchs.Count.ToString() + " matches");
+            int match_count = dataService.UploadMatchs(upload_entry);
 
             this.RegisterHit("/api/v2/co_driver/upload_matchs");
             return Json(match_count);
