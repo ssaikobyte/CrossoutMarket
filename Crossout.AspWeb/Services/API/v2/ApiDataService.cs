@@ -165,6 +165,7 @@ namespace Crossout.AspWeb.Services.API.v2
                 UploadDamageRecords(match);
                 UploadScores(match);
                 UploadMedals(match);
+                UploadGroups(match);
                 UploadUploadRecord(match, MatchContainsError(match.match_id) ? "C" : "I", upload_entry.uploader_uid);
             }
 
@@ -189,6 +190,22 @@ namespace Crossout.AspWeb.Services.API.v2
             }
 
             return upload_count;
+        }
+
+        public int GetGroupId(GroupPoco group)
+        {
+            int group_id = 0;
+
+            try
+            {
+                group_id = NPocoDB.Fetch<GroupPoco>("WHERE UID_1 = @0 AND UID_2 = @1 AND UID_3 = @2 AND UID_4 = @3", group.uid_1, group.uid_2, group.uid_3, group.uid_4).FirstOrDefault().group_id;
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog(0, "db group id error:" + ex.Message);
+            }
+
+            return group_id;
         }
 
         public bool MatchContainsError(long match_id)
@@ -240,6 +257,104 @@ namespace Crossout.AspWeb.Services.API.v2
             }
 
             return match_exists;
+        }
+        public bool GroupExists(GroupPoco group)
+        {
+            bool group_exists = false;
+
+            try
+            {
+                if (NPocoDB.Fetch<GroupPoco>("WHERE UID_1 = @0 AND UID_2 = @1 AND UID_3 = @2 AND UID_4 = @3", group.uid_1, group.uid_2, group.uid_3, group.uid_4).Any())
+                    group_exists = true;
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog(0, "db group existance error:" + ex.Message);
+            }
+
+            return group_exists;
+        }
+
+        private class group_record
+        {
+            public int group_id { get; set; }
+            public List<int> uids { get; set; }
+        }
+
+        public void UploadGroups(MatchEntry match)
+        {
+            try
+            {
+                MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
+                List<PlayerRoundPoco> poco_players = NPocoDB.Fetch<PlayerRoundPoco>("WHERE MATCH_ID = @0", match.match_id);
+                List<group_record> groups = new List<group_record> { };
+
+                foreach (RoundEntry round in match.rounds)
+                {
+                    foreach (MatchPlayerEntry player in round.players.Where(x => x.group_id > 0))
+                    {
+                        if (!groups.Any(x => x.group_id == player.group_id))
+                            groups.Add(new group_record { group_id = player.group_id, uids = new List<int> { } });
+
+                        if (!groups.Any(x => x.group_id == player.group_id && x.uids.Contains(player.uid)))
+                            groups.First(x => x.group_id == player.group_id).uids.Add(player.uid);
+                    }
+                }
+
+                foreach (group_record group in groups)
+                {
+                    group.uids.Sort();
+
+                    MatchGroupPoco match_group_poco = new MatchGroupPoco { };
+                    GroupPoco group_poco = new GroupPoco { };
+                    int group_id = 0;
+                    
+                    group_poco.uid_1 = 0;
+                    group_poco.uid_2 = 0;
+                    group_poco.uid_3 = 0;
+                    group_poco.uid_4 = 0;
+
+                    foreach (int uid in group.uids)
+                    {
+                        if (group_poco.uid_1 == 0)
+                            group_poco.uid_1 = uid;
+                        else
+                        if (group_poco.uid_2 == 0)
+                            group_poco.uid_2 = uid;
+                        else
+                        if (group_poco.uid_3 == 0)
+                            group_poco.uid_3 = uid;
+                        else
+                        if (group_poco.uid_4 == 0)
+                            group_poco.uid_4 = uid;
+                    }
+
+                    if (!GroupExists(group_poco))
+                        NPocoDB.Insert(group_poco);
+
+                    group_id = GetGroupId(group_poco);
+
+                    if (group_id != 0)
+                    {
+                        match_group_poco.match_id = match.match_id;
+                        match_group_poco.group_id = group_id;
+                        NPocoDB.Insert(match_group_poco);
+                    }
+
+                    foreach (PlayerRoundPoco poco_player in poco_players)
+                    {
+                        if (!group.uids.Contains(poco_player.uid))
+                            continue;
+
+                        poco_player.group_id = group_id;
+                        NPocoDB.Update(poco_player);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog(match.match_id, "db upload group error:" + ex.Message);
+            }
         }
 
         public void UploadMap(MatchEntry match)
@@ -437,10 +552,10 @@ namespace Crossout.AspWeb.Services.API.v2
                     if (poco_match.round_id_1 == 0)
                         poco_match.round_id_1 = poco_round.round_id;
                     else
-                   if (poco_match.round_id_2 == 0)
+                    if (poco_match.round_id_2 == 0)
                         poco_match.round_id_2 = poco_round.round_id;
                     else
-                   if (poco_match.round_id_3 == 0)
+                    if (poco_match.round_id_3 == 0)
                         poco_match.round_id_3 = poco_round.round_id;
 
                 }
@@ -488,6 +603,7 @@ namespace Crossout.AspWeb.Services.API.v2
                         poco_player.round_id = poco_match.round_id_1;
                         poco_player.uid = player.uid;
                         poco_player.nickname = player.nickname;
+                        poco_player.group_id = 0;
                         poco_player.team = player.team;
                         poco_player.build_hash = player.build_hash;
                         poco_player.power_score = player.power_score;

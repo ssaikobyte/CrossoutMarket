@@ -89,6 +89,7 @@ namespace Crossout.AspWeb.Pocos
     }
 
     [TableName("cod_player_round_records")]
+    [PrimaryKey("match_id, round_id, uid", AutoIncrement = false)]
     [ExplicitColumns]
     public class PlayerRoundPoco
     {
@@ -102,6 +103,8 @@ namespace Crossout.AspWeb.Pocos
         public string nickname { get; set; }
         [Column("team")]
         public int team { get; set; }
+        [Column("group_id")]
+        public int group_id { get; set; }
         [Column("build_hash")]
         public string build_hash { get; set; }
         [Column("game_result")]
@@ -186,6 +189,34 @@ namespace Crossout.AspWeb.Pocos
         public string medal { get; set; }
         [Column("amount")]
         public int amount { get; set; }
+    }
+
+    [TableName("cod_group_record")]
+    [PrimaryKey("group_id", AutoIncrement = true)]
+    [ExplicitColumns]
+    public class GroupPoco
+    {
+        [Column("group_id")]
+        public int group_id { get; set; }
+        [Column("uid_1")]
+        public int uid_1 { get; set; }
+        [Column("uid_2")]
+        public int uid_2 { get; set; }
+        [Column("uid_3")]
+        public int uid_3 { get; set; }
+        [Column("uid_4")]
+        public int uid_4 { get; set; }
+    }
+
+    [TableName("cod_group_match_record")]
+    [PrimaryKey("group_id", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class MatchGroupPoco
+    {
+        [Column("match_id")]
+        public long match_id { get; set; }
+        [Column("group_id")]
+        public int group_id { get; set; }
     }
 
     [TableName("cod_maps")]
