@@ -1,9 +1,10 @@
 ﻿@using System.Globalization
 @model Crossout.AspWeb.Models.Cod.TeamTable
 
-<table class="table table-borderless table-hover" id="teamTable@(Model.Id)">
+<table class="table table-borderless team-table" data-matchid="@Model.MatchId" data-tableid="@Model.Id" id="teamTable@(Model.Id)">
     <thead>
         <tr>
+            <th></th>
             <th>
                 Name
             </th>
@@ -25,17 +26,24 @@
             <th>
                 Score
             </th>
+            <th class="never">
+                User ID
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var teamPlayer in Model.Team)
         {
         <tr>
+            <td class="details-control">
+                <svg class="feather-help-circle plus"><use xlink:href="/icons/feather-sprite.svg#plus-circle" /></svg>
+                <svg class="feather-help-circle minus d-none"><use xlink:href="/icons/feather-sprite.svg#minus-circle" /></svg>
+            </td>
             <td>
                 @teamPlayer.nickname
             </td>
             <td>
-                @teamPlayer.damage_taken.ToString("0", CultureInfo.InvariantCulture)
+                @teamPlayer.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)
             </td>
             <td>
                 @teamPlayer.drone_kills
@@ -47,47 +55,86 @@
                 @teamPlayer.kills
             </td>
             <td>
-                @teamPlayer.damage.ToString("0", CultureInfo.InvariantCulture)
+                @teamPlayer.damage.ToString("0.00", CultureInfo.InvariantCulture)
             </td>
             <td>
                 @teamPlayer.score
+            </td>
+            <td>
+                @teamPlayer.uid
             </td>
         </tr>
         }
     </tbody>
 </table>
 
-<script>
+@*<script>
+
     var table@(Model.Id) = $('#teamTable@(Model.Id)').DataTable({
         dom: '<tr>',
-        order: [[2, 'desc']],
+        order: [[7, 'desc']],
         searching: true,
         lengthChange: false,
         paging: false,
         info: false,
         autoWidth: false,
         columnDefs: [
-            { width: '15%', targets: [0, 1, 5, 6] },
-            { width: '13.33%', targets: [2, 3, 4] }
-        ],
-        responsive: {
-            details: {
-                type: 'inline',
-                renderer: function (api, rowIdx, columns) {
-                    var data = $.map(columns, function (col, i) {
-                        return col.hidden ?
-                            '<div class="d-inline-flex flex-column card p-1 px-2 m-2" data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                            '<div class="font-weight-bold">' + col.title + '' + '</div> ' +
-                            '<div>' + col.data + '</div>' +
-                            '</div>' :
-                            '';
-                    }).join('');
+            { width: '15%', targets: [1, 2, 6, 7] },
+            { width: '12%', targets: [3, 4, 5] },
+            { orderable: false, width: '4%', targets: [0] }
+        ]
+    });
 
-                    return data ?
-                        $('<div/>').append(data) :
-                        false;
-                }
-            }
+    $('#teamTable@(Model.Id) tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table@(Model.Id).row(tr);
+
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
+            $(this).children('td.details-control > svg.minus').addClass('d-none');
+            $(this).children('td.details-control > svg.plus').removeClass('d-none');
+        }
+        else {
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+            $(this).children('td.details-control > svg.plus').addClass('d-none');
+            $(this).children('td.details-control > svg.minus').removeClass('d-none');
         }
     });
-</script>
+
+    function format(rowData) {
+        var matchId = $('#teamTable@(Model.Id)').data('matchid');
+        var div = $('<div/>')
+            .addClass('loading')
+            .text('Loading...');
+
+        $.ajax({
+            url: '/data/match/' + matchId + '/player/' + rowData[8],
+            dataType: 'json',
+            success: function (json) {
+                var html = '<table class="table table-borderless" style="width:50%">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>Weapon</th>' +
+                    '<th>Damage</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+                json.damageData.forEach(function (e, i) {
+                    var image = ''
+                    if (e.imageExists)
+                        image = '<img class="mr-1" width="32"height="32" src="/img/items/' + e.itemId + '.png"></img>';
+                    var name = e.weaponDisplayName
+                    if (e.itemId !== 0)
+                        name = '<a href="/item/' + e.itemId + '">' + e.weaponDisplayName + '</a>';
+                    html += '<tr><td>' + image + name + '</td><td>' + e.damage + '</td></tr>';
+                });
+                html += '</tbody>';
+                div.html(html);
+            }
+        });
+
+        return div;
+    }
+</script>*@

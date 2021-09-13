@@ -530,10 +530,10 @@ namespace Crossout.AspWeb.Services
         }
 
 
-        public List<RoundDamage> SelectRoundDamage(long matchId)
+        public List<RoundDamage> SelectRoundDamage(long matchId, int lang)
         {
             NPoco.Connection.Open();
-            var roundDamages = NPoco.Fetch<RoundDamage>("SELECT * FROM crossout.cod_player_round_damage_records LEFT JOIN item ON cod_player_round_damage_records.weapon = item.externalKey LEFT JOIN itemlocalization ON item.id = itemlocalization.itemnumber WHERE match_id = 1612560728382002 AND (itemlocalization.languagenumber = 1 OR cod_player_round_damage_records.weapon = 'Ramming');", matchId);
+            var roundDamages = NPoco.Fetch<RoundDamage>("SELECT * FROM crossout.cod_player_round_damage_records LEFT JOIN item ON cod_player_round_damage_records.weapon = item.externalKey LEFT JOIN itemlocalization ON item.id = itemlocalization.itemnumber WHERE match_id = @0 AND (itemlocalization.languagenumber = @1 OR cod_player_round_damage_records.weapon = 'Ramming');", matchId, lang);
             NPoco.Connection.Close();
             return roundDamages;
         }

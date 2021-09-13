@@ -1,5 +1,6 @@
 ﻿using Crossout.AspWeb.Models.View;
 using Crossout.AspWeb.Pocos;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,5 +52,35 @@ namespace Crossout.AspWeb.Models.Cod
             }
             return result.Values.ToList();
         }
+    }
+
+    public class MatchPlayerDetailData
+    {
+        [JsonProperty("damageData")]
+        public List<RoundDamage> DamageData { get; set; } = new List<RoundDamage>();
+    }
+
+    public class RoundDamage
+    {
+        [JsonIgnore]
+        public RoundDamagePoco RoundDamageRecord { get; set; }
+
+        [JsonIgnore]
+        public ItemPoco Item { get; set; }
+
+        [JsonProperty("roundId")]
+        public int RoundId { get => RoundDamageRecord.round_id; }
+
+        [JsonProperty("damage")]
+        public float Damage { get => RoundDamageRecord.damage; }
+
+        [JsonProperty("itemId")]
+        public int ItemId { get => Item?.Id ?? 0; }
+
+        [JsonProperty("imageExists")]
+        public bool ImageExists { get => Item?.ImageExists ?? false; }
+
+        [JsonProperty("weaponDisplayName")]
+        public string WeaponDisplayName { get => Item?.AvailableName ?? RoundDamageRecord.weapon; }
     }
 }

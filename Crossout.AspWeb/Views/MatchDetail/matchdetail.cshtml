@@ -2,6 +2,7 @@
     Layout = "_Layout";
 }
 
+@using Crossout.AspWeb.Helper
 @using Crossout.AspWeb.Models.Cod
 @model MatchDetail
 @{
@@ -78,14 +79,13 @@
         <h4 class="card-title">Teams</h4>
         <div class="my-1">
             <h5>Team 1 - @(Model.MatchRecord.winning_team == 1 ? "Won" : "Lost")</h5>
-            <partial name="matchteamtable" model="new TeamTable { Id = 1, Team = Model.Team1PlayersCombined }" />
+            <partial name="matchteamtable" model="new TeamTable { Id = 1, MatchId = Model.MatchRecord.match_id, Team = Model.Team1PlayersCombined }" />
         </div>
         <div class="my-1">
             <h5>Team 2 - @(Model.MatchRecord.winning_team == 2 ? "Won" : "Lost")</h5>
-            <partial name="matchteamtable" model="new TeamTable { Id = 2, Team = Model.Team2PlayersCombined }" />
+            <partial name="matchteamtable" model="new TeamTable { Id = 2, MatchId = Model.MatchRecord.match_id, Team = Model.Team2PlayersCombined }" />
         </div>
     </div>
 </div>
 
-<script>
-</script>
+<script src="~/scripts/internal/teamtables.js?@CacheBuster.Once"></script>
