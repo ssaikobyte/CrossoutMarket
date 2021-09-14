@@ -14,19 +14,13 @@ namespace Crossout.AspWeb.Models.Items
     public class ItemModel : BaseViewModel, IViewTitle
     {
         [JsonProperty("item")]
-        public Item Item { get; set; } = new Item() {};
+        public Item Item { get; set; } = new Item() { };
 
         [JsonProperty("recipe")]
         public RecipeModel Recipe { get; set; } = new RecipeModel();
 
         [JsonIgnore]
         public List<OCRStatItemPoco> OCRStatItems { get; set; } = new List<OCRStatItemPoco>();
-
-        [JsonProperty("synergies")]
-        public List<SynergyPoco> Synergies { get; set; } = new List<SynergyPoco>();
-
-        [JsonProperty("synergyitems")]
-        public List<SynergyPoco> SynergyItems { get; set; } = new List<SynergyPoco>();
 
         [JsonIgnore]
         public StatusModel Status { get; set; } = new StatusModel();

@@ -133,11 +133,8 @@
                     </tr>
                 </tbody>
             </table>
-            @if (Model.Synergies.Count > 0)
-            {
-                <h4 class="align-self-center">Synergy</h4>
-                <partial name="synergycard" model="@Model.SynergyItems" />
-            }
+            <h4 class="align-self-center">Synergy</h4>
+            <partial name="synergycard" />
         </div>
     </div>
 
@@ -398,9 +395,7 @@
         url: '/data/synergy/@(Model.Item.Id)',
         dataType: 'json',
         success: function (json) {
-            synergyData.data = json.data;
-            //$('#synergyWrapper').append(json);
-            console.log(json.data);
+            synergyData.data = json;
             synergyData.loaded = true;
             onSynergyDataLoaded();
         }

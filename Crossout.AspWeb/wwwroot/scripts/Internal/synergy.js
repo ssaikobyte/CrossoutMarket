@@ -22,7 +22,6 @@ $(document).ready(function () {
 });
 
 function onSynergyDataLoaded() {
-/*
     synergyList = synergyData.data.synergies;
     itemList = synergyData.data.synergyitems;
     uniqueId = 0;
@@ -37,11 +36,12 @@ function onSynergyDataLoaded() {
         });
     });
     drawSynergy();
-*/
 
+/*
     var wrapper = $('#synergyWrapper').append('<div>');
     //wrapper.children().remove();
     var treeWrapper = $('<div class="col-4">' + 'TEST' + '</div>').appendTo(wrapper);
+*/
 }
 
 function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
