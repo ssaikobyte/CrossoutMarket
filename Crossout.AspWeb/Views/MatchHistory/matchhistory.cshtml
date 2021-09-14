@@ -2,6 +2,7 @@
     Layout = "_Layout";
 }
 
+@using Crossout.AspWeb.Helper
 @using Crossout.AspWeb.Models.Cod
 @model MatchHistory
 @{
@@ -114,7 +115,9 @@
 </div>
 
 <link rel="stylesheet" href="~/content/datepicker.min.css">
-<script src="~/scripts/datepicker.min.js"></script>
+<script src="~/scripts/datepicker.min.js?@CacheBuster.Once"></script>
+<script src="~/scripts/blockies.min.js?@CacheBuster.Once"></script>
+<script src="~/scripts/internal/blockyplacer.js?@CacheBuster.Once"></script>
 
 <script>
     const startDate = datepicker('#startDate', { id: 1, dateSelected: moment().subtract(6, 'days').toDate() })
@@ -157,7 +160,7 @@
                         var start = getAdjustedTimestamp(row.start);
                         var timestamp = moment(row.start).unix();
                         var relative = moment(row.start).fromNow();
-                        return '<div class="d-none>' + timestamp + '</div><div class=" d-flex flex-nowrap align-items-center"><a href="' + window.origin + '/match/' + data + '">' + start + '</a></div><div>(' + relative + ')</div>';
+                        return '<div class="blocky" data-seed="' + data + '" data-blockytype="match"></div><div class="d-none>' + timestamp + '</div><div class=" d-flex flex-nowrap align-items-center"><a href="' + window.origin + '/match/' + data + '">' + start + '</a></div><div>(' + relative + ')</div>';
                     },
                     'width': '20%'
                 },
@@ -236,6 +239,9 @@
 
         // Make table a bit prettier
         $('.dataTables_paginate > .pagination').addClass('pagination-sm');
+
+
+        placeBlockies();
     }
 
     function onXhr() {
@@ -243,6 +249,7 @@
 
         $('#loadingIcon').removeClass('d-flex').addClass('d-none');
         $('#table-wrapper').removeClass('d-none');
+
     }
 
     function applyFilter() {

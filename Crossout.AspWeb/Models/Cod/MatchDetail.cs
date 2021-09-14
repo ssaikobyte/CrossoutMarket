@@ -18,39 +18,88 @@ namespace Crossout.AspWeb.Models.Cod
 
         public List<RoundPoco> RoundRecords { get; set; }
 
-        public List<RoundDamage> RoundDamages { get; set; }
-
         public List<PlayerRoundPoco> PlayerRoundRecords { get; set; }
 
         public TimeSpan Duration { get => MatchRecord.match_end.Subtract(MatchRecord.match_start); }
 
         public int PowerScoreRange { get => MatchRecord.max_power_score - MatchRecord.min_power_score; }
 
-        public List<PlayerRoundPoco> Team1PlayersCombined { get => CombineRounds(PlayerRoundRecords.Where(x => x.team == 1).ToList()); }
+        public List<Team> Teams { get; set; } = new List<Team>();
 
-        public List<PlayerRoundPoco> Team2PlayersCombined { get => CombineRounds(PlayerRoundRecords.Where(x => x.team == 2).ToList()); }
-
-        private List<PlayerRoundPoco> CombineRounds(List<PlayerRoundPoco> rounds)
+        public void FormTeams()
         {
-            var result = new Dictionary<int, PlayerRoundPoco>();
-            foreach (var round in rounds)
+            var teamNumbers = PlayerRoundRecords.Select(x => x.team).Distinct().ToList();
+            teamNumbers.Sort();
+            foreach (var teamNumber in teamNumbers)
             {
-                if (result.ContainsKey(round.uid))
+                var team = new Team(PlayerRoundRecords.Where(x => x.team == teamNumber).ToList());
+                Teams.Add(team);
+            }
+        }
+    }
+
+    public class Team
+    {
+        public int TeamNumber { get; set; }
+
+        public Dictionary<int, Player> Players { get; set; } = new Dictionary<int, Player>();
+
+        public Team(List<PlayerRoundPoco> playerRounds)
+        {
+            TeamNumber = playerRounds[0].team;
+
+            foreach (var playerRound in playerRounds)
+            {
+                if (Players.ContainsKey(playerRound.uid))
                 {
-                    result[round.uid].damage += round.damage;
-                    result[round.uid].damage_taken += round.damage_taken;
-                    result[round.uid].drone_kills += round.drone_kills;
-                    result[round.uid].kills += round.kills;
-                    result[round.uid].score += round.score;
-                    result[round.uid].assists += round.assists;
+                    Players[playerRound.uid] = new Player(playerRounds.Where(x => x.uid == playerRound.uid).ToList());
                 }
                 else
                 {
-                    var playerRoundRecordPoco = round.ShallowCopy();
-                    result.Add(playerRoundRecordPoco.uid, playerRoundRecordPoco);
+                    Players.Add(playerRound.uid, new Player(playerRounds.Where(x => x.uid == playerRound.uid).ToList()));
                 }
             }
-            return result.Values.ToList();
+        }
+    }
+
+    public class Player
+    {
+        public int UserId { get; set; }
+
+        public PlayerRoundPoco RoundsCombined { get; set; }
+
+        public List<PlayerRoundPoco> Rounds { get; set; }
+
+        public Player(List<PlayerRoundPoco> playerRounds)
+        {
+            UserId = playerRounds[0].uid;
+
+            Rounds = playerRounds.OrderBy(x => x.round_id).ToList();
+
+            RoundsCombined = CombineRounds(playerRounds);
+        }
+
+        private PlayerRoundPoco CombineRounds(List<PlayerRoundPoco> rounds)
+        {
+            var result = new PlayerRoundPoco();
+            foreach (var round in rounds)
+            {
+                if (result.uid == round.uid)
+                {
+                    result.damage += round.damage;
+                    result.damage_taken += round.damage_taken;
+                    result.drone_kills += round.drone_kills;
+                    result.kills += round.kills;
+                    result.score += round.score;
+                    result.assists += round.assists;
+                }
+                else
+                {
+                    result = round.ShallowCopy();
+                }
+            }
+
+            return result;
         }
     }
 
@@ -67,6 +116,9 @@ namespace Crossout.AspWeb.Models.Cod
 
         [JsonIgnore]
         public ItemPoco Item { get; set; }
+
+        [JsonProperty("userId")]
+        public int UserId { get => RoundDamageRecord.uid; }
 
         [JsonProperty("roundId")]
         public int RoundId { get => RoundDamageRecord.round_id; }

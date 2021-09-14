@@ -9,6 +9,9 @@
                 Name
             </th>
             <th>
+                Group
+            </th>
+            <th>
                 Damage Taken
             </th>
             <th>
@@ -32,109 +35,70 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var teamPlayer in Model.Team)
+        @foreach (var teamPlayer in Model.Players)
         {
-        <tr>
-            <td class="details-control">
-                <svg class="feather-help-circle plus"><use xlink:href="/icons/feather-sprite.svg#plus-circle" /></svg>
-                <svg class="feather-help-circle minus d-none"><use xlink:href="/icons/feather-sprite.svg#minus-circle" /></svg>
-            </td>
-            <td>
-                @teamPlayer.nickname
-            </td>
-            <td>
-                @teamPlayer.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)
-            </td>
-            <td>
-                @teamPlayer.drone_kills
-            </td>
-            <td>
-                @teamPlayer.assists
-            </td>
-            <td>
-                @teamPlayer.kills
-            </td>
-            <td>
-                @teamPlayer.damage.ToString("0.00", CultureInfo.InvariantCulture)
-            </td>
-            <td>
-                @teamPlayer.score
-            </td>
-            <td>
-                @teamPlayer.uid
-            </td>
-        </tr>
+            var total = teamPlayer.RoundsCombined;
+            <tr>
+                <td class="details-control">
+                    <img class="loading" src="~/icons/Spinner-1s-64px.svg" width="32" height="32" />
+                    <svg class="feather-help-circle plus d-none"><use xlink:href="/icons/feather-sprite.svg#plus-circle" /></svg>
+                    <svg class="feather-help-circle minus d-none"><use xlink:href="/icons/feather-sprite.svg#minus-circle" /></svg>
+                </td>
+                <td>
+                    @total.nickname
+                </td>
+                <td>
+                    @if (total.group_id != 0)
+                    {
+                        <div class="blocky" data-seed="@total.group_id" data-blockytype="group"></div>
+                    }
+                </td>
+                <td data-order="@total.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)">
+                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)</b></div>
+                    @foreach (var round in teamPlayer.Rounds)
+                    {
+                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)</div>
+                    }
+                </td>
+                <td data-order="@total.drone_kills">
+                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.drone_kills</b></div>
+                    @foreach (var round in teamPlayer.Rounds)
+                    {
+                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.drone_kills</div>
+                    }
+                </td>
+                <td data-order="@total.assists">
+                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.assists</b></div>
+                    @foreach (var round in teamPlayer.Rounds)
+                    {
+                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.assists</div>
+                    }
+                </td>
+                <td data-order="@total.kills">
+                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.kills</b></div>
+                    @foreach (var round in teamPlayer.Rounds)
+                    {
+                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.kills</div>
+                    }
+                </td>
+                <td data-order="@total.damage.ToString("0.00", CultureInfo.InvariantCulture)">
+                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.damage.ToString("0.00", CultureInfo.InvariantCulture)</b></div>
+                    @foreach (var round in teamPlayer.Rounds)
+                    {
+                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.damage.ToString("0.00", CultureInfo.InvariantCulture)</div>
+                    }
+                </td>
+                <td data-order="@total.score">
+                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.score</b></div>
+                    @foreach (var round in teamPlayer.Rounds)
+                    {
+                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.score</div>
+                    }
+                </td>
+                <td>
+                    @total.uid
+                </td>
+            </tr>
         }
     </tbody>
 </table>
-
-@*<script>
-
-    var table@(Model.Id) = $('#teamTable@(Model.Id)').DataTable({
-        dom: '<tr>',
-        order: [[7, 'desc']],
-        searching: true,
-        lengthChange: false,
-        paging: false,
-        info: false,
-        autoWidth: false,
-        columnDefs: [
-            { width: '15%', targets: [1, 2, 6, 7] },
-            { width: '12%', targets: [3, 4, 5] },
-            { orderable: false, width: '4%', targets: [0] }
-        ]
-    });
-
-    $('#teamTable@(Model.Id) tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = table@(Model.Id).row(tr);
-
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass('shown');
-            $(this).children('td.details-control > svg.minus').addClass('d-none');
-            $(this).children('td.details-control > svg.plus').removeClass('d-none');
-        }
-        else {
-            row.child(format(row.data())).show();
-            tr.addClass('shown');
-            $(this).children('td.details-control > svg.plus').addClass('d-none');
-            $(this).children('td.details-control > svg.minus').removeClass('d-none');
-        }
-    });
-
-    function format(rowData) {
-        var matchId = $('#teamTable@(Model.Id)').data('matchid');
-        var div = $('<div/>')
-            .addClass('loading')
-            .text('Loading...');
-
-        $.ajax({
-            url: '/data/match/' + matchId + '/player/' + rowData[8],
-            dataType: 'json',
-            success: function (json) {
-                var html = '<table class="table table-borderless" style="width:50%">' +
-                    '<thead>' +
-                    '<tr>' +
-                    '<th>Weapon</th>' +
-                    '<th>Damage</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody>';
-                json.damageData.forEach(function (e, i) {
-                    var image = ''
-                    if (e.imageExists)
-                        image = '<img class="mr-1" width="32"height="32" src="/img/items/' + e.itemId + '.png"></img>';
-                    var name = e.weaponDisplayName
-                    if (e.itemId !== 0)
-                        name = '<a href="/item/' + e.itemId + '">' + e.weaponDisplayName + '</a>';
-                    html += '<tr><td>' + image + name + '</td><td>' + e.damage + '</td></tr>';
-                });
-                html += '</tbody>';
-                div.html(html);
-            }
-        });
-
-        return div;
-    }
-</script>*@

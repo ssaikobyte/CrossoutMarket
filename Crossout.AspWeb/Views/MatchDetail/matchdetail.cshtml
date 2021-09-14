@@ -21,18 +21,22 @@
     <div class="row">
         <div class="col-lg-7 col-md-12">
             <div class="card my-1 p-2">
-                <h4 class="card-title">Match <span class="timestamp">@Model.MatchRecord.match_start</span> <span data-toggle="collapse" data-target="#helpWrapper"><svg class="feather-help-circle"><use xlink:href="/icons/feather-sprite.svg#help-circle" /></svg></span></h4>
+                <div class="d-flex flex-row">
+                    <div class="blocky" data-seed="@Model.MatchRecord.match_id" data-blockytype="match"></div>
+                    <div class="ml-2">
+                        <h4 class="card-title">Match <span class="timestamp">@Model.MatchRecord.match_start</span> <span data-toggle="collapse" data-target="#helpWrapper"><svg class="feather-help-circle"><use xlink:href="/icons/feather-sprite.svg#help-circle" /></svg></span></h4>
+                        <div id="helpWrapper" class="collapse">
+                            <h5 class="m-2"><loc model="loc" category="shared" name="title.howitworks">How it works</loc></h5>
 
-                <div id="helpWrapper" class="collapse">
-                    <h5 class="m-2"><loc model="loc" category="shared" name="title.howitworks">How it works</loc></h5>
+                        </div>
 
+                        <h5>
+                            @Model.MatchRecord.match_type
+                            <small class="text-muted">on</small>
+                            @Model.Map.map_display_name
+                        </h5>
+                    </div>
                 </div>
-
-                <h5>
-                    @Model.MatchRecord.match_type
-                    <small class="text-muted">on</small>
-                    @Model.Map.map_display_name
-                </h5>
 
             </div>
 
@@ -77,15 +81,26 @@
 
     <div class="card my-1 p-2">
         <h4 class="card-title">Teams</h4>
-        <div class="my-1">
-            <h5>Team 1 - @(Model.MatchRecord.winning_team == 1 ? "Won" : "Lost")</h5>
-            <partial name="matchteamtable" model="new TeamTable { Id = 1, MatchId = Model.MatchRecord.match_id, Team = Model.Team1PlayersCombined }" />
-        </div>
-        <div class="my-1">
-            <h5>Team 2 - @(Model.MatchRecord.winning_team == 2 ? "Won" : "Lost")</h5>
-            <partial name="matchteamtable" model="new TeamTable { Id = 2, MatchId = Model.MatchRecord.match_id, Team = Model.Team2PlayersCombined }" />
-        </div>
+        @foreach (var team in Model.Teams)
+        {
+            <div class="my-1">
+                <h5>Team @team.TeamNumber - @(Model.MatchRecord.winning_team == team.TeamNumber ? "Won" : "Lost")</h5>
+                <partial name="matchteamtable" model="new TeamTable { Id = team.TeamNumber, MatchId = Model.MatchRecord.match_id, RoundNumber = -1, Players = team.Players.Values.ToList() }" />
+            </div>
+        }
     </div>
 </div>
 
+<script src="~/scripts/blockies.min.js?@CacheBuster.Once"></script>
+
 <script src="~/scripts/internal/teamtables.js?@CacheBuster.Once"></script>
+
+<script src="~/scripts/internal/blockyplacer.js?@CacheBuster.Once"></script>
+
+<script>
+    placeBlockies();
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

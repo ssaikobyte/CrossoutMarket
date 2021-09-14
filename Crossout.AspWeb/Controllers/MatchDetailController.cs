@@ -32,6 +32,7 @@ namespace Crossout.AspWeb.Controllers
             var matchId = model.MatchRecord.match_id;
             model.RoundRecords = db.SelectRoundRecords(matchId);
             model.PlayerRoundRecords = db.SelectPlayerRoundRecords(matchId);
+            model.FormTeams();
 
             this.RegisterHit("Match History");
 
