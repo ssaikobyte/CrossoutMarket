@@ -51,6 +51,14 @@ namespace Crossout.AspWeb.Services
             itemModel.OCRStatItems.ForEach(x => x.CreateDisplayStats());
             itemModel.OCRStatItems = itemModel.OCRStatItems.GroupBy(x => x.XoVer).Select(x => x.OrderByDescending(x => x.Timestamp).First()).ToList();
             itemModel.OCRStatItems.Sort(OCRStatItemPoco.CompareDateTimeDesc);
+
+            itemModel.Synergies = NPoco.Fetch<SynergyPoco>("WHERE itemnumber = @0", id);
+
+            foreach (var synergy in itemModel.Synergies)
+            {
+                itemModel.SynergyItems.AddRange(NPoco.Fetch<SynergyPoco>("WHERE synergy = '" + synergy.SynergyType + "' and itemnumber != @0", id));
+            }
+
             NPoco.Connection.Close();
 
             var item = Item.Create(ds[0]);

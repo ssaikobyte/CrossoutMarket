@@ -77,7 +77,7 @@
                             </select>
                         }
                     }
-                    else if(Model.Item.Description != null)
+                    else if (Model.Item.Description != null)
                     {
                         <p>@Html.Raw(Model.Item.Description.Text)</p>
                     }
@@ -133,6 +133,11 @@
                     </tr>
                 </tbody>
             </table>
+            @if (Model.Synergies.Count > 0)
+            {
+                <h4 class="align-self-center">Synergy</h4>
+                <partial name="synergycard" model="@Model.SynergyItems" />
+            }
         </div>
     </div>
 
@@ -355,6 +360,7 @@
 
 <script src="~/scripts/internal/item.js?@(CacheBuster.Once)"></script>
 <script src="~/scripts/internal/craftingcalc.js?@(CacheBuster.Once)"></script>
+<script src="~/scripts/internal/synergy.js?@(CacheBuster.Once)"></script>
 <script src="~/scripts/internal/scriptlocalization.js?@(CacheBuster.Once)"></script>
 <script>
     $(document).ready(function () {
@@ -374,12 +380,16 @@
             craftingCalcData.data = data;
             craftingCalcData.loaded = true;
 
+            synergyData.data = data;
+            synergyData.loaded = true;
+
             await getLocalizations('item', Cookies.get('language'));
         });
 
     function onLocalizationLoaded() {
         localize();
         onDataLoaded();
+        onSynergyDataLoaded();
     }
 
     $('#versionSelect').on('change', function (e) {

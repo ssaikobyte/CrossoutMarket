@@ -22,6 +22,12 @@ namespace Crossout.AspWeb.Models.Items
         [JsonIgnore]
         public List<OCRStatItemPoco> OCRStatItems { get; set; } = new List<OCRStatItemPoco>();
 
+        [JsonProperty("synergies")]
+        public List<SynergyPoco> Synergies { get; set; } = new List<SynergyPoco>();
+
+        [JsonProperty("synergyitems")]
+        public List<SynergyPoco> SynergyItems { get; set; } = new List<SynergyPoco>();
+
         [JsonIgnore]
         public StatusModel Status { get; set; } = new StatusModel();
 
