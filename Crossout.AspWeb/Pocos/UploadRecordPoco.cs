@@ -142,7 +142,7 @@ namespace Crossout.AspWeb.Pocos
         public float damage { get; set; }
     }
 
-    [TableName("cod_player_match_resource_records")]
+    [TableName("cod_player_match_resources")]
     [PrimaryKey("match_id", AutoIncrement = false)]
     [ExplicitColumns]
     public class MatchResourcePoco
@@ -157,7 +157,7 @@ namespace Crossout.AspWeb.Pocos
         public int amount { get; set; }
     }
 
-    [TableName("cod_player_match_score_records")]
+    [TableName("cod_player_match_scores")]
     [PrimaryKey("match_id", AutoIncrement = false)]
     [ExplicitColumns]
     public class MatchScorePoco
@@ -174,7 +174,7 @@ namespace Crossout.AspWeb.Pocos
         public int score { get; set; }
     }
 
-    [TableName("cod_player_match_medal_records")]
+    [TableName("cod_player_match_medals")]
     [PrimaryKey("match_id", AutoIncrement = false)]
     [ExplicitColumns]
     public class MatchMedalPoco
@@ -191,7 +191,7 @@ namespace Crossout.AspWeb.Pocos
         public int amount { get; set; }
     }
 
-    [TableName("cod_group_record")]
+    [TableName("cod_groups")]
     [PrimaryKey("group_id", AutoIncrement = true)]
     [ExplicitColumns]
     public class GroupPoco
@@ -208,7 +208,7 @@ namespace Crossout.AspWeb.Pocos
         public int uid_4 { get; set; }
     }
 
-    [TableName("cod_group_match_record")]
+    [TableName("cod_group_matches")]
     [PrimaryKey("group_id", AutoIncrement = false)]
     [ExplicitColumns]
     public class MatchGroupPoco
@@ -217,6 +217,44 @@ namespace Crossout.AspWeb.Pocos
         public long match_id { get; set; }
         [Column("group_id")]
         public int group_id { get; set; }
+    }
+
+    [TableName("cod_build_upload_record")]
+    [PrimaryKey("uid, build_hash, power_score", AutoIncrement = false)]
+    [ExplicitColumns]
+    public class BuildUploadPoco
+    {
+        [Column("uid")]
+        public int uid { get; set; }
+        [Column("build_hash")]
+        public string build_hash { get; set; }
+        [Column("power_score")]
+        public int power_score { get; set; }
+        [Column("part_count")]
+        public int part_count { get; set; }
+    }
+
+    [TableName("cod_builds")]
+    [ExplicitColumns]
+    [PrimaryKey("build_id", AutoIncrement = false)]
+    public class BuildPoco
+    {
+        [Column("build_id")]
+        public int build_id { get; set; }
+        [Column("build_hash")]
+        public string build_hash { get; set; }
+        [Column("power_score")]
+        public int power_score { get; set; }
+    }
+
+    [TableName("cod_build_parts")]
+    [ExplicitColumns]
+    public class BuildPartPoco
+    {
+        [Column("build_id")]
+        public int build_id { get; set; }
+        [Column("part_name")]
+        public string part_name { get; set; }
     }
 
     [TableName("cod_maps")]

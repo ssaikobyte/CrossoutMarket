@@ -368,7 +368,7 @@ namespace Crossout.AspWeb.Controllers
             sql.Open(WebSettings.Settings.CreateDescription());
             ApiDataService dataService = new ApiDataService(sql);
 
-            List<long> model = dataService.GetCodUploadRecords(uid).Select(x => x.match_id).ToList();
+            UploadReturn model = dataService.GetCodUploadRecords(uid);
 
             this.RegisterHit("/api/v2/co_driver/upload_records");
             return Json(model);
@@ -376,16 +376,16 @@ namespace Crossout.AspWeb.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        [Route("/api/v2/co_driver/upload_matchs")]
-        public IActionResult UploadMatchAction([FromBody] UploadEntry upload_entry)
+        [Route("/api/v2/co_driver/upload_match_and_build")]
+        public IActionResult UploadMatchAndBuildAction([FromBody] UploadEntry upload_entry)
         {
             sql.Open(WebSettings.Settings.CreateDescription());
             ApiDataService dataService = new ApiDataService(sql);
 
-            int match_count = dataService.UploadMatchs(upload_entry);
+            UploadReturn match_and_build_return = dataService.UploadMatchsAndBuilds(upload_entry);
 
             this.RegisterHit("/api/v2/co_driver/upload_matchs");
-            return Json(match_count);
+            return Json(match_and_build_return);
         }
 
         private IActionResult RouteSearch(string searchQuery, int page, string rarity, string category, string faction, string removedItems, string metaItems, int id, int language)
