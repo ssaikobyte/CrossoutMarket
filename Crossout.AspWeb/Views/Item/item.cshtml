@@ -380,16 +380,12 @@
             craftingCalcData.data = data;
             craftingCalcData.loaded = true;
 
-            synergyData.data = data;
-            synergyData.loaded = true;
-
             await getLocalizations('item', Cookies.get('language'));
         });
 
     function onLocalizationLoaded() {
         localize();
         onDataLoaded();
-        onSynergyDataLoaded();
     }
 
     $('#versionSelect').on('change', function (e) {
@@ -397,4 +393,17 @@
         let target = '#' + e.target.value;
         $(target).removeClass('d-none');
     })
+
+    $.ajax({
+        url: '/data/synergy/@(Model.Item.Id)',
+        dataType: 'json',
+        success: function (json) {
+            synergyData.data = json.data;
+            //$('#synergyWrapper').append(json);
+            console.log(json.data);
+            synergyData.loaded = true;
+            onSynergyDataLoaded();
+        }
+    });
+
 </script>

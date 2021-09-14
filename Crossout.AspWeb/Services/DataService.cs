@@ -70,6 +70,26 @@ namespace Crossout.AspWeb.Services
             return itemModel;
         }
 
+        public ItemSynergyCollection SelectItemSynergy(int id)
+        {
+            ItemSynergyCollection itemSynergies = new ItemSynergyCollection();
+
+            var parmeter = new List<Parameter>();
+            parmeter.Add(new Parameter { Identifier = "id", Value = id });
+
+            itemSynergies.ItemNumber = id;
+
+            NPoco.Connection.Open();
+            itemSynergies.Synergies = NPoco.Fetch<SynergyPoco>("WHERE itemnumber = @0", id);
+            foreach (var synergy in itemSynergies.Synergies)
+            {
+                itemSynergies.SynergyItems.AddRange(NPoco.Fetch<SynergyPoco>("WHERE synergy = '" + synergy.SynergyType + "' and itemnumber != @0", id));
+            }
+            NPoco.Connection.Close();
+
+            return itemSynergies;
+        }
+
         public Dictionary<int, Item> SelectListOfItems(List<int> ids, int language)
         {
             Dictionary<int, Item> items = new Dictionary<int, Item>();

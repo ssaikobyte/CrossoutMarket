@@ -22,6 +22,7 @@ $(document).ready(function () {
 });
 
 function onSynergyDataLoaded() {
+/*
     synergyList = synergyData.data.synergies;
     itemList = synergyData.data.synergyitems;
     uniqueId = 0;
@@ -36,12 +37,11 @@ function onSynergyDataLoaded() {
         });
     });
     drawSynergy();
-
-/*
-    var wrapper = $('#synergyWrapper').append('<div>');
-    wrapper.children().remove();
-    var treeWrapper = $('<div class="col-4">' + synergyData.data.synergyitems[0].itemNumber + '</div>').appendTo(wrapper);
 */
+
+    var wrapper = $('#synergyWrapper').append('<div>');
+    //wrapper.children().remove();
+    var treeWrapper = $('<div class="col-4">' + 'TEST' + '</div>').appendTo(wrapper);
 }
 
 function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
@@ -70,10 +70,10 @@ function drawSynergy() {
     var wrapper = $('#synergyWrapper').append('<div>');
     wrapper.children().remove();
     var treeWrapper = $('<div class="col-4"></div>').appendTo(wrapper);
-    drawTreeHeader(treeWrapper);
+    drawSynergyTreeHeader(treeWrapper);
     synergies.tree.topToBottom.forEach(function (e, i) {
         if (e.show) {
-            drawTreeEntry(e, treeWrapper);
+            drawSynergyTreeEntry(e, treeWrapper);
             synergies.tree.visible.push(e);
         }
     });
@@ -81,7 +81,7 @@ function drawSynergy() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function drawTreeHeader(wrapper) {
+function drawSynergyTreeHeader(wrapper) {
     var html = '<div class="d-flex flex-row justify-content-between my-1 mx-1">' +
         '<div class="d-flex flex-row justify-content-between w-50">' +
         '<div class="font-weight-bold">' +
@@ -91,7 +91,7 @@ function drawTreeHeader(wrapper) {
     $(wrapper).append(html);
 }
 
-function drawTreeEntry(displayItem, wrapper) {
+function drawSynergyTreeEntry(displayItem, wrapper) {
     var depthSpacer = '';
     var expandButton = '<button class="btn btn-sm btn-outline-secondary recipe-expand-btn text-monospace ' + (displayItem.hasIngredients ? '' : 'invisible') + '" data-uniqueid="' + displayItem.uniqueId + '">' + (displayItem.expanded ? '-' : '+') + '</button>';
 
