@@ -74,12 +74,11 @@ namespace Crossout.AspWeb.Services
             NPoco.Connection.Open();
             itemSynergies.Synergies = NPoco.Fetch<SynergyPoco>("WHERE itemnumber = @0", id);
             var synergyTypes = itemSynergies.Synergies.Select(x => x.SynergyType).ToList();
-            //var synergyItems = NPoco.Fetch<SynergyItem>("SELECT itemsynergies.*, item.* FROM itemsynergies LEFT OUTER JOIN item ON item.id = itemsynergies.itemnumber WHERE itemsynergies.synergy IN (@0) AND itemsynergies.itemnumber <> @1", synergyTypes, id, 1);
-            var synergyItems = NPoco.Fetch<SynergyItem>(@"SELECT itemsynergies.*, item.*, rarity.* FROM itemsynergies 
+            var synergyItems = NPoco.Fetch<SynergyItem>(@"SELECT itemsynergies.*, item.*, itemlocalization.*, rarity.* FROM itemsynergies 
                                                         LEFT JOIN itemlocalization ON itemlocalization.itemnumber = itemsynergies.itemnumber 
                                                         LEFT JOIN item ON item.id = itemsynergies.itemnumber 
                                                         LEFT JOIN rarity ON rarity.id = item.raritynumber
-                                                        WHERE itemsynergies.synergy IN (@0) AND itemsynergies.itemnumber <> @1 AND itemlocalization.languagenumber = 1", synergyTypes, id, 1);
+                                                        WHERE itemsynergies.synergy IN (@0) AND itemsynergies.itemnumber <> @1 AND itemlocalization.languagenumber = 1 ORDER BY rarity.order", synergyTypes, id, 1);
             itemSynergies.SynergyItems.AddRange(synergyItems);
             NPoco.Connection.Close();
 

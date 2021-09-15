@@ -37,7 +37,7 @@ namespace Crossout.AspWeb.Models.Items
         public string SynergyType { get => Synergy.SynergyType; }
 
         [JsonProperty("name")]
-        public string Name { get => Item.AvailableName; }
+        public string Name { get => Item.ItemLocalization.LocalizedName; }
 
         [JsonProperty("rarity")]
         public string Rarity { get => Item.Rarity.Name; }
