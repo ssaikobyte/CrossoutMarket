@@ -24,7 +24,7 @@ $(document).ready(function () {
 function onSynergyDataLoaded() {
     synergyList = synergyData.data.synergies;
     itemList = synergyData.data.synergyitems;
-    uniqueId = 0;
+    var uniqueId = 0;
     synergyList.forEach(function (s, i) {
         mapSynergyItems(null, s, 0, uniqueId);
         uniqueId++;
@@ -36,7 +36,6 @@ function onSynergyDataLoaded() {
         });
     });
     drawSynergy();
-
 /*
     var wrapper = $('#synergyWrapper').append('<div>');
     //wrapper.children().remove();
@@ -50,18 +49,17 @@ function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
         synergyType: item.synergyType,
         itemNumber: item.itemNumber,
         name: item.itemNumber,
-        factionId: 1,
         show: true,
         expanded: true,
         depth: currentDepth,
-        hasIngredients: false,
+        hasSynergies: false,
         rootDisplayItem: rootDisplayItem,
     }
 
     if (displayItem.depth == 0) {
         displayItem.name = item.synergyType;
-        displayItem.hasIngredients = true;
-        expanded = true;
+        displayItem.hasSynergies = true;
+        expanded = false;
     }
     synergies.tree.topToBottom.push(displayItem);
 }
@@ -79,6 +77,7 @@ function drawSynergy() {
     });
     bindEvents();
     $('[data-toggle="tooltip"]').tooltip();
+    bindSynergyEvents();
 }
 
 function drawSynergyTreeHeader(wrapper) {
@@ -93,24 +92,73 @@ function drawSynergyTreeHeader(wrapper) {
 
 function drawSynergyTreeEntry(displayItem, wrapper) {
     var depthSpacer = '';
-    var expandButton = '<button class="btn btn-sm btn-outline-secondary recipe-expand-btn text-monospace ' + (displayItem.hasIngredients ? '' : 'invisible') + '" data-uniqueid="' + displayItem.uniqueId + '">' + (displayItem.expanded ? '-' : '+') + '</button>';
+    for (var i = 0; i < displayItem.depth; i++) {
+        depthSpacer += '<div style="width: 24px;"></div>';
+    }
+    var expandButton = '<button class="btn btn-sm btn-outline-secondary synergy-expand-btn text-monospace ' + (displayItem.hasSynergies ? '' : 'invisible') + '" data-uniqueid="' + displayItem.uniqueId + '">' + (displayItem.expanded ? '-' : '+') + '</button>';
 
     var html = '<div class="d-flex flex-row justify-content-between my-1 mx-1"">' +
 
         '<div class="d-flex flex-row w-50">' +
         depthSpacer +
-        (displayItem.rootDisplayItem !== null ? expandButton : '') +
+        (displayItem.rootDisplayItem == null ? expandButton : '') +
         '<a href="/item/' + displayItem.itemNumber + '">' +
         '<div class="d-flex flex-row">' +
-        '<img class="ml-1 item-image-med" src="' +
+        (displayItem.depth > 0 ? '<img class="ml-1 item-image-med" src="' +
         '/img/items/' + displayItem.itemNumber + '.png' +
-        '"/ >' +
+        '"/ >' : '') +
         '<div class="ml-1">' +
         displayItem.name +
         '</div>' +
-        (displayItem.factionId && displayItem.factionId > 0 && displayItem.hasIngredients ? '<div class="ml-1">' + '<img class="faction-icon" width="32" height="32" src="/img/faction-icons/' + displayItem.factionId + '.png" data-toggle="tooltip" data-placement="bottom" title="' + displayItem.factionName + '">' + '</div>' : '') +
         '</div>' +
         '</a>';
     $(wrapper).append(html);
+}
+
+// MANIPULATE
+function setSynergyCollapse(uniqueId, collapse) {
+    var inTarget = false;
+    var targetDepth = 0;
+    synergies.tree.topToBottom.forEach(function (e, i) {
+        if (inTarget && e.depth > targetDepth) {
+            if (e.depth > targetDepth + 1)
+                e.show = false;
+            else
+                e.show = !collapse;
+            if (e.hasSynergies)
+                e.expanded = false;
+        } else {
+            inTarget = false;
+        }
+
+        if (e.uniqueId === uniqueId) {
+            inTarget = true;
+            targetDepth = e.depth;
+            e.expanded = !collapse;
+        }
+    });
+}
+
+// UPDATE
+function expandSynergy(uniqueId, expand) {
+    setSynergyCollapse(uniqueId, !expand);
+    drawSynergy();
+}
+
+// EVENT HANDLERS
+function bindSynergyEvents() {
+    $('.synergy-expand-btn').click(function () {
+        var uniqueId = parseInt($(this).attr('data-uniqueid'));
+        if (getSynergyExpandedStatus(uniqueId))
+            expandSynergy(uniqueId, false);
+        else {
+            expandSynergy(uniqueId, true);
+        }
+    });
+}
+
+// HELPERS
+function getSynergyExpandedStatus(uniqueId) {
+    return synergies.tree.topToBottom.find(x => x.uniqueId === uniqueId).expanded;
 }
 

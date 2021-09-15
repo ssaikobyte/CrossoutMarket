@@ -22,12 +22,9 @@ namespace Crossout.AspWeb.Controllers
 
             DataService db = new DataService(sql);
 
-            //ItemSynergyCollection model = new ItemSynergyCollection();
-
             try
             {
                 var model = db.SelectItemSynergy(id);
-                Console.WriteLine("SUCCESS");
 
                 return Json(model);
             }
