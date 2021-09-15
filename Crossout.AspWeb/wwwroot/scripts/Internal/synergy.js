@@ -22,8 +22,8 @@ $(document).ready(function () {
 });
 
 function onSynergyDataLoaded() {
-    synergyList = synergyData.data.synergies;
-    itemList = synergyData.data.synergyitems;
+    var synergyList = synergyData.data.synergies;
+    var itemList = synergyData.data.synergyItems;
     if (synergyList === undefined || synergyList.length == 0) {
 
     }
@@ -40,7 +40,7 @@ function onSynergyDataLoaded() {
             mapSynergyItems(null, { synergy: s }, 0, uniqueId);
             uniqueId++;
             itemList.forEach(function (e, i) {
-                if (e.synergy.synergyType == s.synergyType) {
+                if (e.synergyType == s.synergyType) {
                     mapSynergyItems(s, e, 1, uniqueId);
                     uniqueId++;
                 }
@@ -58,10 +58,10 @@ function onSynergyDataLoaded() {
 function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
     var displayItem = {
         uniqueId: uniqueId,
-        synergyType: item.synergy.synergyType,
-        itemNumber: item.synergy.itemNumber,
-        name: item.itemLoc === undefined ? item.synergy.synergyType : item.itemLoc.LocalizedName,
-        show: item.itemloc === undefined ? false : true,
+        synergyType: item.synergyType,
+        itemNumber: item.itemNumber,
+        name: item.name === undefined ? item.itemNumber : item.name,
+        show: rootDisplayItem == null ? true : false,
         expanded: false,
         depth: currentDepth,
         hasSynergies: false,
@@ -80,7 +80,7 @@ function drawSynergy() {
     var wrapper = $('#synergyWrapper').append('<div>');
     wrapper.children().remove();
     var treeWrapper = $('<div></div>').appendTo(wrapper);
-    drawSynergyTreeHeader(treeWrapper);
+    //drawSynergyTreeHeader(treeWrapper);
     synergies.tree.topToBottom.forEach(function (e, i) {
         if (e.show) {
             drawSynergyTreeEntry(e, treeWrapper);

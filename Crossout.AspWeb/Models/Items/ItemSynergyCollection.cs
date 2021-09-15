@@ -16,19 +16,30 @@ namespace Crossout.AspWeb.Models.Items
         [JsonProperty("synergies")]
         public List<SynergyPoco> Synergies { get; set; } = new List<SynergyPoco>();
 
-        [JsonProperty("synergyitems")]
+        [JsonProperty("synergyItems")]
         public List<SynergyItem> SynergyItems { get; set; } = new List<SynergyItem>();
     }
 
     public class SynergyItem
     {
-        [JsonProperty("synergy")]
+        [JsonIgnore]
         [Reference(ReferenceType.OneToOne)]
         public SynergyPoco Synergy { get; set; }
 
-        [JsonProperty("itemLoc")]
+        [JsonIgnore]
         [Reference(ReferenceType.OneToOne)]
-        public ItemLocalizationPoco ItemLoc { get; set; }
+        public ItemPoco Item { get; set; }
 
+        [JsonProperty("itemNumber")]
+        public int ItemId { get => Synergy.ItemNumber; }
+
+        [JsonProperty("synergyType")]
+        public string SynergyType { get => Synergy.SynergyType; }
+
+        [JsonProperty("name")]
+        public string Name { get => Item.AvailableName; }
+
+        [JsonProperty("rarity")]
+        public string Rarity { get => Item.Rarity.Name; }
     }
 }
