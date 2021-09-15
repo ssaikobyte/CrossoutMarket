@@ -73,10 +73,9 @@ namespace Crossout.AspWeb.Services
 
             NPoco.Connection.Open();
             itemSynergies.Synergies = NPoco.Fetch<SynergyPoco>("WHERE itemnumber = @0", id);
-            foreach (var synergy in itemSynergies.Synergies)
-            {
-                itemSynergies.SynergyItems.AddRange(NPoco.Fetch<SynergyPoco>("WHERE synergy = '" + synergy.SynergyType + "' and itemnumber != @0", id));
-            }
+            var synergyTypes = itemSynergies.Synergies.Select(x => x.SynergyType).ToList();
+            var synergyItems = NPoco.Fetch<SynergyItem>("SELECT itemsynergies.*, itemlocalization.* FROM itemsynergies LEFT OUTER JOIN itemlocalization ON itemlocalization.itemnumber = itemsynergies.itemnumber WHERE itemsynergies.synergy IN (@0) AND itemsynergies.itemnumber <> @1 AND itemlocalization.languagenumber = 1", synergyTypes, id, 1);
+            itemSynergies.SynergyItems.AddRange(synergyItems);
             NPoco.Connection.Close();
 
             return itemSynergies;

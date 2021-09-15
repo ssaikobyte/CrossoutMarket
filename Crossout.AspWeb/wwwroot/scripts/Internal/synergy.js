@@ -26,10 +26,10 @@ function onSynergyDataLoaded() {
     itemList = synergyData.data.synergyitems;
     var uniqueId = 0;
     synergyList.forEach(function (s, i) {
-        mapSynergyItems(null, s, 0, uniqueId);
+        mapSynergyItems(null, { synergy: s}, 0, uniqueId);
         uniqueId++;
         itemList.forEach(function (e, i) {
-            if (e.synergyType == s.synergyType) {
+            if (e.synergy.synergyType == s.synergyType) {
                 mapSynergyItems(s, e, 1, uniqueId);
                 uniqueId++;
             }
@@ -46,9 +46,9 @@ function onSynergyDataLoaded() {
 function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
     var displayItem = {
         uniqueId: uniqueId,
-        synergyType: item.synergyType,
-        itemNumber: item.itemNumber,
-        name: item.itemNumber,
+        synergyType: item.synergy.synergyType,
+        itemNumber: item.synergy.itemNumber,
+        name: item.itemLoc === undefined ? item.synergy.synergyType : item.itemLoc.LocalizedName,
         show: true,
         expanded: true,
         depth: currentDepth,
@@ -57,7 +57,7 @@ function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
     }
 
     if (displayItem.depth == 0) {
-        displayItem.name = item.synergyType;
+        displayItem.name = item.synergy.synergyType;
         displayItem.hasSynergies = true;
         expanded = false;
     }
