@@ -24,22 +24,34 @@ $(document).ready(function () {
 function onSynergyDataLoaded() {
     synergyList = synergyData.data.synergies;
     itemList = synergyData.data.synergyitems;
-    var uniqueId = 0;
-    synergyList.forEach(function (s, i) {
-        mapSynergyItems(null, { synergy: s}, 0, uniqueId);
-        uniqueId++;
-        itemList.forEach(function (e, i) {
-            if (e.synergy.synergyType == s.synergyType) {
-                mapSynergyItems(s, e, 1, uniqueId);
-                uniqueId++;
-            }
+    if (synergyList === undefined || synergyList.length == 0) {
+
+    }
+    else {
+        var html = '<div class="row card m-2 p-2">' +
+            '           <h4 class="align-self-center">Synergy</h4>' +
+            '           <div class="row m-1" id="synergyWrapper" style="max-height: 360px; overflow-y: scroll;">' +
+            '           </div>' +
+            '       </div > ';
+        $('#sidebarWrapper').append(html);
+
+        var uniqueId = 0;
+        synergyList.forEach(function (s, i) {
+            mapSynergyItems(null, { synergy: s }, 0, uniqueId);
+            uniqueId++;
+            itemList.forEach(function (e, i) {
+                if (e.synergy.synergyType == s.synergyType) {
+                    mapSynergyItems(s, e, 1, uniqueId);
+                    uniqueId++;
+                }
+            });
         });
-    });
-    drawSynergy();
+        drawSynergy();
+    }
 /*
     var wrapper = $('#synergyWrapper').append('<div>');
     //wrapper.children().remove();
-    var treeWrapper = $('<div class="col-4">' + 'TEST' + '</div>').appendTo(wrapper);
+    var treeWrapper = $('<div>' + 'TEST' + '</div>').appendTo(wrapper);
 */
 }
 
@@ -49,7 +61,7 @@ function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
         synergyType: item.synergy.synergyType,
         itemNumber: item.synergy.itemNumber,
         name: item.itemLoc === undefined ? item.synergy.synergyType : item.itemLoc.LocalizedName,
-        show: true,
+        show: item.itemloc === undefined ? false : true,
         expanded: false,
         depth: currentDepth,
         hasSynergies: false,
@@ -59,7 +71,7 @@ function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
     if (displayItem.depth == 0) {
         displayItem.name = item.synergy.synergyType;
         displayItem.hasSynergies = true;
-        expanded = false;
+        displayItem.show = true;
     }
     synergies.tree.topToBottom.push(displayItem);
 }
@@ -67,7 +79,7 @@ function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
 function drawSynergy() {
     var wrapper = $('#synergyWrapper').append('<div>');
     wrapper.children().remove();
-    var treeWrapper = $('<div class="col-4"></div>').appendTo(wrapper);
+    var treeWrapper = $('<div></div>').appendTo(wrapper);
     drawSynergyTreeHeader(treeWrapper);
     synergies.tree.topToBottom.forEach(function (e, i) {
         if (e.show) {
@@ -82,7 +94,7 @@ function drawSynergy() {
 
 function drawSynergyTreeHeader(wrapper) {
     var html = '<div class="d-flex flex-row justify-content-between my-1 mx-1">' +
-        '<div class="d-flex flex-row justify-content-between w-50">' +
+        '<div class="d-flex flex-row justify-content-between">' +
         '<div class="font-weight-bold">' +
         '' +
         '</div>' +
@@ -99,7 +111,7 @@ function drawSynergyTreeEntry(displayItem, wrapper) {
 
     var html = '<div class="d-flex flex-row justify-content-between my-1 mx-1"">' +
 
-        '<div class="d-flex flex-row w-50">' +
+        '<div class="d-flex flex-row">' +
         depthSpacer +
         (displayItem.rootDisplayItem == null ? expandButton : '') +
         '<a href="/item/' + displayItem.itemNumber + '">' +
