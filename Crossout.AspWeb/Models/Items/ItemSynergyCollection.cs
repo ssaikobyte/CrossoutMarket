@@ -16,9 +16,6 @@ namespace Crossout.AspWeb.Models.Items
         [JsonProperty("synergies")]
         public List<SynergyPoco> Synergies { get; set; } = new List<SynergyPoco>();
 
-        //[JsonProperty("synergyitems")]
-        //public List<SynergyPoco> SynergyItems { get; set; } = new List<SynergyPoco>();
-
         [JsonProperty("synergyitems")]
         public List<SynergyItem> SynergyItems { get; set; } = new List<SynergyItem>();
     }

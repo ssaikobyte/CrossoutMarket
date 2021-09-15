@@ -50,7 +50,7 @@ function mapSynergyItems(rootDisplayItem, item, currentDepth, uniqueId) {
         itemNumber: item.synergy.itemNumber,
         name: item.itemLoc === undefined ? item.synergy.synergyType : item.itemLoc.LocalizedName,
         show: true,
-        expanded: true,
+        expanded: false,
         depth: currentDepth,
         hasSynergies: false,
         rootDisplayItem: rootDisplayItem,
