@@ -136,57 +136,19 @@ namespace Crossout.AspWeb.Services.API.v2
             UploadReturn upload_return = new UploadReturn { };
 
             upload_return.uploaded_matches = NPocoDB.Fetch<UploadPoco>("WHERE uid = @0", uid).Select(x => x.match_id).ToList();
-            upload_return.uploaded_builds = GetCodBuildRecords(uid);
-
-            Console.WriteLine(string.Format("calling GetCodUploadRecords found records {0},{1}", upload_return.uploaded_matches.Count, upload_return.uploaded_builds.Count));
+            upload_return.uploaded_builds = NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_BUILD_UPLOAD_RECORD WHERE UID = @0", uid);
 
             return upload_return;
         }
 
-        public List<BuildReturn> GetCodBuildRecords(int uid)
-        {
-            List<BuildReturn> build_returns = new List<BuildReturn> { };
-            
-            try
-            {
-                List<BuildUploadPoco> builds = NPocoDB.Fetch<BuildUploadPoco>("WHERE uid = @0", uid);
-                foreach (BuildUploadPoco build in builds)
-                {
-                    BuildReturn build_return = new BuildReturn { };
-                    build_return.build_hash = build.build_hash;
-                    build_return.power_score = build.power_score;
-                    build_return.part_count = build.part_count;
-
-                    build_returns.Add(build_return);
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteErrorLog(0, "db build return error:" + ex.Message);
-            }
-
-            return build_returns;
-        }
-
         public UploadReturn UploadMatchsAndBuilds(UploadEntry upload_entry)
         {
-            UploadReturn upload_return = new UploadReturn { uploaded_matches = new List<long> { }, uploaded_builds = new List<BuildReturn> { } };
+            UploadReturn upload_return = new UploadReturn { uploaded_matches = new List<long> { }, uploaded_builds = 0 };
 
             if (upload_entry.match_list.Count == 0 && upload_entry.build_list.Count == 0)
                 return upload_return;
 
             NPocoDB.BeginTransaction();
-
-            foreach (BuildEntry build in upload_entry.build_list)
-            {
-                if (!BuildExists(build.build_hash, build.power_score))
-                    UploadBuild(build);
-
-                Console.WriteLine(string.Format("uploading build {0},{1},{2}", build.build_hash, build.power_score, build.parts.Count));
-
-                UploadBuildParts(build);
-                UploadBuildUploadRecord(build, upload_entry.uploader_uid);
-            }
 
             foreach (MatchEntry match in upload_entry.match_list)
             {
@@ -198,8 +160,6 @@ namespace Crossout.AspWeb.Services.API.v2
                 if (MatchExists(match.match_id))
                 {
                     UploadUploadRecord(match, ValidMatch(match) ? "V" : "C", upload_entry.uploader_uid);
-
-                    NPocoDB.CompleteTransaction();
                     continue;
                 }
 
@@ -212,6 +172,15 @@ namespace Crossout.AspWeb.Services.API.v2
                 UploadMedals(match);
                 UploadGroups(match);
                 UploadUploadRecord(match, MatchContainsError(match.match_id) ? "C" : "I", upload_entry.uploader_uid);
+            }
+
+            foreach (BuildEntry build in upload_entry.build_list)
+            {
+                if (!BuildExists(build.build_hash, build.power_score))
+                    UploadBuild(build);
+
+                UploadBuildParts(build);
+                UploadBuildUploadRecord(build, upload_entry.uploader_uid);
             }
 
             upload_return = GetCodUploadRecords(upload_entry.uploader_uid);
@@ -557,9 +526,6 @@ namespace Crossout.AspWeb.Services.API.v2
                 build_poco.build_hash = build.build_hash;
                 build_poco.power_score = build.power_score;
 
-                Console.WriteLine(string.Format("assigned build id {0},{1}", build.build_hash, build.power_score));
-
-
                 NPocoDB.Insert(build_poco);
             }
             catch (Exception ex)
@@ -597,6 +563,9 @@ namespace Crossout.AspWeb.Services.API.v2
                     if (build_parts_poco.Any(x => x.part_name == part))
                         continue;
 
+                    if (!NPocoDB.Fetch<ItemPoco>("WHERE externalKey = @0", part).Any())
+                        continue;
+
                     BuildPartPoco build_part_poco = new BuildPartPoco { };
                     build_part_poco = new BuildPartPoco { };
                     build_part_poco.build_id = build_poco.build_id;
@@ -618,7 +587,7 @@ namespace Crossout.AspWeb.Services.API.v2
                 build_upload_poco.uid = uid;
                 build_upload_poco.build_hash = build.build_hash;
                 build_upload_poco.power_score = build.power_score;
-                build_upload_poco.power_score = build.parts.Count;
+                build_upload_poco.part_count = build.parts.Count;
                 
                 NPocoDB.Insert(build_upload_poco);
             }
@@ -975,7 +944,7 @@ namespace Crossout.AspWeb.Services.API.v2
             }
             catch (Exception ex)
             {
-                Console.WriteLine(log);
+                Console.WriteLine("error writing log" + log + ex.Message);
             }
         }
 
