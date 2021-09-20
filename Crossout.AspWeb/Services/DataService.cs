@@ -538,6 +538,14 @@ namespace Crossout.AspWeb.Services
             return roundDamages;
         }
 
+        public List<MatchMedal> SelectMatchMedal(long matchId)
+        {
+            NPoco.Connection.Open();
+            var matchMedals = NPoco.Fetch<MatchMedal>("SELECT * FROM crossout.cod_player_match_medal_records WHERE match_id = @0", matchId);
+            NPoco.Connection.Close();
+            return matchMedals;
+        }
+
         public List<PlayerRoundPoco> SelectPlayerRoundRecords(long matchId)
         {
             NPoco.Connection.Open();

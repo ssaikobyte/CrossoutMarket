@@ -79,28 +79,48 @@
 
     </div>
 
-    <div class="card my-1 p-2">
-        <h4 class="card-title">Teams</h4>
-        @foreach (var team in Model.Teams)
-        {
-            <div class="my-1">
-                <h5>Team @team.TeamNumber - @(Model.MatchRecord.winning_team == team.TeamNumber ? "Won" : "Lost")</h5>
-                <partial name="matchteamtable" model="new TeamTable { Id = team.TeamNumber, MatchId = Model.MatchRecord.match_id, RoundNumber = -1, Players = team.Players.Values.ToList() }" />
+    <div class="card text-center my-1">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                @foreach (var round in Model.Rounds)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(round.Counter == 0 ? "active" : "")" data-toggle="tab" role="tab" href="#round@(round.Counter)">@round.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="itemTabContent">
+                @{
+                    int i = 0;
+                }
+                @foreach (var round in Model.Rounds)
+                {
+                    <div class="tab-pane @(round.Counter == 0 ? "show active" : "")" id="round@(round.Counter)">
+                        @foreach (var team in round.Teams)
+                        {
+                            <div class="my-1">
+                                <h5>Team @team.TeamNumber - @(Model.MatchRecord.winning_team == team.TeamNumber ? "Won" : "Lost")</h5>
+                                <partial name="matchteamtable" model="new TeamTable { Id = i++, MatchId = Model.MatchRecord.match_id, RoundNumber = round.Counter - 1, Players = team.Players.Values.ToList() }" />
+                            </div>
+                        }
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
-</div>
 
-<script src="~/scripts/blockies.min.js?@CacheBuster.Once"></script>
+    <script src="~/scripts/blockies.min.js?@CacheBuster.Once"></script>
 
-<script src="~/scripts/internal/teamtables.js?@CacheBuster.Once"></script>
+    <script src="~/scripts/internal/teamtables.js?@CacheBuster.Once"></script>
 
-<script src="~/scripts/internal/blockyplacer.js?@CacheBuster.Once"></script>
+    <script src="~/scripts/internal/blockyplacer.js?@CacheBuster.Once"></script>
 
-<script>
-    placeBlockies();
+    <script>
+        placeBlockies();
 
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-</script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>

@@ -7,7 +7,7 @@ $.ajax({
     url: '/data/match/' + matchId,
     dataType: 'json',
     success: function (json) {
-        matchData = { damageData: json.damageData };
+        matchData = json;
         $('td.details-control > .loading').addClass('d-none');
         $('td.details-control > svg.plus').removeClass('d-none');
     }
@@ -16,9 +16,10 @@ $.ajax({
 var tables = [];
 $('.team-table').each(function (i, e) {
     var id = $(e).data('tableid');
+    var roundId = $(e).data('roundid');
     var table = $(e).DataTable({
         dom: '<tr>',
-        order: [[7, 'desc']],
+        order: [[8, 'desc']],
         searching: true,
         lengthChange: false,
         paging: false,
@@ -32,15 +33,15 @@ $('.team-table').each(function (i, e) {
         ]
     });
 
-    tables.push({ id: id, table: table });
+    tables.push({ id: id, roundId: roundId, table: table });
 });
 
 $('.team-table tbody').on('click', 'td.details-control', function () {
     var teamTable = $(this).closest('.team-table');
     var id = $(teamTable).data('tableid');
-    var table = tables.find(x => x.id === id).table;
+    var table = tables.find(x => x.id === id);
     var tr = $(this).closest('tr');
-    var row = table.row(tr);
+    var row = table.table.row(tr);
 
     if (row.child.isShown()) {
         row.child.hide();
@@ -57,9 +58,11 @@ $('.team-table tbody').on('click', 'td.details-control', function () {
 });
 
 function format(table, rowData) {
+    var roundId = table.roundId;
+
     var div = $('<div/>');
 
-    var html = '<table class="table table-borderless" style="width:50%">' +
+    var html = '<div class="d-flex flex-row-reverse justify-content-between"><table class="table table-borderless" style="width:50%">' +
         '<thead>' +
         '<tr>' +
         '<th>Weapon</th>' +
@@ -67,7 +70,27 @@ function format(table, rowData) {
         '</tr>' +
         '</thead>' +
         '<tbody>';
-    matchData.damageData.filter(x => x.userId === parseInt(rowData[9])).forEach(function (e, i) {
+
+    var damages = [];
+    if (roundId >= 0)
+        damages = matchData.damageData.filter(x => x.userId === parseInt(rowData[9]) && x.roundId === roundId);
+    else {
+        damages = matchData.damageData.filter(x => x.userId === parseInt(rowData[9]));
+        var combinedDamages = [];
+        damages.forEach(function (e, i) {
+            var combinedIndex = combinedDamages.indexOf(x => x.itemId === e.itemId);
+            if (combinedIndex === -1) {
+                combinedDamages.push(e);
+            }
+            else {
+                combinedDamages[combinedIndex].damage += e.damage;
+            }
+        });
+        damages = combinedDamages;
+    }
+
+
+    damages.forEach(function (e, i) {
         var image = ''
         if (e.imageExists)
             image = '<img class="mr-1" width="32"height="32" src="/img/items/' + e.itemId + '.png"></img>';
@@ -77,6 +100,34 @@ function format(table, rowData) {
         html += '<tr><td>' + image + name + '</td><td>' + e.damage + '</td></tr>';
     });
     html += '</tbody>';
+
+
+    var medals = [];
+    if (roundId >= 0)
+        medals = matchData.medalData.filter(x => x.userId === parseInt(rowData[9]) && x.roundId === roundId);
+    else {
+        medals = matchData.medalData.filter(x => x.userId === parseInt(rowData[9]));
+        var combinedMedals = [];
+        medals.forEach(function (e, i) {
+            var combinedIndex = combinedMedals.indexOf(x => x.medal === e.medal);
+            if (combinedIndex === -1) {
+                combinedMedals.push(e);
+            }
+            else {
+                combinedMedals[combinedIndex].amount += e.amount;
+            }
+        });
+        medals = combinedMedals;
+    }
+
+    html += '<ul class="list-unstyled" style="width:50%">';
+
+    medals.forEach(function (e, i) {
+        html += '<li>' + e.amount + ' ' + e.medal + '</li>';
+    });
+
+    html += '</ul></div>';
+
     div.html(html);
 
     return div;

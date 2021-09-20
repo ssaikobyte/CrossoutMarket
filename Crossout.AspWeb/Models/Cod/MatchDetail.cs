@@ -24,15 +24,68 @@ namespace Crossout.AspWeb.Models.Cod
 
         public int PowerScoreRange { get => MatchRecord.max_power_score - MatchRecord.min_power_score; }
 
+        public List<Round> Rounds { get; set; } = new List<Round>();
+
+        public void Create()
+        {
+            var roundIds = PlayerRoundRecords.Select(x => x.round_id).Distinct().ToList();
+            roundIds.Sort();
+            var combinedRound = new Round(CombineRounds(PlayerRoundRecords), 0);
+            Rounds.Add(combinedRound);
+            int i = 1;
+            foreach (var roundId in roundIds)
+            {
+                var round = new Round(PlayerRoundRecords.Where(x => x.round_id == roundId).ToList(), i);
+                Rounds.Add(round);
+                i++;
+            }
+        }
+
+        private List<PlayerRoundPoco> CombineRounds(List<PlayerRoundPoco> rounds)
+        {
+            var playerRounds = new Dictionary<int, PlayerRoundPoco>();
+            foreach (var round in rounds)
+            {
+                if (playerRounds.ContainsKey(round.uid))
+                {
+                    playerRounds[round.uid].damage += round.damage;
+                    playerRounds[round.uid].damage_taken += round.damage_taken;
+                    playerRounds[round.uid].drone_kills += round.drone_kills;
+                    playerRounds[round.uid].kills += round.kills;
+                    playerRounds[round.uid].score += round.score;
+                    playerRounds[round.uid].assists += round.assists;
+                }
+                else
+                {
+                    playerRounds.Add(round.uid, round.ShallowCopy());
+                }
+            }
+
+            return playerRounds.Values.ToList();
+        }
+    }
+
+    public class Round
+    {
+        public int Id { get; }
+
+        public int Counter { get; set; }
+
+        public string Name { get => Counter > 0 ? $"Round {Counter}" : "Combined"; }
+
         public List<Team> Teams { get; set; } = new List<Team>();
 
-        public void FormTeams()
+        public Round(List<PlayerRoundPoco> rounds, int counter)
         {
-            var teamNumbers = PlayerRoundRecords.Select(x => x.team).Distinct().ToList();
+            Id = rounds.FirstOrDefault().round_id;
+
+            Counter = counter;
+
+            var teamNumbers = rounds.Select(x => x.team).Distinct().ToList();
             teamNumbers.Sort();
             foreach (var teamNumber in teamNumbers)
             {
-                var team = new Team(PlayerRoundRecords.Where(x => x.team == teamNumber).ToList());
+                var team = new Team(rounds.Where(x => x.team == teamNumber).ToList());
                 Teams.Add(team);
             }
         }
@@ -66,40 +119,15 @@ namespace Crossout.AspWeb.Models.Cod
     {
         public int UserId { get; set; }
 
-        public PlayerRoundPoco RoundsCombined { get; set; }
-
         public List<PlayerRoundPoco> Rounds { get; set; }
+
+        public PlayerRoundPoco FirstRound { get => Rounds.FirstOrDefault(); }
 
         public Player(List<PlayerRoundPoco> playerRounds)
         {
             UserId = playerRounds[0].uid;
 
             Rounds = playerRounds.OrderBy(x => x.round_id).ToList();
-
-            RoundsCombined = CombineRounds(playerRounds);
-        }
-
-        private PlayerRoundPoco CombineRounds(List<PlayerRoundPoco> rounds)
-        {
-            var result = new PlayerRoundPoco();
-            foreach (var round in rounds)
-            {
-                if (result.uid == round.uid)
-                {
-                    result.damage += round.damage;
-                    result.damage_taken += round.damage_taken;
-                    result.drone_kills += round.drone_kills;
-                    result.kills += round.kills;
-                    result.score += round.score;
-                    result.assists += round.assists;
-                }
-                else
-                {
-                    result = round.ShallowCopy();
-                }
-            }
-
-            return result;
         }
     }
 
@@ -107,24 +135,27 @@ namespace Crossout.AspWeb.Models.Cod
     {
         [JsonProperty("damageData")]
         public List<RoundDamage> DamageData { get; set; } = new List<RoundDamage>();
+
+        [JsonProperty("medalData")]
+        public List<MatchMedal> MedalData { get; set; } = new List<MatchMedal>();
     }
 
     public class RoundDamage
     {
         [JsonIgnore]
-        public RoundDamagePoco RoundDamageRecord { get; set; }
+        public RoundDamagePoco RoundDamageRecordPoco { get; set; }
 
         [JsonIgnore]
         public ItemPoco Item { get; set; }
 
         [JsonProperty("userId")]
-        public int UserId { get => RoundDamageRecord.uid; }
+        public int UserId { get => RoundDamageRecordPoco.uid; }
 
         [JsonProperty("roundId")]
-        public int RoundId { get => RoundDamageRecord.round_id; }
+        public int RoundId { get => RoundDamageRecordPoco.round_id; }
 
         [JsonProperty("damage")]
-        public float Damage { get => RoundDamageRecord.damage; }
+        public float Damage { get => RoundDamageRecordPoco.damage; }
 
         [JsonProperty("itemId")]
         public int ItemId { get => Item?.Id ?? 0; }
@@ -133,6 +164,24 @@ namespace Crossout.AspWeb.Models.Cod
         public bool ImageExists { get => Item?.ImageExists ?? false; }
 
         [JsonProperty("weaponDisplayName")]
-        public string WeaponDisplayName { get => Item?.AvailableName ?? RoundDamageRecord.weapon; }
+        public string WeaponDisplayName { get => Item?.AvailableName ?? RoundDamageRecordPoco.weapon; }
+    }
+
+    public class MatchMedal
+    {
+        [JsonIgnore]
+        public MatchMedalPoco MatchMedalPoco { get; set; }
+
+        [JsonProperty("userId")]
+        public int UserId { get => MatchMedalPoco.uid; }
+
+        [JsonProperty("roundId")]
+        public int RoundId { get => MatchMedalPoco.round_id; }
+
+        [JsonProperty("medal")]
+        public string Medal { get => MatchMedalPoco.medal; }
+
+        [JsonProperty("amount")]
+        public int Amount { get => MatchMedalPoco.amount; }
     }
 }

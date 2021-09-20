@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @model Crossout.AspWeb.Models.Cod.TeamTable
 
-<table class="table table-borderless team-table" data-matchid="@Model.MatchId" data-tableid="@Model.Id" id="teamTable@(Model.Id)">
+<table class="table table-borderless team-table" data-matchid="@Model.MatchId" data-tableid="@Model.Id" data-roundid="@Model.RoundNumber" id="teamTable@(Model.Id)">
     <thead>
         <tr>
             <th></th>
@@ -35,9 +35,8 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var teamPlayer in Model.Players)
+        @foreach (var player in Model.Players)
         {
-            var total = teamPlayer.RoundsCombined;
             <tr>
                 <td class="details-control">
                     <img class="loading" src="~/icons/Spinner-1s-64px.svg" width="32" height="32" />
@@ -45,58 +44,34 @@
                     <svg class="feather-help-circle minus d-none"><use xlink:href="/icons/feather-sprite.svg#minus-circle" /></svg>
                 </td>
                 <td>
-                    @total.nickname
+                    @player.FirstRound.nickname
                 </td>
                 <td>
-                    @if (total.group_id != 0)
+                    @if (player.FirstRound.group_id != 0)
                     {
-                        <div class="blocky" data-seed="@total.group_id" data-blockytype="group"></div>
+                        <div class="blocky" data-seed="@player.FirstRound.group_id" data-blockytype="group"></div>
                     }
                 </td>
-                <td data-order="@total.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)">
-                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)</b></div>
-                    @foreach (var round in teamPlayer.Rounds)
-                    {
-                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)</div>
-                    }
+                <td data-order="@player.FirstRound.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)">
+                    <div>@player.FirstRound.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)</div>
                 </td>
-                <td data-order="@total.drone_kills">
-                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.drone_kills</b></div>
-                    @foreach (var round in teamPlayer.Rounds)
-                    {
-                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.drone_kills</div>
-                    }
+                <td data-order="@player.FirstRound.drone_kills">
+                    <div>@player.FirstRound.drone_kills</div>
                 </td>
-                <td data-order="@total.assists">
-                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.assists</b></div>
-                    @foreach (var round in teamPlayer.Rounds)
-                    {
-                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.assists</div>
-                    }
+                <td data-order="@player.FirstRound.assists">
+                    <div>@player.FirstRound.assists</div>
                 </td>
-                <td data-order="@total.kills">
-                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.kills</b></div>
-                    @foreach (var round in teamPlayer.Rounds)
-                    {
-                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.kills</div>
-                    }
+                <td data-order="@player.FirstRound.kills">
+                    <div>@player.FirstRound.kills</div>
                 </td>
-                <td data-order="@total.damage.ToString("0.00", CultureInfo.InvariantCulture)">
-                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.damage.ToString("0.00", CultureInfo.InvariantCulture)</b></div>
-                    @foreach (var round in teamPlayer.Rounds)
-                    {
-                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.damage.ToString("0.00", CultureInfo.InvariantCulture)</div>
-                    }
+                <td data-order="@player.FirstRound.damage.ToString("0.00", CultureInfo.InvariantCulture)">
+                    <div>@player.FirstRound.damage.ToString("0.00", CultureInfo.InvariantCulture)</div>
                 </td>
-                <td data-order="@total.score">
-                    <div data-toggle="tooltip" data-placement="top" title="Total"><b>@total.score</b></div>
-                    @foreach (var round in teamPlayer.Rounds)
-                    {
-                        <div data-toggle="tooltip" data-placement="top" title="Round @(teamPlayer.Rounds.IndexOf(round) + 1)">@round.score</div>
-                    }
+                <td data-order="@player.FirstRound.score">
+                    <div>@player.FirstRound.score</div>
                 </td>
                 <td>
-                    @total.uid
+                    @player.FirstRound.uid
                 </td>
             </tr>
         }

@@ -32,7 +32,7 @@ namespace Crossout.AspWeb.Controllers
             var matchId = model.MatchRecord.match_id;
             model.RoundRecords = db.SelectRoundRecords(matchId);
             model.PlayerRoundRecords = db.SelectPlayerRoundRecords(matchId);
-            model.FormTeams();
+            model.Create();
 
             this.RegisterHit("Match History");
 
@@ -66,6 +66,8 @@ namespace Crossout.AspWeb.Controllers
             {
                 model.DamageData = db.SelectRoundDamage(id, lang.Id);
                 model.DamageData.ForEach(x => x.Item?.SetImageExists(pathProvider));
+
+                model.MedalData = db.SelectMatchMedal(id);
 
                 return Json(model);
             }
