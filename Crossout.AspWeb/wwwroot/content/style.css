@@ -460,6 +460,13 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
     right: 0px;
 }
 
+.img-overlay-medal-amount {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+}
+
 .discount {
     color: #a4d007;
     background: #4c6b22;

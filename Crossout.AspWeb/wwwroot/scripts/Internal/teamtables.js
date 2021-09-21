@@ -120,13 +120,13 @@ function format(table, rowData) {
         medals = combinedMedals;
     }
 
-    html += '<ul class="list-unstyled" style="width:50%">';
+    html += '<div class="d-flex flex-row flex-wrap" style="width:50%">';
 
     medals.forEach(function (e, i) {
-        html += '<li>' + e.amount + ' ' + e.medal + '</li>';
+        html += '<div class="overlay-container"><img class="" width="64" height="64" src="/img/medals/' + e.medal + '.png"><div class="img-overlay-medal-amount">' + e.amount + '</div></div>';
     });
 
-    html += '</ul></div>';
+    html += '</div></div>';
 
     div.html(html);
 
