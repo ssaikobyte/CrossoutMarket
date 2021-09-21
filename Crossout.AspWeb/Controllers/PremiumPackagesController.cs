@@ -24,7 +24,28 @@ namespace Crossout.AspWeb.Controllers
         }
 
         [Route("packs")]
-        public IActionResult Packages()
+        public IActionResult Packages(int id)
+        {
+            Language lang = this.ReadLanguageCookie(sql);
+            this.RegisterHit("Packs");
+
+            sql.Open(WebSettings.Settings.CreateDescription());
+
+            DataService db = new DataService(sql);
+
+            try
+            {
+                var packagesCollection = db.SelectAllPremiumPackages();
+
+                return View("packages", packagesCollection);
+            }
+            catch (Exception ex)
+            {
+                return Redirect("/");
+            }
+        }
+
+        public IActionResult PackagesOld()
         {
             Language lang = this.ReadLanguageCookie(sql);
             this.RegisterHit("Packs");
