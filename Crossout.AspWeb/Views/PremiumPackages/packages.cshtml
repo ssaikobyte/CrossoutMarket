@@ -5,8 +5,9 @@
 @using Crossout.Model.Items
 @using Crossout.Web
 @using Crossout.AspWeb.Models
+@using Crossout.AspWeb.Models.General
 @using Crossout.Data.PremiumPackages
-@model Crossout.AspWeb.Models.General.PremiumPackagesModel
+@model Crossout.AspWeb.Models.General.PremiumPackageColletionNew
 @{ 
     var loc = Model.Localizations;
 }
@@ -75,26 +76,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (int id in package.MarketPartIDs)
+                                @foreach (ContainedItemNew item in package.ContainedItems)
                                 {
 
                                     <tr>
                                         <td>
-                                            @if (Model.ContainedItems[id].ImageExists)
-                                            {
-                                                <a href="~/item/@(id)"><img class="item-image-med" src="~/img/items/@(id).png" /></a>
-                                            }
-                                            else
-                                            {
-                                                <a href="~/item/@(id)"><img class="item-image-med" src="~/img/NoImage.png" /></a>
-                                            }
-                                            <a href="~/item/@(id)">@Model.ContainedItems[id].AvailableName</a>
+                                            <a href="~/item/@(item.Id)"><img class="item-image-med" src="~/img/items/@(item.Id).png" /></a>
+                                            <a href="~/item/@(item.Id)">@(item.Name)</a>
                                         </td>
                                         <td>
-                                            <div class="mx-auto" style="color: red">@(Model.ContainedItems[id].FormatSellPrice) <img src="~/img/Coin.png" height="14" /></div>
+                                            <div class="mx-auto" style="color: red">@(item.FormatSellPrice) <img src="~/img/Coin.png" height="14" /></div>
                                         </td>
                                         <td>
-                                            <div class="mx-auto" style="color: green">@(Model.ContainedItems[id].FormatBuyPrice) <img src="~/img/Coin.png" height="14" /></div>
+                                            <div class="mx-auto" style="color: green">@(item.FormatBuyPrice) <img src="~/img/Coin.png" height="14" /></div>
                                         </td>
                                     </tr>
 
@@ -145,7 +139,7 @@
                                 </td>
                             </tr>
 
-                            @foreach (Currency price in package.AppPrices.Prices)
+                            @foreach (CurrencyNew price in package.AppPrices.Prices)
                             {
                                 <tr>
                                     @if (price.Final != 0)

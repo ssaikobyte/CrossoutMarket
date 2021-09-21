@@ -89,8 +89,18 @@ namespace Crossout.AspWeb.Services
         {
             PremiumPackageColletionNew packagesCollection = new PremiumPackageColletionNew();
             NPoco.Connection.Open();
-            var packages = NPoco.Fetch<PremiumPackagePoco>(@"SELECT premiumpackage.*, premiumpackageitem.*, item.*, itemlocalization.* FROM premiumpackage 
-                                                        ");
+            var packages = new List<PremiumPackageNew>();
+            var premiumPackages = NPoco.Fetch<PremiumPackagePoco>();
+            var packageItems = NPoco.Fetch<ContainedItemNew>(@"SELECT premiumpackageitem.*, item.*, itemlocalization.*, steamprices.* FROM premiumpackageitem 
+                                                            LEFT JOIN item ON item.id = premiumpackageitem.itemnumber
+                                                            LEFT JOIN itemlocalization ON itemlocalization.itemnumber = premiumpackageitem.itemnumber
+                                                            LEFT JOIN steamprices ON steamprices.appid = premiumpackageitem.appid
+                                                            WHERE itemlocalization.languagenumber = 1");
+            premiumPackages.ForEach((element) => {
+                var package = new PremiumPackageNew { PremiumPackage = element, ContainedItems = packageItems.Where(x => x.PremiumPackageItem.PackId == element.Id).ToList() };
+                packages.Add(package);
+            });
+
             packagesCollection.Packages.AddRange(packages);
             NPoco.Connection.Close();
 

@@ -40,22 +40,22 @@ namespace Crossout.AspWeb.Models.General
         public int SteamAppID { get => PremiumPackage.SteamAppID; }
 
         [JsonProperty("containeditems")]
-        public List<ContainedItemNew> ContainedItems;
+        public List<ContainedItemNew> ContainedItems { get; set; }
 
         [JsonProperty("name")]
         public string Name { get => PremiumPackage.Name; }
 
         [JsonProperty("category")]
-        public int Category;
+        public int Category { get; set; }
 
         [JsonProperty("description")]
-        public string Description;
+        public string Description { get; set; }
 
         [JsonProperty("sellsum")]
-        public int SellSum;
+        public int SellSum { get; set; }
 
         [JsonProperty("buysum")]
-        public int BuySum;
+        public int BuySum { get; set; }
 
         [JsonProperty("formatsellsum")]
         public string FormatSellSum => PriceFormatter.FormatPrice(SellSum);
@@ -76,42 +76,54 @@ namespace Crossout.AspWeb.Models.General
         public string FormatTotalBuySum => PriceFormatter.FormatPrice(TotalBuySum);
 
         [JsonProperty("rawcoins")]
-        public int RawCoins;
+        public int RawCoins { get; set; }
 
         [JsonProperty("appprices")]
-        public AppPricesNew AppPrices;
+        [Reference(ReferenceType.OneToOne)]
+        public AppPricesNew AppPrices { get; set; }
 
     }
 
     public class AppPricesNew
     {
         [JsonProperty("id")]
-        public int Id;
+        public int Id { get; set; }
 
         [JsonProperty("steamappid")]
-        public int SteamAppId;
+        public int SteamAppId { get; set; }
 
         [JsonProperty("prices")]
-        public List<CurrencyNew> Prices;
+        public List<CurrencyNew> Prices { get; set; }
 
         [JsonProperty("discount")]
-        public int Discount;
+        public int Discount { get; set; }
 
         [JsonProperty("successtimestamp")]
-        public DateTime SuccessTimestamp;
+        public DateTime SuccessTimestamp { get; set; }
 
+        public string FormatSuccessTimestamp => SuccessTimestamp.ToString("yyyy-MM-dd HH:mm:ss");
+        public bool OlderThan(int minutes)
+        {
+            return DateTime.UtcNow - SuccessTimestamp > new TimeSpan(0, minutes, 0);
+        }
     }
 
     public class CurrencyNew
     {
         [JsonProperty("currencyabbriviation")]
-        public string CurrencyAbbriviation;
+        public string CurrencyAbbriviation { get; set; }
 
         [JsonProperty("final")]
-        public int Final;
+        public int Final { get; set; }
 
         [JsonProperty("formatfinal")]
         public string FormatFinal => PriceFormatter.FormatPrice(Final);
+
+        public string SteamCurrencyAbbriviation { get; set; }
+        public int Initial { get; set; }
+        public int DiscountPercent { get; set; }
+        public string FormatSellPriceDividedByCurrency { get; set; }
+        public string FormatBuyPriceDividedByCurrency { get; set; }
     }
 
     public class ContainedItemNew
@@ -131,10 +143,10 @@ namespace Crossout.AspWeb.Models.General
         public string Name { get => Item.ItemLocalization.LocalizedName; }
 
         [JsonProperty("sellprice")]
-        public int SellPrice;
+        public int SellPrice { get; set; }
 
         [JsonProperty("buyprice")]
-        public int BuyPrice;
+        public int BuyPrice { get; set; }
 
         [JsonProperty("formatsellprice")]
         public string FormatSellPrice => PriceFormatter.FormatPrice(SellPrice);
