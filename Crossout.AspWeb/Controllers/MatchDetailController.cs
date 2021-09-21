@@ -16,7 +16,7 @@ namespace Crossout.AspWeb.Controllers
         SqlConnector sql = new SqlConnector(ConnectionType.MySql);
 
         [Route("match/{id:long}")]
-        public IActionResult MatchDetail(long id)
+        public IActionResult MatchDetail(long id, int highlight)
         {
             sql.Open(WebSettings.Settings.CreateDescription());
 
@@ -32,6 +32,8 @@ namespace Crossout.AspWeb.Controllers
             var matchId = model.MatchRecord.match_id;
             model.RoundRecords = db.SelectRoundRecords(matchId);
             model.PlayerRoundRecords = db.SelectPlayerRoundRecords(matchId);
+            if (model.PlayerRoundRecords.Exists(x => x.uid == highlight))
+                model.HighlightUid = highlight;
             model.Create();
 
             this.RegisterHit("Match History");

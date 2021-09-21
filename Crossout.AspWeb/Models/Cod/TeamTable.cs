@@ -14,6 +14,8 @@ namespace Crossout.AspWeb.Models.Cod
 
         public int RoundNumber { get; set; }
 
+        public int? HighlightUid { get; set; }
+
         public List<Player> Players { get; set; }
     }
 }

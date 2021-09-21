@@ -37,7 +37,7 @@
     <tbody>
         @foreach (var player in Model.Players)
         {
-            <tr>
+            <tr class="@(player.UserId == Model.HighlightUid ? "table-info" : "")">
                 <td class="details-control">
                     <img class="loading" src="~/icons/Spinner-1s-64px.svg" width="32" height="32" />
                     <svg class="feather-help-circle plus d-none"><use xlink:href="/icons/feather-sprite.svg#plus-circle" /></svg>
@@ -71,7 +71,7 @@
                     <div>@player.FirstRound.score</div>
                 </td>
                 <td>
-                    @player.FirstRound.uid
+                    @player.UserId
                 </td>
             </tr>
         }

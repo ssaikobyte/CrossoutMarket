@@ -238,3 +238,7 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
 .dark-mode .feather-general {
     stroke: rgba(255, 255, 255, 0.5);
 }
+
+.dark-mode .table-info, .table-info > th, .table-info > td {
+    background-color: $table-info !important;
+}

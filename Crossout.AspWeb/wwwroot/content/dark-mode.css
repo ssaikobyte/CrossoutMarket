@@ -156,3 +156,6 @@
 
 .dark-mode .feather-general {
   stroke: rgba(255, 255, 255, 0.5); }
+
+.dark-mode .table-info, .table-info > th, .table-info > td {
+  background-color: rgba(23, 162, 184, 0.1) !important; }

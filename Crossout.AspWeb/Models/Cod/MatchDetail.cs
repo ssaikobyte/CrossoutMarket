@@ -24,6 +24,8 @@ namespace Crossout.AspWeb.Models.Cod
 
         public int PowerScoreRange { get => MatchRecord.max_power_score - MatchRecord.min_power_score; }
 
+        public int? HighlightUid { get; set; }
+
         public List<Round> Rounds { get; set; } = new List<Round>();
 
         public void Create()
