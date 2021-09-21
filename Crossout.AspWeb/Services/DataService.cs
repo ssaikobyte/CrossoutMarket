@@ -85,6 +85,18 @@ namespace Crossout.AspWeb.Services
             return itemSynergies;
         }
 
+        public PremiumPackageColletionNew SelectAllPremiumPackages()
+        {
+            PremiumPackageColletionNew packagesCollection = new PremiumPackageColletionNew();
+            NPoco.Connection.Open();
+            var packages = NPoco.Fetch<PremiumPackagePoco>(@"SELECT premiumpackage.*, premiumpackageitem.*, item.*, itemlocalization.* FROM premiumpackage 
+                                                        ");
+            packagesCollection.Packages.AddRange(packages);
+            NPoco.Connection.Close();
+
+            return packagesCollection;
+        }
+
         public Dictionary<int, Item> SelectListOfItems(List<int> ids, int language)
         {
             Dictionary<int, Item> items = new Dictionary<int, Item>();
