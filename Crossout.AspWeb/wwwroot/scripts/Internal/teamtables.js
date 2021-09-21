@@ -78,7 +78,7 @@ function format(table, rowData) {
         damages = matchData.damageData.filter(x => x.userId === parseInt(rowData[9]));
         var combinedDamages = [];
         damages.forEach(function (e, i) {
-            var combinedIndex = combinedDamages.indexOf(x => x.itemId === e.itemId);
+            var combinedIndex = combinedDamages.findIndex(x => x.itemId === e.itemId);
             if (combinedIndex === -1) {
                 combinedDamages.push(e);
             }
@@ -109,7 +109,7 @@ function format(table, rowData) {
         medals = matchData.medalData.filter(x => x.userId === parseInt(rowData[9]));
         var combinedMedals = [];
         medals.forEach(function (e, i) {
-            var combinedIndex = combinedMedals.indexOf(x => x.medal === e.medal);
+            var combinedIndex = combinedMedals.findIndex(x => x.medal === e.medal);
             if (combinedIndex === -1) {
                 combinedMedals.push(e);
             }
@@ -131,4 +131,101 @@ function format(table, rowData) {
     div.html(html);
 
     return div;
+}
+
+$('.dropdown-item').click(function (e) {
+    var tableId = $(this).parent().data('tableid');
+    var wrapperId = '#visualizationWrapper' + tableId;
+    if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
+        $(wrapperId).addClass('d-none');
+    }
+    else {
+        $(this).parent().children().removeClass('active');
+        $(this).addClass('active');
+        var colIndex = $(this).data('columnindex');
+        var label = $(this).text();
+        createPieChart(tableId, colIndex, label);
+        $(wrapperId).removeClass('d-none');
+    }
+});
+
+var charts = [];
+function createPieChart(tableId, columnIndex, label) {
+    var wrapperId = 'piechartWrapper' + tableId;
+    var table = tables.find(x => x.id === tableId);
+    var data = [];
+    table.table.cells().every(function (cellRowIndex, cellColumnIndex, tableLoopCounter, cellLoopCounter) {
+        if (cellColumnIndex === columnIndex) {
+            var node = this.node();
+            var value = parseFloat($(node).data('order'));
+            var name = table.table.cell({ row: cellRowIndex, column: 1 }).data();
+            var dataPoint = { name: name, y: value };
+            data.push(dataPoint);
+        }
+    });
+
+    var indexOfChart = charts.findIndex(x => x.tableId === tableId);
+    if (indexOfChart !== -1)
+        charts[indexOfChart].chart.destroy();
+
+    var chart = Highcharts.chart(wrapperId, {
+        chart: {
+            backgroundColor: null,
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        pane: {
+            background: {
+                backgroundColor: null
+            }
+        },
+        title: {
+            text: label
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                borderColor: null,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        textOutline: 'none'
+                    }
+                }
+            },
+            series: {
+                dataSorting: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{
+            name: label,
+            colorByPoint: true,
+            data: data
+        }],
+        exporting: {
+            enabled: false
+        }
+    });
+
+    var indexOfChart = charts.findIndex(x => x.tableId === tableId);
+    if (indexOfChart === -1)
+        charts.push({ tableId: tableId, chart: chart });
+    else {
+        charts[indexOfChart].chart = chart;
+    }
 }

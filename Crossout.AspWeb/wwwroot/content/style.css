@@ -464,7 +464,11 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
     position: absolute;
     top: 0px;
     left: 0px;
-    text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: black;
 }
 
 .discount {
@@ -530,6 +534,16 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
 
 .feather-help-circle:hover {
     stroke: rgba(0, 0, 0, 1);
+}
+
+.feather-general {
+    stroke: rgba(0, 0, 0, 0.5);
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
 }
 
 .timestamp-older-than-10080 {

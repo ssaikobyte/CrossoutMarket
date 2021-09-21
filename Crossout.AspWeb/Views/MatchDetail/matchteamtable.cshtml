@@ -77,3 +77,30 @@
         }
     </tbody>
 </table>
+
+<div class="input-group">
+    <div class="input-group-prepend">
+        <label class="input-group-text" for="piechartDropdown@(Model.Id)">Visualization</label>
+    </div>
+
+    <div class="input-group-append">
+        <button id="piechartDropdown@(Model.Id)" type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Pie Chart <svg class="feather-general"><use xlink:href="/icons/feather-sprite.svg#pie-chart" /></svg>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="piechartDropdown@(Model.Id)" data-tableid="@Model.Id">
+            <a class="dropdown-item" data-columnindex="3">Damage Taken</a>
+            <a class="dropdown-item" data-columnindex="4">Drone Kills</a>
+            <a class="dropdown-item" data-columnindex="5">Assists</a>
+            <a class="dropdown-item" data-columnindex="6">Kills</a>
+            <a class="dropdown-item" data-columnindex="7">Damage</a>
+            <a class="dropdown-item" data-columnindex="8">Score</a>
+        </div>
+    </div>
+
+</div>
+
+<div id="visualizationWrapper@(Model.Id)">
+    <div id="piechartWrapper@(Model.Id)">
+
+    </div>
+</div>

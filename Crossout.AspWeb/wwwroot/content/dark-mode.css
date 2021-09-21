@@ -114,6 +114,13 @@
   fill: #6c757d;
   stroke: #343a40; }
 
+.dark-mode .highcharts-title,
+.dark-mode .highcharts-data-label text {
+  fill: #f8f9fa !important; }
+
+.dark-mode .highcharts-background {
+  fill: #1e1e1e; }
+
 .dark-mode .highcharts-scrollbar-track {
   fill: #495057;
   stroke: #343a40; }
@@ -142,3 +149,10 @@
 
 .dark-mode .faction-icon {
   filter: invert(1); }
+
+.dark-mode .img-overlay-medal-amount {
+  color: black;
+  -webkit-text-stroke-color: #f8f9fa; }
+
+.dark-mode .feather-general {
+  stroke: rgba(255, 255, 255, 0.5); }
