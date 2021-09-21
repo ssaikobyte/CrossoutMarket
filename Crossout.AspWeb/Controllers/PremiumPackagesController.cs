@@ -41,6 +41,7 @@ namespace Crossout.AspWeb.Controllers
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex);
                 return Redirect("/");
             }
         }
