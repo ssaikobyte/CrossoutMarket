@@ -30,6 +30,8 @@ namespace Crossout.AspWeb.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine("ERROR in SynergyController: " + ex.Message);
+
                 return StatusCode(500);
             }
         }
