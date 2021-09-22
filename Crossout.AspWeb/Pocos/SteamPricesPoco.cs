@@ -66,6 +66,7 @@ namespace Crossout.AspWeb.Pocos
         }
     }
 
+    //TODO: Rename CurrencyNew there is a conflic with Crossout.AspWeb.Services.API.v2.ApiPackEntry
     public class CurrencyNew
     {
         [JsonProperty("currencyabbriviation")]

@@ -14,6 +14,7 @@ using Crossout.AspWeb.Pocos;
 
 namespace Crossout.AspWeb.Models.API.v2
 {
+    //TODO: Can this be consolidated with Crossout.AspWeb.Models.General.PremiumPackageColletion
     public class ApiPackEntry : ApiEntryBase
     {
         [JsonProperty("key")]
