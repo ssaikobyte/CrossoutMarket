@@ -10,6 +10,7 @@ using Crossout.Model;
 using Crossout.Model.Formatter;
 using Crossout.Data.PremiumPackages;
 using Crossout.AspWeb.Models.General;
+using Crossout.AspWeb.Pocos;
 
 namespace Crossout.AspWeb.Models.API.v2
 {
@@ -49,7 +50,7 @@ namespace Crossout.AspWeb.Models.API.v2
         public int RawCoins;
 
         [JsonProperty("appprices")]
-        public AppPricesNew AppPrices;
+        public SteamPricesPoco AppPrices;
 
         public ApiPackEntry(PremiumPackageNew package)
         {
@@ -62,6 +63,7 @@ namespace Crossout.AspWeb.Models.API.v2
             BuySum = package.BuySum;
             RawCoins = package.RawCoins;
             AppPrices = package.AppPrices;
+            AppPrices.Prices.ForEach(x => x.CurrencyAbbriviation = x.CurrencyAbbriviation.ToLower());
         }
     }
 
