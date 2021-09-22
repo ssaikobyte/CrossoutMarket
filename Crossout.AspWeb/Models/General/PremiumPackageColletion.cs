@@ -11,44 +11,41 @@ using System.Threading.Tasks;
 
 namespace Crossout.AspWeb.Models.General
 {
-    public class PremiumPackageColletionNew : BaseViewModel, IViewTitle
+    public class PremiumPackageColletion : BaseViewModel, IViewTitle
     {
         public string Title => "Packs";
 
         [JsonProperty("packages")]
-        public List<PremiumPackageNew> Packages { get; set; } = new List<PremiumPackageNew>();
-
-        [JsonProperty("containeditems")]
-        public Dictionary<int, Item> ContainedItems { get; set; } = new Dictionary<int, Item>();
+        public List<PremiumPackage> Packages { get; set; } = new List<PremiumPackage>();
 
         [JsonIgnore]
         public StatusModel Status { get; set; } = new StatusModel();
     }
-    public class PremiumPackageNew
+    public class PremiumPackage
     {
         [JsonIgnore]
         [Reference(ReferenceType.OneToOne)]
-        public PremiumPackagePoco PremiumPackage { get; set; }
+        public PremiumPackagePoco Package { get; set; }
 
         [JsonIgnore]
         [Ignore]
-        public int Id { get => PremiumPackage.Id; }
+        public int Id { get => Package.Id; }
 
         [JsonProperty("key")]
         [Ignore]
-        public string Key { get => PremiumPackage.Key; }
+        public string Key { get => Package.Key; }
 
         [JsonProperty("steamappid")]
         [Ignore]
-        public int SteamAppID { get => PremiumPackage.SteamAppID; }
+        public int SteamAppID { get => Package.SteamAppID; }
 
         [JsonProperty("containeditems")]
         [Ignore]
-        public List<ContainedItemNew> ContainedItems { get; set; }
+        public List<PremiumPackageItem> ContainedItems { get; set; }
 
         [JsonProperty("name")]
         [Ignore]
-        public string Name { get => PremiumPackage.Name; }
+        public string Name { get => Package.Name; }
 
         [JsonProperty("category")]
         [Ignore]
@@ -92,7 +89,7 @@ namespace Crossout.AspWeb.Models.General
 
         [JsonProperty("rawcoins")]
         [Ignore]
-        public int RawCoins { get => PremiumPackage.RawCoins; }
+        public int RawCoins { get => Package.RawCoins; }
 
         [JsonProperty("appprices")]
         [Reference(ReferenceType.OneToOne)]
@@ -105,6 +102,7 @@ namespace Crossout.AspWeb.Models.General
                 SellSum += item.SellPrice;
                 BuySum += item.BuyPrice;
             }
+            //TODO: Add null checking
             AppPrices.Create();
             foreach (var price in AppPrices.Prices)
             {
@@ -117,11 +115,11 @@ namespace Crossout.AspWeb.Models.General
         }
     }
 
-    public class ContainedItemNew
+    public class PremiumPackageItem
     {
         [JsonIgnore]
         [Reference(ReferenceType.OneToOne)]
-        public PremiumPackageItemPoco PremiumPackageItem { get; set; }
+        public PremiumPackageItemPoco PackageItem { get; set; }
 
         [JsonIgnore]
         [Reference(ReferenceType.OneToOne)]
@@ -129,7 +127,7 @@ namespace Crossout.AspWeb.Models.General
 
         [JsonProperty("id")]
         [Ignore]
-        public int Id { get => PremiumPackageItem.ItemNumber; }
+        public int Id { get => PackageItem.ItemNumber; }
 
         [JsonProperty("name")]
         [Ignore]

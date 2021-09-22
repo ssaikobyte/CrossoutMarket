@@ -66,8 +66,8 @@
     <Compile Include="Info\UpdateNote.cs" />
     <Compile Include="KnightRiders\KnightRiders.cs" />
     <Compile Include="KnightRidersCollection.cs" />
-    <Compile Include="PremiumPackagesColletion.cs" />
-    <Compile Include="PremiumPackages\PremiumPackage.cs" />
+    <Compile Include="PremiumPackagesColletionOLD.cs" />
+    <Compile Include="PremiumPackages\PremiumPackageOLD.cs" />
     <Compile Include="Stats\Main\PartStatsCabin.Generated.cs" />
     <Compile Include="Stats\Main\PartStatsCore.Generated.cs" />
     <Compile Include="Stats\Main\PartStatsDecor.Generated.cs" />

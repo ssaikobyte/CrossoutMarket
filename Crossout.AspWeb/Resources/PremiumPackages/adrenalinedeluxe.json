@@ -1,9 +1,0 @@
-﻿{
-  "Id": 34,
-  "Key": "adrenalinedeluxe",
-  "SteamAppID": 1356211,
-  "Name": "Adrenaline (Deluxe)",
-  "Description": "",
-  "MarketPartIDs": [ 1205, 1197, 1199, 1198, 1200, 1192, 31, 31, 1196, 1196, 1195, 1195, 1195, 1193, 1193, 1194, 1194, 80, 202 ],
-  "RawCoins": 4000
-}

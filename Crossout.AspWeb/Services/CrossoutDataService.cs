@@ -35,7 +35,6 @@ namespace Crossout.AspWeb.Services
         public PartStatsCollection MovementStatsCollection { get; } = new PartStatsCollection();
         public ReverseItemLookup ReverseItemLookup { get; } = new ReverseItemLookup();
         public StringLookup StringLookup { get; } = new StringLookup();
-        public PremiumPackagesColletion PremiumPackagesCollection { get; } = new PremiumPackagesColletion();
         public KnightRidersCollection KnightRidersCollection { get; } = new KnightRidersCollection();
 
         public static void Initialize(IWebHostEnvironment webHostEnvironment)
@@ -56,7 +55,6 @@ namespace Crossout.AspWeb.Services
             MovementStatsCollection.ReadStats<PartStatsWheel>(Path.Combine(rootPath, WebSettings.Settings.FileCarEditorWheelsLua));
             CoreStatsCollection.ReadStats<PartStatsCore>(Path.Combine(rootPath, WebSettings.Settings.FileCarEditorCoreLua));
 
-            PremiumPackagesCollection.ReadPackages(Path.Combine(rootPath, WebSettings.Settings.DirectoryPremiumPackages));
             KnightRidersCollection.ReadPackages(Path.Combine(rootPath, WebSettings.Settings.DirectoryKnightRiders));
         }
 

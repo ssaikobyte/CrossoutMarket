@@ -104,7 +104,7 @@ namespace Crossout.Web.Modules.Search
                 listOfCategories.Sort();
                 foreach (var category in listOfCategories)
                 {
-                    packagesModel.Packages.Add(category, new List<PremiumPackage>());
+                    packagesModel.Packages.Add(category, new List<PremiumPackageOLD>());
                 }
 
                 //Categorize

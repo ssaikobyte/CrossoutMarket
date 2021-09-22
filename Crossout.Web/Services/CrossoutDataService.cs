@@ -34,7 +34,7 @@ namespace Crossout.Web.Services
         public PartStatsCollection MovementStatsCollection { get; } = new PartStatsCollection();
         public ReverseItemLookup ReverseItemLookup { get; } = new ReverseItemLookup();
         public StringLookup StringLookup { get; } = new StringLookup();
-        public PremiumPackagesColletion PremiumPackagesCollection { get; } = new PremiumPackagesColletion();
+        public PremiumPackagesColletionOLD PremiumPackagesCollection { get; } = new PremiumPackagesColletionOLD();
         public KnightRidersCollection KnightRidersCollection { get; } = new KnightRidersCollection();
 
         public static void Initialize()

@@ -38,7 +38,7 @@ namespace Crossout.AspWeb.Pocos
 
         [JsonProperty("prices")]
         [Ignore]
-        public List<CurrencyNew> Prices { get; private set; }
+        public List<CurrencyNew> Prices { get; set; }
 
         [JsonProperty("discount")]
         [Column("discount")]

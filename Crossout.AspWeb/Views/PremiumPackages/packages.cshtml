@@ -8,7 +8,7 @@
 @using Crossout.AspWeb.Pocos
 @using Crossout.AspWeb.Models.General
 @using Crossout.Data.PremiumPackages
-@model Crossout.AspWeb.Models.General.PremiumPackageColletionNew
+@model Crossout.AspWeb.Models.General.PremiumPackageColletion
 @{
     var loc = Model.Localizations;
 }
@@ -77,7 +77,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (ContainedItemNew item in package.ContainedItems)
+                                @foreach (PremiumPackageItem item in package.ContainedItems)
                                 {
 
                                     <tr>

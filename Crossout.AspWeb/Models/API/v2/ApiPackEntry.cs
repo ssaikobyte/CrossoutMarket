@@ -20,7 +20,7 @@ namespace Crossout.AspWeb.Models.API.v2
         public string Key;
 
         [JsonProperty("containeditems")]
-        public List<ContainedItemNew> ContainedItems;
+        public List<PremiumPackageItem> ContainedItems;
 
         [JsonProperty("sellsum")]
         public int SellSum;
@@ -52,7 +52,7 @@ namespace Crossout.AspWeb.Models.API.v2
         [JsonProperty("appprices")]
         public SteamPricesPoco AppPrices;
 
-        public ApiPackEntry(PremiumPackageNew package)
+        public ApiPackEntry(PremiumPackage package)
         {
             package.Create();
             Id = package.Id;

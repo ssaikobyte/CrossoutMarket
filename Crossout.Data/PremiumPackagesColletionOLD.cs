@@ -12,20 +12,21 @@ using Newtonsoft.Json;
 
 namespace Crossout.Data
 {
-    public class PremiumPackagesColletion
+    //TODO: Remove references from Crossout.Web project
+    public class PremiumPackagesColletionOLD
     {
         private Logger Log = LogManager.GetCurrentClassLogger();
 
-        public List<PremiumPackage> Packages { get; private set; } = new List<PremiumPackage>();
+        public List<PremiumPackageOLD> Packages { get; private set; } = new List<PremiumPackageOLD>();
         
-        public PremiumPackagesColletion()
+        public PremiumPackagesColletionOLD()
         {
             
         }
 
         public void ReadPackages(string directory)
         {
-            PremiumPackage package = new PremiumPackage();
+            PremiumPackageOLD package = new PremiumPackageOLD();
             DirectoryInfo packageDir = new DirectoryInfo(directory);
 
             foreach (var file in packageDir.GetFiles())
@@ -34,7 +35,7 @@ namespace Crossout.Data
 
                 string output = sr.ReadToEnd();
 
-                package = JsonConvert.DeserializeObject<PremiumPackage>(output);
+                package = JsonConvert.DeserializeObject<PremiumPackageOLD>(output);
                 Packages.Add(package);
             }
 

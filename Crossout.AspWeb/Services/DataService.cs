@@ -85,22 +85,22 @@ namespace Crossout.AspWeb.Services
             return itemSynergies;
         }
 
-        public PremiumPackageColletionNew SelectAllPremiumPackages(int language)
+        public PremiumPackageColletion SelectAllPremiumPackages(int language)
         {
-            PremiumPackageColletionNew packagesCollection = new PremiumPackageColletionNew();
+            PremiumPackageColletion packagesCollection = new PremiumPackageColletion();
             NPoco.Connection.Open();
-            var packages = NPoco.Fetch<PremiumPackageNew>(@"SELECT premiumpackage.*, steamprices.* FROM premiumpackage 
+            var packages = NPoco.Fetch<PremiumPackage>(@"SELECT premiumpackage.*, steamprices.* FROM premiumpackage 
                                                             LEFT JOIN steamprices ON steamprices.appid = premiumpackage.appid
                                                             ");
 
-            var allPackageItems = NPoco.Fetch<ContainedItemNew>(@"SELECT premiumpackageitem.*, item.*, itemlocalization.* FROM premiumpackageitem 
+            var allPackageItems = NPoco.Fetch<PremiumPackageItem>(@"SELECT premiumpackageitem.*, item.*, itemlocalization.* FROM premiumpackageitem 
                                                             LEFT JOIN item ON item.id = premiumpackageitem.itemnumber
                                                             LEFT JOIN itemlocalization ON itemlocalization.itemnumber = premiumpackageitem.itemnumber
                                                             WHERE itemlocalization.languagenumber = @0", language);
 
-            foreach (PremiumPackageNew package in packages)
+            foreach (PremiumPackage package in packages)
             {
-                package.ContainedItems = allPackageItems.Where(x => x.PremiumPackageItem.PackId == package.Id).ToList();
+                package.ContainedItems = allPackageItems.Where(x => x.PackageItem.PackId == package.Id).ToList();
             }
 
             packagesCollection.Packages.AddRange(packages);
@@ -377,18 +377,18 @@ namespace Crossout.AspWeb.Services
             return dict;
         }
 
-        public List<AppPrices> SelectAllSteamPrices()
+        public List<SteamPricesPoco> SelectAllSteamPrices()
         {
-            List<AppPrices> appPrices = new List<AppPrices>();
+            List<SteamPricesPoco> appPrices = new List<SteamPricesPoco>();
             var ds = DB.SelectDataSet(BuildSteamPricesQuery());
             foreach (var row in ds)
             {
-                List<Currency> currencys = new List<Currency>();
-                currencys.Add(new Currency() { Final = row[1].ConvertTo<int>(), CurrencyAbbriviation = "USD" });
-                currencys.Add(new Currency() { Final = row[2].ConvertTo<int>(), CurrencyAbbriviation = "EUR" });
-                currencys.Add(new Currency() { Final = row[3].ConvertTo<int>(), CurrencyAbbriviation = "GBP" });
-                currencys.Add(new Currency() { Final = row[4].ConvertTo<int>(), CurrencyAbbriviation = "RUB" });
-                AppPrices appPrice = new AppPrices() { Id = (int)row[0], Prices = currencys, Discount = row[5].ConvertTo<int>(), SuccessTimestamp = row[6].ConvertTo<DateTime>() };
+                List<CurrencyNew> currencys = new List<CurrencyNew>();
+                currencys.Add(new CurrencyNew() { Final = row[1].ConvertTo<int>(), CurrencyAbbriviation = "USD" });
+                currencys.Add(new CurrencyNew() { Final = row[2].ConvertTo<int>(), CurrencyAbbriviation = "EUR" });
+                currencys.Add(new CurrencyNew() { Final = row[3].ConvertTo<int>(), CurrencyAbbriviation = "GBP" });
+                currencys.Add(new CurrencyNew() { Final = row[4].ConvertTo<int>(), CurrencyAbbriviation = "RUB" });
+                SteamPricesPoco appPrice = new SteamPricesPoco() { Id = (int)row[0], Prices = currencys, Discount = row[5].ConvertTo<int>(), SuccessTimestamp = row[6].ConvertTo<DateTime>() };
                 appPrices.Add(appPrice);
             }
             return appPrices;

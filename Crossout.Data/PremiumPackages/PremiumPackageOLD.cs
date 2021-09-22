@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Crossout.Data.PremiumPackages
 {
-    public class AppPrices
+    //TODO: Remove references from Crossout.Web project
+    public class AppPricesOLD
     {
         public int Id;
-        public List<Currency> Prices;
+        public List<CurrencyOLD> Prices;
         public int Discount;
         public DateTime SuccessTimestamp;
         public string FormatSuccessTimestamp => SuccessTimestamp.ToString("yyyy-MM-dd HH:mm:ss");
@@ -19,7 +20,7 @@ namespace Crossout.Data.PremiumPackages
         }
     }
 
-    public class Currency
+    public class CurrencyOLD
     {
         public string CurrencyAbbriviation;
         public string SteamCurrencyAbbriviation;
@@ -31,7 +32,7 @@ namespace Crossout.Data.PremiumPackages
         public string FormatBuyPriceDividedByCurrency;
     }
 
-    public class PremiumPackage
+    public class PremiumPackageOLD
     {
         public int Id;
         public string Key;
@@ -47,6 +48,6 @@ namespace Crossout.Data.PremiumPackages
         public string FormatTotalSellSum;
         public string FormatTotalBuySum;
         public int RawCoins;
-        public AppPrices AppPrices;
+        public AppPricesOLD AppPrices;
     }
 }

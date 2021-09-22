@@ -306,18 +306,18 @@ namespace Crossout.Web.Services
             return dict;
         }
 
-        public List<AppPrices> SelectAllSteamPrices()
+        public List<AppPricesOLD> SelectAllSteamPrices()
         {
-            List<AppPrices> appPrices = new List<AppPrices>();
+            List<AppPricesOLD> appPrices = new List<AppPricesOLD>();
             var ds = DB.SelectDataSet(BuildSteamPricesQuery());
             foreach (var row in ds)
             {
-                List<Currency> currencys = new List<Currency>();
-                currencys.Add(new Currency() { Final = row[1].ConvertTo<int>(), CurrencyAbbriviation = "USD" });
-                currencys.Add(new Currency() { Final = row[2].ConvertTo<int>(), CurrencyAbbriviation = "EUR" });
-                currencys.Add(new Currency() { Final = row[3].ConvertTo<int>(), CurrencyAbbriviation = "GBP" });
-                currencys.Add(new Currency() { Final = row[4].ConvertTo<int>(), CurrencyAbbriviation = "RUB" });
-                AppPrices appPrice = new AppPrices() { Id = (int)row[0], Prices = currencys };
+                List<CurrencyOLD> currencys = new List<CurrencyOLD>();
+                currencys.Add(new CurrencyOLD() { Final = row[1].ConvertTo<int>(), CurrencyAbbriviation = "USD" });
+                currencys.Add(new CurrencyOLD() { Final = row[2].ConvertTo<int>(), CurrencyAbbriviation = "EUR" });
+                currencys.Add(new CurrencyOLD() { Final = row[3].ConvertTo<int>(), CurrencyAbbriviation = "GBP" });
+                currencys.Add(new CurrencyOLD() { Final = row[4].ConvertTo<int>(), CurrencyAbbriviation = "RUB" });
+                AppPricesOLD appPrice = new AppPricesOLD() { Id = (int)row[0], Prices = currencys };
                 appPrices.Add(appPrice);
             }
             return appPrices;
