@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Crossout.Model;
 using Crossout.Model.Formatter;
 using Crossout.Data.PremiumPackages;
+using Crossout.AspWeb.Models.General;
 
 namespace Crossout.AspWeb.Models.API.v2
 {
@@ -18,7 +19,7 @@ namespace Crossout.AspWeb.Models.API.v2
         public string Key;
 
         [JsonProperty("containeditems")]
-        public List<ContainedItem> ContainedItems;
+        public List<ContainedItemNew> ContainedItems;
 
         [JsonProperty("sellsum")]
         public int SellSum;
@@ -48,25 +49,19 @@ namespace Crossout.AspWeb.Models.API.v2
         public int RawCoins;
 
         [JsonProperty("appprices")]
-        public AppPrices AppPrices;
+        public AppPricesNew AppPrices;
 
-        public void Create(List<PremiumPackage> packages, object[] steamPricesRow, Dictionary<int, ContainedItem> containedItems)
+        public ApiPackEntry(PremiumPackageNew package)
         {
-            AppPrices = new AppPrices();
-            AppPrices.Create(steamPricesRow);
-            Id = AppPrices.Id;
-            var matchingPack = packages.Find(x => x.Id == AppPrices.Id);
-            Key = matchingPack.Key;
-            Name = matchingPack.Name;
-            ContainedItems = new List<ContainedItem>();
-            foreach (var id in matchingPack.MarketPartIDs)
-            {
-                var containedItem = containedItems[id];
-                ContainedItems.Add(containedItem);
-                SellSum += containedItem.SellPrice;
-                BuySum += containedItem.BuyPrice;
-            }
-            RawCoins = matchingPack.RawCoins;
+            package.Create();
+            Id = package.Id;
+            Name = package.Name;
+            Key = package.Key;
+            ContainedItems = package.ContainedItems;
+            SellSum = package.SellSum;
+            BuySum = package.BuySum;
+            RawCoins = package.RawCoins;
+            AppPrices = package.AppPrices;
         }
     }
 

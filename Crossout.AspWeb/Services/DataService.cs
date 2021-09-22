@@ -85,26 +85,23 @@ namespace Crossout.AspWeb.Services
             return itemSynergies;
         }
 
-        public PremiumPackageColletionNew SelectAllPremiumPackages()
+        public PremiumPackageColletionNew SelectAllPremiumPackages(int language)
         {
             PremiumPackageColletionNew packagesCollection = new PremiumPackageColletionNew();
             NPoco.Connection.Open();
             var packages = NPoco.Fetch<PremiumPackageNew>(@"SELECT premiumpackage.*, steamprices.* FROM premiumpackage 
                                                             LEFT JOIN steamprices ON steamprices.appid = premiumpackage.appid
                                                             ");
-            
-            foreach (PremiumPackageNew package in packages)
-            {
-                var packageItems = NPoco.Fetch<ContainedItemNew>(@"SELECT premiumpackageitem.*, item.*, itemlocalization.* FROM premiumpackageitem 
+
+            var allPackageItems = NPoco.Fetch<ContainedItemNew>(@"SELECT premiumpackageitem.*, item.*, itemlocalization.* FROM premiumpackageitem 
                                                             LEFT JOIN item ON item.id = premiumpackageitem.itemnumber
                                                             LEFT JOIN itemlocalization ON itemlocalization.itemnumber = premiumpackageitem.itemnumber
-                                                            WHERE premiumpackageitem.packid = @0 AND itemlocalization.languagenumber = 1", package.Id);
-                package.ContainedItems = packageItems;
+                                                            WHERE itemlocalization.languagenumber = @0", language);
+
+            foreach (PremiumPackageNew package in packages)
+            {
+                package.ContainedItems = allPackageItems.Where(x => x.PremiumPackageItem.PackId == package.Id).ToList();
             }
-            //premiumPackages.ForEach((element) => {
-                //var package = new PremiumPackageNew { PremiumPackage = element, ContainedItems = packageItems.Where(x => x.PremiumPackageItem.PackId == element.Id).ToList() };
-                //packages.Add(package);
-            //});
 
             packagesCollection.Packages.AddRange(packages);
             NPoco.Connection.Close();

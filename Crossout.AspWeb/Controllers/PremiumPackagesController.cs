@@ -35,8 +35,12 @@ namespace Crossout.AspWeb.Controllers
 
             try
             {
-                var packagesCollection = db.SelectAllPremiumPackages();
+                var packagesCollection = db.SelectAllPremiumPackages(lang.Id);
+                packagesCollection.Packages.ForEach(x => x.Create());
 
+                packagesCollection.Localizations = db.SelectFrontendLocalizations(lang.Id, "packs");
+
+                packagesCollection.Status = db.SelectStatus();
                 return View("packages", packagesCollection);
             }
             catch (Exception ex)
@@ -82,8 +86,6 @@ namespace Crossout.AspWeb.Controllers
                             itemIDs.Add(itemID);
                         }
                     }
-
-
                 }
 
                 packagesModel.ContainedItems = db.SelectListOfItems(itemIDs, language);

@@ -91,21 +91,12 @@ namespace Crossout.AspWeb.Services.API.v2
         public List<ApiPackEntry> GetPacks()
         {
             List<ApiPackEntry> list = new List<ApiPackEntry>();
-            List<PremiumPackage> packages = CrossoutDataService.Instance.PremiumPackagesCollection.Packages;
-            List<int> containedItemIDs = new List<int>();
-            foreach (var pack in packages)
-            {
-                containedItemIDs.AddRange(pack.MarketPartIDs);
-            }
-            Dictionary<int, ContainedItem> containedItems = SelectItemsByID(DB, containedItemIDs);
-            string query = "SELECT steamprices.id, steamprices.appid, steamprices.priceusd, steamprices.priceeur, steamprices.pricegbp, steamprices.pricerub, steamprices.discount, steamprices.successtimestamp FROM steamprices ORDER BY steamprices.id ASC";
-            var ds = DB.SelectDataSet(query);
-            foreach(var row in ds)
-            {
-                var apiPackEntry = new ApiPackEntry();
-                apiPackEntry.Create(packages, row, containedItems);
+            DataService db = new DataService(DB);
+            var packageCollection = db.SelectAllPremiumPackages(1);
 
-                list.Add(apiPackEntry);
+            foreach(var package in packageCollection.Packages)
+            {
+                list.Add(new ApiPackEntry(package));
             }
             return list;
         }
