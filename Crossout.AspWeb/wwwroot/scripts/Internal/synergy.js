@@ -108,13 +108,13 @@ function drawSynergyTreeEntry(displayItem, wrapper) {
         depthSpacer += '<div style="width: 24px;"></div>';
     }
     var expandButton = '<button class="btn btn-sm btn-outline-secondary synergy-expand-btn text-monospace ' + (displayItem.hasSynergies ? '' : 'invisible') + '" data-uniqueid="' + displayItem.uniqueId + '">' + (displayItem.expanded ? '-' : '+') + '</button>';
-
+    var itemLink = '<a href="/item/' + displayItem.itemNumber + '">';
     var html = '<div class="d-flex flex-row justify-content-between my-1 mx-1"">' +
 
         '<div class="d-flex flex-row">' +
         depthSpacer +
         (displayItem.rootDisplayItem == null ? expandButton : '') +
-        '<a href="/item/' + displayItem.itemNumber + '">' +
+        (displayItem.rootDisplayItem == null ? '' : itemLink) +
         '<div class="d-flex flex-row">' +
         (displayItem.depth > 0 ? '<img class="ml-1 item-image-med" src="' +
         '/img/items/' + displayItem.itemNumber + '.png' +
@@ -123,7 +123,7 @@ function drawSynergyTreeEntry(displayItem, wrapper) {
         displayItem.name +
         '</div>' +
         '</div>' +
-        '</a>';
+        (displayItem.rootDisplayItem == null ? '' : '</a>');
     $(wrapper).append(html);
 }
 

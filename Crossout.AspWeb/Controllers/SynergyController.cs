@@ -16,15 +16,17 @@ namespace Crossout.AspWeb.Controllers
         SqlConnector sql = new SqlConnector(ConnectionType.MySql);
 
         [Route("/data/synergy/{id:int}")]
-        public IActionResult Synergy(int id)
+        public IActionResult Synergy(int id, string l)
         {
             sql.Open(WebSettings.Settings.CreateDescription());
+
+            Language lang = this.VerifyLanguage(sql, l);
 
             DataService db = new DataService(sql);
 
             try
             {
-                var model = db.SelectItemSynergy(id);
+                var model = db.SelectItemSynergy(id, lang.Id);
 
                 return Json(model);
             }
