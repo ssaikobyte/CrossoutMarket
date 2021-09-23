@@ -62,7 +62,7 @@ namespace Crossout.AspWeb.Services
             return itemModel;
         }
 
-        public ItemSynergyCollection SelectItemSynergy(int id)
+        public ItemSynergyCollection SelectItemSynergy(int id, int language)
         {
             ItemSynergyCollection itemSynergies = new ItemSynergyCollection();
 
@@ -78,7 +78,7 @@ namespace Crossout.AspWeb.Services
                                                         LEFT JOIN itemlocalization ON itemlocalization.itemnumber = itemsynergies.itemnumber 
                                                         LEFT JOIN item ON item.id = itemsynergies.itemnumber 
                                                         LEFT JOIN rarity ON rarity.id = item.raritynumber
-                                                        WHERE itemsynergies.synergy IN (@0) AND itemsynergies.itemnumber <> @1 AND itemlocalization.languagenumber = 1 ORDER BY rarity.order", synergyTypes, id, 1);
+                                                        WHERE itemsynergies.synergy IN (@0) AND itemsynergies.itemnumber <> @1 AND itemlocalization.languagenumber = @2 ORDER BY rarity.order", synergyTypes, id, language);
             itemSynergies.SynergyItems.AddRange(synergyItems);
             NPoco.Connection.Close();
 

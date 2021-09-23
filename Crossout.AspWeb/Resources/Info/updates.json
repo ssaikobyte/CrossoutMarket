@@ -239,5 +239,16 @@
       "Added new items",
       "Added new packs: The Creation, Triad: The Patron (all editions)"
     ]
+  },
+  {
+    "Id": 23,
+    "Name": "Enemy of my Enemy Update",
+    "Timestamp": "2021-09-23T11:00:00Z",
+    "Notes": [
+      "Added synergy card to item pages",
+      "Added new items",
+      "Added new recipes",
+      "Updated event page"
+    ]
   }
 ]

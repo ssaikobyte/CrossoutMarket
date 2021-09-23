@@ -41,5 +41,11 @@ namespace Crossout.AspWeb.Models.Items
 
         [JsonProperty("rarity")]
         public string Rarity { get => Item.Rarity.Name; }
+
+        [JsonProperty("categoryNumber")]
+        public int CategoryNumber { get => Item.CategoryNumber; }
+
+        [JsonProperty("typeNumber")]
+        public int TypeNumber { get => Item.TypeNumber; }
     }
 }

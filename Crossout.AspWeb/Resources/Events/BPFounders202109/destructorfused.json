@@ -1,32 +1,32 @@
 ﻿{
   "Id": null,
-  "ImageOverridePath": "/img/items/1318.png",
-  "Key": "buggywheelfused",
-  "Name": "Buggy Wheel (Fused)",
+  "ImageOverridePath": "/img/items/1359.png",
+  "Key": "destructorfused",
+  "Name": "Destructor (Fused)",
   "Talers": 0,
   "Ingredients": [
     /* Wires x100 */
     {
       "Id": 85,
-      "Amount": 750
+      "Amount": 1800
     },
-    /* Copper x100 */
+    /* Electronics x100 */
     {
-      "Id": 43,
-      "Amount": 900
+      "Id": 168,
+      "Amount": 1100
     },
     /* Batteries x100 */
     {
       "Id": 784,
-      "Amount": 450
+      "Amount": 1600
     },
     /* Plastic x100 */
     {
       "Id": 785,
-      "Amount": 300
+      "Amount": 1450
     },
     {
-      "Id": 1318,
+      "Id": 1359,
       "Amount": 2
     }
   ]

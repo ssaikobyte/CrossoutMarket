@@ -14,11 +14,11 @@
 
 <div class="half-hd-container">
 
-    <div class="row justify-content-center">
-        <img src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/26076615/4d242166b46ee3b7d4f831a22ca5bc30e61c4b03_960x311.jpg" />
+    <div class="row justify-content-center px-2">
+        <img class="img-fluid" src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/26076615/2a9c25f1a5cb2f0387d52b6093d8275835307b1c.jpg" />
     </div>
 
-    <div class="row">
+    @*<div class="row">
         <div class="col-md-6 col-sm-12 d-flex flex-row align-items-center justify-content-center">
             <div class="m-2">
                 Buy Ingredients for:
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 
     <div class="row" id="itemWrapper">
         @foreach (EventItem item in Model.EventItems)
@@ -229,6 +229,18 @@
                 </div>
             </div>
         }
+    </div>
+    <div class="alert alert-primary" role="alert">
+        <h5>Limited recipes are available on the item pages.</h5>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="/item/1066"><img src="/img/items/1066.png" width="32" height="32" /> Array</a></li>
+            <li class="list-inline-item"><a href="/item/1067"><img src="/img/items/1067.png" width="32" height="32" /> Array ST</a></li>
+            <li class="list-inline-item"><a href="/item/1054"><img src="/img/items/1054.png" width="32" height="32" /> Summator</a></li>
+            <li class="list-inline-item"><a href="/item/1358"><img src="/img/items/1358.png" width="32" height="32" /> Argument</a></li>
+            <li class="list-inline-item"><a href="/item/1360"><img src="/img/items/1360.png" width="32" height="32" /> Bootstrap</a></li>
+            <li class="list-inline-item"><a href="/item/1359"><img src="/img/items/1359.png" width="32" height="32" /> Destructor</a></li>
+            <li class="list-inline-item"><a href="/item/1357"><img src="/img/items/1357.png" width="32" height="32" /> Parser</a></li>
+        </ul>
     </div>
 </div>
 

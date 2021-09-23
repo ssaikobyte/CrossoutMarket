@@ -1,32 +1,32 @@
 ﻿{
   "Id": null,
-  "ImageOverridePath": "/img/items/1306.png",
-  "Key": "machinistfused",
-  "Name": "Machinist (Fused)",
+  "ImageOverridePath": "/img/items/1358.png",
+  "Key": "argumentfused",
+  "Name": "Argument (Fused)",
   "Talers": 0,
   "Ingredients": [
     /* Wires x100 */
     {
       "Id": 85,
-      "Amount": 1800
+      "Amount": 750
     },
-    /* Electronics x100 */
+    /* Copper x100 */
     {
-      "Id": 168,
-      "Amount": 1100
+      "Id": 43,
+      "Amount": 900
     },
     /* Batteries x100 */
     {
       "Id": 784,
-      "Amount": 1600
+      "Amount": 450
     },
     /* Plastic x100 */
     {
       "Id": 785,
-      "Amount": 1450
+      "Amount": 300
     },
     {
-      "Id": 1306,
+      "Id": 1358,
       "Amount": 2
     }
   ]
