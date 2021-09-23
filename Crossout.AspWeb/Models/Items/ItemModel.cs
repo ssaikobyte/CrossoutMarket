@@ -14,7 +14,7 @@ namespace Crossout.AspWeb.Models.Items
     public class ItemModel : BaseViewModel, IViewTitle
     {
         [JsonProperty("item")]
-        public Item Item { get; set; } = new Item() {};
+        public Item Item { get; set; } = new Item() { };
 
         [JsonProperty("recipe")]
         public RecipeModel Recipe { get; set; } = new RecipeModel();

@@ -62,6 +62,29 @@ namespace Crossout.AspWeb.Services
             return itemModel;
         }
 
+        public ItemSynergyCollection SelectItemSynergy(int id, int language)
+        {
+            ItemSynergyCollection itemSynergies = new ItemSynergyCollection();
+
+            var parmeter = new List<Parameter>();
+            parmeter.Add(new Parameter { Identifier = "id", Value = id });
+
+            itemSynergies.ItemNumber = id;
+
+            NPoco.Connection.Open();
+            itemSynergies.Synergies = NPoco.Fetch<SynergyPoco>("WHERE itemnumber = @0", id);
+            var synergyTypes = itemSynergies.Synergies.Select(x => x.SynergyType).ToList();
+            var synergyItems = NPoco.Fetch<SynergyItem>(@"SELECT itemsynergies.*, item.*, itemlocalization.*, rarity.* FROM itemsynergies 
+                                                        LEFT JOIN itemlocalization ON itemlocalization.itemnumber = itemsynergies.itemnumber 
+                                                        LEFT JOIN item ON item.id = itemsynergies.itemnumber 
+                                                        LEFT JOIN rarity ON rarity.id = item.raritynumber
+                                                        WHERE itemsynergies.synergy IN (@0) AND itemsynergies.itemnumber <> @1 AND itemlocalization.languagenumber = @2 ORDER BY rarity.order", synergyTypes, id, language);
+            itemSynergies.SynergyItems.AddRange(synergyItems);
+            NPoco.Connection.Close();
+
+            return itemSynergies;
+        }
+
         public Dictionary<int, Item> SelectListOfItems(List<int> ids, int language)
         {
             Dictionary<int, Item> items = new Dictionary<int, Item>();
