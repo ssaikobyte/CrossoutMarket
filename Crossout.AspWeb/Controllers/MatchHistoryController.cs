@@ -26,13 +26,13 @@ namespace Crossout.AspWeb.Controllers
             Language lang = this.ReadLanguageCookie(sql);
 
             MatchHistory model = new MatchHistory();
-
+            //test commit
             model.Localizations = db.SelectFrontendLocalizations(lang.Id, "matchhistory");
             model.Maps = db.SelectMaps();
             model.Types = db.SelectMatchTypes();
 
             this.RegisterHit("Match History");
-
+            
             return View("matchhistory", model);
         }
     }
