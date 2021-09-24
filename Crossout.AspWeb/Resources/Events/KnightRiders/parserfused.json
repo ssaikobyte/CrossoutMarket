@@ -1,32 +1,32 @@
 ﻿{
   "Id": null,
-  "ImageOverridePath": "/img/items/1314.png",
-  "Key": "thresherfused",
-  "Name": "Thresher (Fused)",
+  "ImageOverridePath": "/img/items/1357.png",
+  "Key": "parserfused",
+  "Name": "Parser (Fused)",
   "Talers": 0,
   "Ingredients": [
     /* Wires x100 */
     {
       "Id": 85,
-      "Amount": 750
+      "Amount": 1800
     },
-    /* Copper x100 */
+    /* Electronics x100 */
     {
-      "Id": 43,
-      "Amount": 900
+      "Id": 168,
+      "Amount": 1100
     },
     /* Batteries x100 */
     {
       "Id": 784,
-      "Amount": 450
+      "Amount": 1600
     },
     /* Plastic x100 */
     {
       "Id": 785,
-      "Amount": 300
+      "Amount": 1450
     },
     {
-      "Id": 1314,
+      "Id": 1357,
       "Amount": 2
     }
   ]

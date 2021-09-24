@@ -1,8 +1,8 @@
 ﻿{
   "Id": null,
-  "ImageOverridePath": "/img/items/1311.png",
-  "Key": "ka-2flywheelfused",
-  "Name": "KA-2 Flywheel (Fused)",
+  "ImageOverridePath": "/img/items/1358.png",
+  "Key": "argumentfused",
+  "Name": "Argument (Fused)",
   "Talers": 0,
   "Ingredients": [
     /* Wires x100 */
@@ -26,7 +26,7 @@
       "Amount": 300
     },
     {
-      "Id": 1311,
+      "Id": 1358,
       "Amount": 2
     }
   ]

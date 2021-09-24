@@ -15,8 +15,8 @@
 <partial name="status" model="@Model.Status" />
 
 <div class="half-hd-container px-3">
-    <div class="row p-2">
-        <div class="card m-2 p-1 col-lg-8 col-md-12 pr-3">
+    <div class="row p-3">
+        <div class="card my-2 p-1 col-lg-8 col-md-12 pr-3">
             <div class="w-100 media m-1">
                 <div class="align-self-start mr-3">
                     <a href="~/item/@Model.Item.Id">
@@ -77,7 +77,7 @@
                             </select>
                         }
                     }
-                    else if(Model.Item.Description != null)
+                    else if (Model.Item.Description != null)
                     {
                         <p>@Html.Raw(Model.Item.Description.Text)</p>
                     }
@@ -85,54 +85,60 @@
             </div>
         </div>
 
-        <div class="card m-2 p-1 col">
-            <h4 class="align-self-center">Market</h4>
-            <table class="table table-borderless table-sm m-2">
-                <thead>
-                    <tr>
-                        <th class="w-50">
+        <div class="m-0 p-0 col-lg-4 col-md-12" id="sidebarWrapper">
+            <div class="row card m-2 p-2">
+                <h4 class="align-self-center">Market</h4>
+                <table class="table table-borderless table-sm m-2">
+                        <thead>
+                            <tr>
+                                <th class="w-50">
 
-                        </th>
-                        <th class="w-50">
+                                </th>
+                                <th class="w-50">
 
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.sellprice">Sell Price</loc></b></td>
-                        <td>@Model.Item.FormatSellPrice <img height="14" src="~/img/Coin.png" /></td>
-                    </tr>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.buyprice">Buy Price</loc></b></td>
-                        <td>@Model.Item.FormatBuyPrice <img height="14" src="~/img/Coin.png" /></td>
-                    </tr>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.margin">Margin</loc></b></td>
-                        <td>@Model.Item.FormatMargin <img height="14" src="~/img/Coin.png" /></td>
-                    </tr>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.roi">ROI</loc></b></td>
-                        <td>@(Model.Item.FormatROI)%</td>
-                    </tr>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.selloffers">Sell Offers</loc></b></td>
-                        <td>@Model.Item.SellOffers</td>
-                    </tr>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.buyorders">Buy Orders</loc></b></td>
-                        <td>@Model.Item.BuyOrders</td>
-                    </tr>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.demandsupply">Demand/Supply</loc></b></td>
-                        <td>@(Model.Item.FormatDemandSupplyRatio)%</td>
-                    </tr>
-                    <tr>
-                        <td><b><loc model="loc" category="shared" name="tablehead.lastupdate">Last Update</loc></b></td>
-                        <td><span class="item-timestamp @(Model.Item.OlderThan(5) ? "item-older-than-5" : Model.Item.OlderThan(60) ? "item-older-than-60" : "")">@(Model.Item.LastUpdateTime)</span></td>
-                    </tr>
-                </tbody>
-            </table>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.sellprice">Sell Price</loc></b></td>
+                                <td>@Model.Item.FormatSellPrice <img height="14" src="~/img/Coin.png" /></td>
+                            </tr>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.buyprice">Buy Price</loc></b></td>
+                                <td>@Model.Item.FormatBuyPrice <img height="14" src="~/img/Coin.png" /></td>
+                            </tr>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.margin">Margin</loc></b></td>
+                                <td>@Model.Item.FormatMargin <img height="14" src="~/img/Coin.png" /></td>
+                            </tr>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.roi">ROI</loc></b></td>
+                                <td>@(Model.Item.FormatROI)%</td>
+                            </tr>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.selloffers">Sell Offers</loc></b></td>
+                                <td>@Model.Item.SellOffers</td>
+                            </tr>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.buyorders">Buy Orders</loc></b></td>
+                                <td>@Model.Item.BuyOrders</td>
+                            </tr>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.demandsupply">Demand/Supply</loc></b></td>
+                                <td>@(Model.Item.FormatDemandSupplyRatio)%</td>
+                            </tr>
+                            <tr>
+                                <td><b><loc model="loc" category="shared" name="tablehead.lastupdate">Last Update</loc></b></td>
+                                <td><span class="item-timestamp @(Model.Item.OlderThan(5) ? "item-older-than-5" : Model.Item.OlderThan(60) ? "item-older-than-60" : "")">@(Model.Item.LastUpdateTime)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+            @*<div class="row card m-2 p-2">
+                <h4 class="align-self-center">Synergy</h4>
+                <partial name="synergycard" />
+            </div>*@
         </div>
     </div>
 
@@ -355,6 +361,7 @@
 
 <script src="~/scripts/internal/item.js?@(CacheBuster.Once)"></script>
 <script src="~/scripts/internal/craftingcalc.js?@(CacheBuster.Once)"></script>
+<script src="~/scripts/internal/synergy.js?@(CacheBuster.Once)"></script>
 <script src="~/scripts/internal/scriptlocalization.js?@(CacheBuster.Once)"></script>
 <script>
     $(document).ready(function () {
@@ -387,4 +394,15 @@
         let target = '#' + e.target.value;
         $(target).removeClass('d-none');
     })
+
+    $.ajax({
+        url: '/data/synergy/@(Model.Item.Id)?l=' + Cookies.get('language'),
+        dataType: 'json',
+        success: function (json) {
+            synergyData.data = json;
+            synergyData.loaded = true;
+            onSynergyDataLoaded();
+        }
+    });
+
 </script>
