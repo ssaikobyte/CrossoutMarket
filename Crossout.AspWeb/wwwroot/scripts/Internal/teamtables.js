@@ -80,7 +80,7 @@ function format(table, rowData) {
         damages.forEach(function (e, i) {
             var combinedIndex = combinedDamages.findIndex(x => x.itemId === e.itemId);
             if (combinedIndex === -1) {
-                combinedDamages.push(e);
+                combinedDamages.push(JSON.parse(JSON.stringify(e)));
             }
             else {
                 combinedDamages[combinedIndex].damage += e.damage;
@@ -89,6 +89,7 @@ function format(table, rowData) {
         damages = combinedDamages;
     }
 
+    damages.sort((a, b) => (a.damage < b.damage) ? 1 : -1);
 
     damages.forEach(function (e, i) {
         var image = ''
@@ -97,7 +98,7 @@ function format(table, rowData) {
         var name = e.weaponDisplayName
         if (e.itemId !== 0)
             name = '<a href="/item/' + e.itemId + '">' + e.weaponDisplayName + '</a>';
-        html += '<tr><td>' + image + name + '</td><td>' + e.damage + '</td></tr>';
+        html += '<tr><td>' + image + name + '</td><td>' + Math.round(e.damage * 10) / 10 + '</td></tr>';
     });
     html += '</tbody>';
 
@@ -111,7 +112,7 @@ function format(table, rowData) {
         medals.forEach(function (e, i) {
             var combinedIndex = combinedMedals.findIndex(x => x.medal === e.medal);
             if (combinedIndex === -1) {
-                combinedMedals.push(e);
+                combinedMedals.push(JSON.parse(JSON.stringify(e)));
             }
             else {
                 combinedMedals[combinedIndex].amount += e.amount;
@@ -121,6 +122,8 @@ function format(table, rowData) {
     }
 
     html += '<div class="d-flex flex-row flex-wrap" style="width:50%">';
+
+    medals.sort((a, b) => (a.medal > b.medal) ? 1 : -1);
 
     medals.forEach(function (e, i) {
         html += '<div class="overlay-container"><img class="" width="64" height="64" src="/img/medals/' + e.medal + '.png"><div class="img-overlay-medal-amount">' + e.amount + '</div></div>';
