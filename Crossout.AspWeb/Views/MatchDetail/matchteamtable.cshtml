@@ -12,19 +12,19 @@
                 Group
             </th>
             <th>
-                Damage Taken
-            </th>
-            <th>
-                Drone Kills
+                Kills
             </th>
             <th>
                 Assists
             </th>
             <th>
-                Kills
+                Drone Kills
             </th>
             <th>
                 Damage
+            </th>
+            <th>
+                Damage Taken
             </th>
             <th>
                 Score
@@ -52,20 +52,20 @@
                         <div class="blocky" data-seed="@player.FirstRound.group_id" data-blockytype="group"></div>
                     }
                 </td>
-                <td data-order="@player.FirstRound.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)">
-                    <div>@player.FirstRound.damage_taken.ToString("0.00", CultureInfo.InvariantCulture)</div>
-                </td>
-                <td data-order="@player.FirstRound.drone_kills">
-                    <div>@player.FirstRound.drone_kills</div>
+                <td data-order="@player.FirstRound.kills">
+                    <div>@player.FirstRound.kills</div>
                 </td>
                 <td data-order="@player.FirstRound.assists">
                     <div>@player.FirstRound.assists</div>
                 </td>
-                <td data-order="@player.FirstRound.kills">
-                    <div>@player.FirstRound.kills</div>
+                <td data-order="@player.FirstRound.drone_kills">
+                    <div>@player.FirstRound.drone_kills</div>
                 </td>
-                <td data-order="@player.FirstRound.damage.ToString("0.00", CultureInfo.InvariantCulture)">
-                    <div>@player.FirstRound.damage.ToString("0.00", CultureInfo.InvariantCulture)</div>
+                <td data-order="@player.FirstRound.damage.ToString("0.0", CultureInfo.InvariantCulture)">
+                    <div>@player.FirstRound.damage.ToString("0.0", CultureInfo.InvariantCulture)</div>
+                </td>
+                <td data-order="@player.FirstRound.damage_taken.ToString("0.0", CultureInfo.InvariantCulture)">
+                    <div>@player.FirstRound.damage_taken.ToString("0.0", CultureInfo.InvariantCulture)</div>
                 </td>
                 <td data-order="@player.FirstRound.score">
                     <div>@player.FirstRound.score</div>
@@ -88,11 +88,11 @@
             Pie Chart <svg class="feather-general"><use xlink:href="/icons/feather-sprite.svg#pie-chart" /></svg>
         </button>
         <div class="dropdown-menu" aria-labelledby="piechartDropdown@(Model.Id)" data-tableid="@Model.Id">
-            <a class="dropdown-item" data-columnindex="3">Damage Taken</a>
-            <a class="dropdown-item" data-columnindex="4">Drone Kills</a>
-            <a class="dropdown-item" data-columnindex="5">Assists</a>
             <a class="dropdown-item" data-columnindex="6">Kills</a>
+            <a class="dropdown-item" data-columnindex="5">Assists</a>
+            <a class="dropdown-item" data-columnindex="4">Drone Kills</a>
             <a class="dropdown-item" data-columnindex="7">Damage</a>
+            <a class="dropdown-item" data-columnindex="3">Damage Taken</a>
             <a class="dropdown-item" data-columnindex="8">Score</a>
         </div>
     </div>
