@@ -26,8 +26,8 @@ $('.team-table').each(function (i, e) {
         info: false,
         autoWidth: false,
         columnDefs: [
-            { width: '15%', targets: [1, 2, 6, 7] },
-            { width: '12%', targets: [3, 4, 5, 8] },
+            { width: '15%', targets: [1, 6, 7, 8] },
+            { width: '12%', targets: [2, 3, 4, 5] },
             { orderable: false, width: '4%', targets: [0] },
             { visible: false, targets: [9] },
         ]
