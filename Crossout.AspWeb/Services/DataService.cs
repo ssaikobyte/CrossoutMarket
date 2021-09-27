@@ -509,6 +509,22 @@ namespace Crossout.AspWeb.Services
             return types;
         }
 
+        public List<string> SelectMatchResources()
+        {
+            NPoco.Connection.Open();
+            var resources = NPoco.Fetch<string>("SELECT DISTINCT resource FROM crossout.cod_player_match_resource_records");
+            NPoco.Connection.Close();
+            return resources;
+        }
+
+        public List<MatchReward> SelectMatchRewards()
+        {
+            NPoco.Connection.Open();
+            var rewards = NPoco.Fetch<MatchReward>("SELECT resource, match_type, COUNT(*) as datacount, AVG(amount) as averageamount FROM crossout.cod_player_match_resource_records LEFT JOIN cod_match_records ON cod_player_match_resource_records.match_id = cod_match_records.match_id WHERE 1=1 GROUP BY match_type, resource");
+            NPoco.Connection.Close();
+            return rewards;
+        }
+
         public List<MapPoco> SelectMaps()
         {
             NPoco.Connection.Open();
