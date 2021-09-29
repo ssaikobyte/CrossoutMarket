@@ -517,10 +517,29 @@ namespace Crossout.AspWeb.Services
             return resources;
         }
 
-        public List<MatchReward> SelectMatchRewards()
+        public List<MissionPoco> SelectMissions()
         {
             NPoco.Connection.Open();
-            var rewards = NPoco.Fetch<MatchReward>("SELECT resource, match_type, COUNT(*) as datacount, AVG(amount) as averageamount FROM crossout.cod_player_match_resource_records LEFT JOIN cod_match_records ON cod_player_match_resource_records.match_id = cod_match_records.match_id WHERE 1=1 GROUP BY match_type, resource");
+            var missions = NPoco.Fetch<MissionPoco>();
+            NPoco.Connection.Close();
+            return missions;
+        }
+
+        public List<MatchReward> SelectMatchRewards(int newerThanDays)
+        {
+            NPoco.Connection.Open();
+            var rewards = NPoco.Fetch<MatchReward>(@"SELECT t.name, t.resource, t.match_type, AVG(t.baseexp) AS averagebaseexp, AVG(t.resamount) AS averageresources, COUNT(*) AS datacount FROM 
+                                                    (SELECT mission.name, cod_player_match_resource_records.match_id, cod_player_match_resource_records.uid, cod_player_match_resource_records.resource, cod_match_records.match_type,
+                                                        MAX(CASE WHEN cod_player_match_resource_records.resource = 'expBase' THEN cod_player_match_resource_records.amount END) AS baseexp,
+                                                        MAX(CASE WHEN cod_player_match_resource_records.resource != 'expBase' THEN cod_player_match_resource_records.amount END) AS resamount
+                                                    FROM crossout.cod_player_match_resource_records 
+                                                    LEFT JOIN cod_match_records ON cod_player_match_resource_records.match_id = cod_match_records.match_id 
+                                                    LEFT JOIN mission ON cod_match_records.match_type = mission.match_type AND cod_player_match_resource_records.resource = mission.resource
+                                                    WHERE cod_player_match_resource_records.resource NOT IN ('expTotal', 'expBaseFactionTotal', 'expDailyBonus', 'expFactionTotal')
+                                                    AND cod_match_records.match_start > DATE_SUB(UTC_TIMESTAMP(), INTERVAL @0 DAY)
+                                                    GROUP BY cod_player_match_resource_records.match_id, cod_player_match_resource_records.uid) AS t
+                                                    WHERE t.name IS NOT NULL
+                                                    GROUP BY t.name;", newerThanDays);
             NPoco.Connection.Close();
             return rewards;
         }
@@ -583,6 +602,17 @@ namespace Crossout.AspWeb.Services
             var matchMedals = NPoco.Fetch<MatchMedal>("SELECT * FROM crossout.cod_player_match_medals WHERE match_id = @0", matchId);
             NPoco.Connection.Close();
             return matchMedals;
+        }
+
+        public List<ResourceBundle> SelectResourceBundles(int lang)
+        {
+            NPoco.Connection.Open();
+            var bundles = NPoco.Fetch<ResourceBundle>(@"SELECT item.id, resource.resourcekey, itemlocalization.localizedname, resource.name, item.amount, item.sellprice, item.buyprice FROM crossout.item 
+                                                        LEFT JOIN itemlocalization ON itemlocalization.itemnumber = item.id
+                                                        LEFT JOIN resource ON item.resourcenumber = resource.id 
+                                                        WHERE item.resourcenumber > 0 AND languagenumber = @0;", lang);
+            NPoco.Connection.Close();
+            return bundles;
         }
 
         public List<PlayerRoundPoco> SelectPlayerRoundRecords(long matchId)

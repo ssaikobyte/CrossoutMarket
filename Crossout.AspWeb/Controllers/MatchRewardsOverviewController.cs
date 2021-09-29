@@ -16,7 +16,7 @@ namespace Crossout.AspWeb.Controllers
         SqlConnector sql = new SqlConnector(ConnectionType.MySql);
 
         [Route("matchrewards")]
-        public IActionResult MatchHistory()
+        public IActionResult MatchRewardsOverview()
         {
             sql.Open(WebSettings.Settings.CreateDescription());
 
@@ -27,8 +27,7 @@ namespace Crossout.AspWeb.Controllers
             MatchRewardsOverview model = new MatchRewardsOverview();
 
             model.Localizations = db.SelectFrontendLocalizations(lang.Id, "matchrewards");
-            model.MatchTypes = db.SelectMatchTypes();
-            model.Resources = db.SelectMatchResources();
+            model.Missions = db.SelectMissions();
 
             this.RegisterHit("Match Rewards");
 
@@ -41,17 +40,20 @@ namespace Crossout.AspWeb.Controllers
         SqlConnector sql = new SqlConnector(ConnectionType.MySql);
 
         [Route("data/matchrewards")]
-        public IActionResult MatchHistory()
+        public IActionResult MatchRewardsOverviewData(int newerthan, string l)
         {
             sql.Open(WebSettings.Settings.CreateDescription());
 
             DataService db = new DataService(sql);
 
+            Language lang = this.VerifyLanguage(sql, l);
+
             MatchRewardsOverviewData model = new MatchRewardsOverviewData();
 
             try
             {
-                model.MatchRewards = db.SelectMatchRewards();
+                model.MatchRewards = db.SelectMatchRewards(newerthan);
+                model.ResourceBundles = db.SelectResourceBundles(lang.Id);
 
                 return Json(model);
             }
