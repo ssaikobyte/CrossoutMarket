@@ -1,0 +1,26 @@
+﻿@using Crossout.AspWeb.Helper
+@using Crossout.AspWeb.Models.Cod
+
+@model Crossout.AspWeb.Models.Cod.TeamTable
+
+<div class="card my-1">
+    <div class="d-flex flex-row">
+        <b>Game Mode Overview</b>
+
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                @*@foreach (var round in Model.Rounds)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(round.Counter == 0 ? "active" : "")" data-toggle="tab" role="tab" href="#round@(round.Counter)">@round.Name</a>
+                    </li>
+                }*@
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="itemTabContent">
+
+            </div>
+        </div>
+    </div>
+</div>

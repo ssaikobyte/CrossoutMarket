@@ -1,0 +1,21 @@
+﻿@using Crossout.AspWeb.Helper
+@using Crossout.AspWeb.Models.Cod
+@model ProfileOverview
+@{
+    var loc = Model.Localizations;
+}
+
+<div class="card my-1 profile-overview" data-uid="@Model.Uid">
+    <div class="d-flex flex-row">
+        <div class="col-sm-3"><div class="blocky" data-seed="@Model.Uid" data-blockytype="profile"></div></div>
+        <div class="col-sm-3"><div>@Model.Nickname</div></div>
+        <div class="col-sm-3"><b>Games Recorded</b><div class="text-center">@Model.GamesRecorded</div></div>
+        <div class="col-sm-3"><b>Games Uploaded</b><div class="text-center">@Model.GamesUploaded</div></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4"><b>Game Modes</b></div>
+        <div class="col-sm-4"><b>Weapon Usage</b></div>
+        <div class="col-sm-4"><b>Movement Usage</b></div>
+    </div>
+</div>

@@ -67,8 +67,8 @@ namespace Crossout.AspWeb.Pocos
         [Column("co_driver_version")]
         public string co_driver_version { get; set; }
 
-        [Column("server_ip")]
-        public string server_ip { get; set; }
+        [Column("host_name")]
+        public string host_name { get; set; }
     }
 
     [TableName("cod_round_records")]

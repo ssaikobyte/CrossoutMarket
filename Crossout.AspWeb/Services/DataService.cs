@@ -577,6 +577,47 @@ namespace Crossout.AspWeb.Services
             return playerRoundRecords;
         }
 
+        public bool ValidUID(int uid)
+        {
+            bool valid_uid = false;
+            NPoco.Connection.Open();
+
+            if (NPoco.Fetch<PlayerRoundPoco>("WHERE uid = @0", uid).Any())
+                valid_uid = true;
+
+            NPoco.Connection.Close();
+            return valid_uid;
+        }
+
+        public List<string> SelectNicknames(int uid)
+        {
+            NPoco.Connection.Open();
+            List<string> player_nickname = NPoco.Fetch<PlayerRoundPoco>("WHERE uid = @0", uid).Select(x => x.nickname).ToList() ?? new List<string> { "Invalid UID" };
+            NPoco.Connection.Close();
+            return player_nickname;
+        }
+
+        public int SelectRecordedCount(int uid)
+        {
+            NPoco.Connection.Open();
+            int player_nickname = NPoco.ExecuteScalar<int>("SELECT count(distinct match_id) FROM crossout.cod_player_round_records WHERE uid = @0", uid);
+            NPoco.Connection.Close();
+            return player_nickname;
+        }
+
+        public int SelectUploadedCount(int uid)
+        {
+            NPoco.Connection.Open();
+            int player_nickname = NPoco.ExecuteScalar<int>("SELECT count(*) FROM crossout.cod_upload_records WHERE uid = @0", uid);
+            NPoco.Connection.Close();
+            return player_nickname;
+        }
+
+        //public List<Tuple<string, int>> SelectUserGameModeFrequency(int uid)
+        //{
+
+        //}
+
         public string TranslateFieldName(string toTranslate)
         {
             switch (toTranslate)

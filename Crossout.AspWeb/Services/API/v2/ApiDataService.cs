@@ -163,6 +163,8 @@ namespace Crossout.AspWeb.Services.API.v2
                     continue;
                 }
 
+                Console.WriteLine(string.Format("Uploading match {0}, {1} rounds", match.match_id, match.rounds.Count));
+
                 UploadMap(match);
                 UploadMatch(match);
                 UploadRounds(match);
@@ -176,7 +178,10 @@ namespace Crossout.AspWeb.Services.API.v2
 
             foreach (BuildEntry build in upload_entry.build_list)
             {
-                if (!BuildExists(build.build_hash, build.power_score))
+                if (BuildUploadExists(build, upload_entry.uploader_uid))
+                    continue;
+
+                if (!BuildExists(build))
                     UploadBuild(build);
 
                 UploadBuildParts(build);
@@ -256,13 +261,30 @@ namespace Crossout.AspWeb.Services.API.v2
             return upload_exists;
         }
 
-        public bool BuildExists(string build_hash, int power_score)
+        public bool BuildUploadExists(BuildEntry build, int uploader_uid)
+        {
+            bool build_upload_exists = false;
+
+            try
+            {
+                if (NPocoDB.Fetch<BuildUploadPoco>("WHERE BUILD_HASH = @0 AND POWER_SCORE = @1 AND UID = @2 AND PART_COUNT >= @3", build.build_hash, build.power_score, uploader_uid, build.parts.Count).Any())
+                    build_upload_exists = true;
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog(0, "db build upload existance error:" + ex.Message);
+            }
+
+            return build_upload_exists;
+        }
+
+        public bool BuildExists(BuildEntry build)
         {
             bool build_exists = false;
 
             try
             {
-                if (NPocoDB.Fetch<BuildPoco>("WHERE BUILD_HASH = @0 AND POWER_SCORE = @1", build_hash, power_score).Any())
+                if (NPocoDB.Fetch<BuildPoco>("WHERE BUILD_HASH = @0 AND POWER_SCORE = @1", build.build_hash, build.power_score).Any())
                     build_exists = true;
             }
             catch (Exception ex)
@@ -613,7 +635,7 @@ namespace Crossout.AspWeb.Services.API.v2
                 poco_match.round_id_3 = 0;
                 poco_match.client_version = match.client_version;
                 poco_match.co_driver_version = match.co_driver_version;
-                poco_match.server_ip = match.game_server;
+                poco_match.host_name = match.host_name;
 
                 int min_power_score = int.MaxValue;
                 int max_power_score = int.MinValue;
@@ -649,6 +671,9 @@ namespace Crossout.AspWeb.Services.API.v2
             try
             {
                 MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
+
+                //if (poco_match == null)
+                //    return;
 
                 foreach (RoundEntry round in match.rounds)
                 {
@@ -700,6 +725,9 @@ namespace Crossout.AspWeb.Services.API.v2
             try
             {
                 MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
+
+                //if (poco_match == null)
+                //    return;
 
                 foreach (RoundEntry round in match.rounds)
                 {
@@ -937,10 +965,18 @@ namespace Crossout.AspWeb.Services.API.v2
         {
             try
             {
+                int error_count = NPocoDB.ExecuteScalar<int>("SELECT COUNT(*) FROM CROSSOUT.COD_ERROR_LOGS");
+
+                if (error_count >= 200)
+                    return;
+
                 ErrorLogPoco error_log = new ErrorLogPoco { };
                 error_log.match_id = match_id;
                 error_log.error_log = log;
                 NPocoDB.Insert(error_log);
+
+                NPocoDB.CompleteTransaction();
+                NPocoDB.BeginTransaction();
             }
             catch (Exception ex)
             {

@@ -10,6 +10,12 @@ blockyTypes['group'] = {
     size: 10,
     scale: 2
 };
+blockyTypes['profile'] = {
+    color: '#bfff00',
+    size: 16,
+    scale: 4
+};
+
 
 function placeBlockies() {
     $('.blocky').each(function (i, e) {
