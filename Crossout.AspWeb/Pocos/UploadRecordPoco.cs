@@ -107,8 +107,6 @@ namespace Crossout.AspWeb.Pocos
         public int group_id { get; set; }
         [Column("build_hash")]
         public string build_hash { get; set; }
-        [Column("game_result")]
-        public string game_result { get; set; }
         [Column("power_score")]
         public int power_score { get; set; }
         [Column("kills")]
@@ -117,6 +115,8 @@ namespace Crossout.AspWeb.Pocos
         public int assists { get; set; }
         [Column("drone_kills")]
         public int drone_kills { get; set; }
+        [Column("deaths")]
+        public int deaths { get; set; }
         [Column("score")]
         public int score { get; set; }
         [Column("damage")]

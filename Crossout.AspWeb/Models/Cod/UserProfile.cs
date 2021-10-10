@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Crossout.AspWeb.Models.Cod
 {
-    public class ProfileOverview : BaseViewModel, IViewTitle
+    public class UserProfile : BaseViewModel, IViewTitle
     {
         public string Title => "Profile ";
         public int Uid { get; set; }
@@ -19,6 +19,11 @@ namespace Crossout.AspWeb.Models.Cod
         public List<Tuple<string, int>> GameModeTrack { get; set; }
         public List<Tuple<string, int>> MovementTrack { get; set; }
         public List<Tuple<string, int>> WeaponTrack { get; set; }
+    }
+
+    public class ProfileOverview
+    {
+
     }
 
 

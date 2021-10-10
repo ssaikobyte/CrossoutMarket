@@ -672,9 +672,6 @@ namespace Crossout.AspWeb.Services.API.v2
             {
                 MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
 
-                //if (poco_match == null)
-                //    return;
-
                 foreach (RoundEntry round in match.rounds)
                 {
                     RoundPoco poco_round = new RoundPoco { };
@@ -726,9 +723,6 @@ namespace Crossout.AspWeb.Services.API.v2
             {
                 MatchPoco poco_match = NPocoDB.SingleOrDefaultById<MatchPoco>(match.match_id);
 
-                //if (poco_match == null)
-                //    return;
-
                 foreach (RoundEntry round in match.rounds)
                 {
                     foreach (MatchPlayerEntry player in round.players)
@@ -748,6 +742,7 @@ namespace Crossout.AspWeb.Services.API.v2
                         poco_player.kills = player.kills;
                         poco_player.assists = player.assists;
                         poco_player.drone_kills = player.drone_kills;
+                        poco_player.deaths = player.deaths;
                         poco_player.score = player.score;
                         poco_player.damage = (float)player.damage;
                         poco_player.damage_taken = (float)player.damage_taken;
@@ -757,14 +752,6 @@ namespace Crossout.AspWeb.Services.API.v2
                         else
                         if (player.round_id == 2)
                             poco_player.round_id = poco_match.round_id_3;
-
-                        if (player.team == match.winning_team)
-                            poco_player.game_result = "W";
-                        else
-                        if (match.winning_team == 0)
-                            poco_player.game_result = "D";
-                        else
-                            poco_player.game_result = "L";
 
                         NPocoDB.Insert(poco_player);
                     }

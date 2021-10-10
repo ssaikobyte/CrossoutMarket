@@ -24,7 +24,7 @@ namespace Crossout.AspWeb.Controllers
 
             Language lang = this.ReadLanguageCookie(sql);
 
-            ProfileOverview model = new ProfileOverview { };
+            UserProfile model = new UserProfile { };
 
             if (!db.ValidUID(id))
                 return View("profile", model);
