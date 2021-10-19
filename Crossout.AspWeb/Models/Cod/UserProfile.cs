@@ -16,15 +16,26 @@ namespace Crossout.AspWeb.Models.Cod
         public int GamesRecorded { get; set; }
         public int GamesUploaded { get; set; }
         public List<string> Nicknames { get; set; }
-        public List<Tuple<string, int>> GameModeTrack { get; set; }
-        public List<Tuple<string, int>> MovementTrack { get; set; }
-        public List<Tuple<string, int>> WeaponTrack { get; set; }
+        public OverviewCharts preference_overview { get; set; }
     }
 
-    public class ProfileOverview
+    public class OverviewCharts
     {
-
+        public List<DrillDown> gamemode_preference { get; set; }
+        public List<DrillDown> weapon_preference { get; set; }
+        public List<DrillDown> movement_preference { get; set; }
     }
 
+    public class DrillDown
+    {
+        public string type { get; set; }
+        public int count { get; set; }
+        public List<DrillDownSeries> series { get; set; }
+    }
 
+    public class DrillDownSeries
+    {
+        public string name { get; set; }
+        public int count { get; set; }
+    }
 }

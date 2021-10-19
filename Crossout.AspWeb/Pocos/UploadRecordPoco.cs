@@ -32,6 +32,8 @@ namespace Crossout.AspWeb.Pocos
 
         [Column("match_type")]
         public string match_type { get; set; }
+        [Column("match_classification")]
+        public int match_classification { get; set; }
 
         [Column("match_start")]
         public DateTime match_start { get; set; }

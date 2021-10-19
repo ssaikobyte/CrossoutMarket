@@ -626,6 +626,7 @@ namespace Crossout.AspWeb.Services.API.v2
                 MatchPoco poco_match = new MatchPoco { };
                 poco_match.match_id = match.match_id;
                 poco_match.match_type = match.match_type;
+                poco_match.match_classification = match.match_classification;
                 poco_match.match_start = match.match_start;
                 poco_match.match_end = match.match_end;
                 poco_match.map_name = match.map_name;
