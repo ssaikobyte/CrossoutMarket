@@ -613,10 +613,95 @@ namespace Crossout.AspWeb.Services
             return player_nickname;
         }
 
-        //public List<Tuple<string, int>> SelectUserGameModeFrequency(int uid)
-        //{
+        public int SelectSecondsPlayed(int uid)
+        {
+            NPoco.Connection.Open();
+            int player_nickname = NPoco.ExecuteScalar<int>("SELECT SUM(TO_SECONDS(round.round_end) - TO_SECONDS(round.round_start)) FROM crossout.cod_round_records round INNER JOIN crossout.cod_player_round_records player ON round.match_id = player.match_id WHERE player.uid = @0", uid);
+            NPoco.Connection.Close();
+            return player_nickname;
+        }
 
-        //}
+        public OverviewCharts SelectOverviewBreakdowns(int uid)
+        {
+            OverviewCharts overview_dropdowns = new OverviewCharts { };
+
+            NPoco.Connection.Open();
+            overview_dropdowns.gamemode_preference = PopulateGameModeDrillDown(uid);
+            overview_dropdowns.weapon_preference = PopulatePartDrillDown(uid, "Weapons", "ALL");
+            overview_dropdowns.movement_preference = PopulatePartDrillDown(uid, "Movement", "ALL");
+            NPoco.Connection.Close();
+
+            return overview_dropdowns;
+        }
+
+        public List<DrillDown> PopulatePartDrillDown(int uid, string category, string match_type)
+        {
+            List<DrillDownSelect> drill_down_return = new List<DrillDownSelect> { }; 
+
+            if (match_type == "ALL")
+            {
+                drill_down_return = NPoco.Fetch<DrillDownSelect>(@"SELECT ocr.type, ocr.name, count(distinct record.match_id) as count
+                                                                     FROM crossout.cod_match_records record
+                                                               INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
+                                                               INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
+                                                               INNER JOIN crossout.cod_build_parts part ON build.build_id = part.build_id
+                                                               INNER JOIN crossout.item item ON part.part_name = item.externalKey
+                                                               INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
+                                                                    WHERE player.uid = @0
+                                                                      AND ocr.category = @1
+                                                                      AND record.match_type <> 'Custom Game'
+                                                                    GROUP BY ocr.type, ocr.name", uid, category);
+            }
+            else
+            {
+                drill_down_return = NPoco.Fetch<DrillDownSelect>(@"SELECT ocr.type, ocr.name, COUNT(distinct record.match_id) as count
+                                                                     FROM crossout.cod_match_records record
+                                                               INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
+                                                               INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
+                                                               INNER JOIN crossout.cod_build_parts part ON build.build_id = part.build_id
+                                                               INNER JOIN crossout.item item ON part.part_name = item.externalKey
+                                                               INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
+                                                                    WHERE player.uid = @0
+                                                                      AND ocr.category = @1
+                                                                      AND record.match_type = @2
+                                                                    GROUP BY ocr.type, ocr.name", uid, category, match_type);
+            }
+
+            return FillDrillDownListFromSelect(drill_down_return);
+        }
+
+        public List<DrillDown> PopulateGameModeDrillDown(int uid)
+        {
+            List<DrillDownSelect> drill_down_return = new List<DrillDownSelect> { };
+
+            drill_down_return = NPoco.Fetch<DrillDownSelect>(@"SELECT record.match_classification as type, record.match_type as name, COUNT(distinct record.match_id) as count
+                                                                 FROM crossout.cod_match_records record
+                                                           INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
+                                                                WHERE player.uid = @0
+                                                                GROUP BY record.match_classification, record.match_type", uid);
+
+            return FillDrillDownListFromSelect(drill_down_return);
+        }
+
+        public List<DrillDown> FillDrillDownListFromSelect(List<DrillDownSelect> drill_down_select)
+        {
+            List<DrillDown> drill_down = new List<DrillDown> { };
+
+            foreach (DrillDownSelect item in drill_down_select)
+            {
+                if (!drill_down.Any(x => x.type == item.type))
+                    drill_down.Add(new DrillDown { type = item.type, series = new List<DrillDownSeries> { new DrillDownSeries { name = item.name, count = item.count } }, count = 0 });
+
+                DrillDown item_series = drill_down.First(x => x.type == item.type);
+
+                item_series.count += item.count;
+                item_series.series.Add(new DrillDownSeries { name = item.name, count = item.count });
+                item_series.series = item_series.series.OrderByDescending(x => x.count).ToList();
+            }
+
+            drill_down = drill_down.OrderByDescending(x => x.count).ToList();
+            return drill_down;
+        }
 
         public string TranslateFieldName(string toTranslate)
         {

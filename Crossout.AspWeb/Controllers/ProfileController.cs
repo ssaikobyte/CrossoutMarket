@@ -34,8 +34,7 @@ namespace Crossout.AspWeb.Controllers
             model.Nickname = model.Nicknames.FirstOrDefault();
             model.GamesRecorded = db.SelectRecordedCount(id);
             model.GamesUploaded = db.SelectUploadedCount(id);
-            model.preference_overview = new OverviewCharts { };
-
+            model.TimePlayed = TimeSpan.FromSeconds(db.SelectSecondsPlayed(id));
 
             this.RegisterHit("profile");
 
@@ -54,8 +53,8 @@ namespace Crossout.AspWeb.Controllers
 
         SqlConnector sql = new SqlConnector(ConnectionType.MySql);
 
-        [Route("data/profile/gamemodes/{id:long}")]
-        public IActionResult ProfileGameModeData(long id, string l)
+        [Route("data/profile/overview_drilldowns/{id:long}")]
+        public IActionResult ProfileGameModeData(int id, string l)
         {
             sql.Open(WebSettings.Settings.CreateDescription());
 
@@ -63,14 +62,11 @@ namespace Crossout.AspWeb.Controllers
 
             Language lang = this.VerifyLanguage(sql, l);
 
-            MatchPlayerDetailData model = new MatchPlayerDetailData();
+            OverviewCharts model = new OverviewCharts();
 
             try
             {
-                model.DamageData = db.SelectRoundDamage(id, lang.Id);
-                model.DamageData.ForEach(x => x.Item?.SetImageExists(pathProvider));
-
-                model.MedalData = db.SelectMatchMedal(id);
+                model = db.SelectOverviewBreakdowns(id);
 
                 return Json(model);
             }

@@ -15,8 +15,8 @@ namespace Crossout.AspWeb.Models.Cod
         public string Nickname { get; set; }
         public int GamesRecorded { get; set; }
         public int GamesUploaded { get; set; }
+        public TimeSpan TimePlayed { get; set; }
         public List<string> Nicknames { get; set; }
-        public OverviewCharts preference_overview { get; set; }
     }
 
     public class OverviewCharts
@@ -35,6 +35,13 @@ namespace Crossout.AspWeb.Models.Cod
 
     public class DrillDownSeries
     {
+        public string name { get; set; }
+        public int count { get; set; }
+    }
+
+    public class DrillDownSelect
+    {
+        public string type { get; set; }
         public string name { get; set; }
         public int count { get; set; }
     }
