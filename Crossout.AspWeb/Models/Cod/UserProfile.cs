@@ -15,7 +15,9 @@ namespace Crossout.AspWeb.Models.Cod
         public string Nickname { get; set; }
         public int GamesRecorded { get; set; }
         public int GamesUploaded { get; set; }
-        public TimeSpan TimePlayed { get; set; }
+        public string TimePlayed { get; set; }
+        public string KPB { get; set; }
+        public string MVPRate { get; set; }
         public List<string> Nicknames { get; set; }
     }
 

@@ -616,9 +616,25 @@ namespace Crossout.AspWeb.Services
         public int SelectSecondsPlayed(int uid)
         {
             NPoco.Connection.Open();
-            int player_nickname = NPoco.ExecuteScalar<int>("SELECT SUM(TO_SECONDS(round.round_end) - TO_SECONDS(round.round_start)) FROM crossout.cod_round_records round INNER JOIN crossout.cod_player_round_records player ON round.match_id = player.match_id WHERE player.uid = @0", uid);
+            int seconds_played = NPoco.ExecuteScalar<int>("SELECT SUM(TO_SECONDS(round.round_end) - TO_SECONDS(round.round_start)) FROM crossout.cod_round_records round INNER JOIN crossout.cod_player_round_records player ON round.match_id = player.match_id WHERE player.uid = @0", uid);
             NPoco.Connection.Close();
-            return player_nickname;
+            return seconds_played;
+        }
+
+        public int SelectPVPKillAssists(int uid)
+        {
+            NPoco.Connection.Open();
+            int kill_and_assists = NPoco.ExecuteScalar<int>("SELECT sum(player.kills + player.assists) FROM crossout.cod_match_records record INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id WHERE player.uid = @0 AND record.match_classification = 1", uid);
+            NPoco.Connection.Close();
+            return kill_and_assists;
+        }
+
+        public int SelectMVPCount(int uid)
+        {
+            NPoco.Connection.Open();
+            int mvp_count = NPoco.ExecuteScalar<int>("SELECT sum(amount) FROM crossout.cod_match_records record INNER JOIN crossout.cod_player_match_medals medals ON record.match_id = medals.match_id WHERE medals.uid = @0 AND record.match_classification = 1 AND medals.medal = 'PvpMvpWin'", uid);
+            NPoco.Connection.Close();
+            return mvp_count;
         }
 
         public OverviewCharts SelectOverviewBreakdowns(int uid)

@@ -11,9 +11,9 @@ blockyTypes['group'] = {
     scale: 2
 };
 blockyTypes['profile'] = {
-    color: '#bfff00',
-    size: 16,
-    scale: 4
+    color: 'Blue',
+    size: 10,
+    scale: 28
 };
 
 

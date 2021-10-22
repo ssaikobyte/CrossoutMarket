@@ -34,7 +34,15 @@ namespace Crossout.AspWeb.Controllers
             model.Nickname = model.Nicknames.FirstOrDefault();
             model.GamesRecorded = db.SelectRecordedCount(id);
             model.GamesUploaded = db.SelectUploadedCount(id);
-            model.TimePlayed = TimeSpan.FromSeconds(db.SelectSecondsPlayed(id));
+            model.KPB = Math.Round((double)db.SelectPVPKillAssists(id) / (double)model.GamesRecorded,2).ToString();
+            model.MVPRate = ((double)db.SelectMVPCount(id) / (double)model.GamesRecorded).ToString("P1");
+
+            TimeSpan time_played = TimeSpan.FromSeconds(db.SelectSecondsPlayed(id));
+
+            if (time_played.Days > 0)
+                model.TimePlayed = string.Format("{0}d {1}h", time_played.Days, time_played.Hours);
+            else
+                model.TimePlayed = string.Format("{0}h {1}m", time_played.Hours, time_played.Minutes);
 
             this.RegisterHit("profile");
 
