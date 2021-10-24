@@ -16,15 +16,15 @@
                     <div class="row display-4 justify-content-center">@Model.GamesRecorded</div>
                 </div>
                 <div class="col justify-content-center">
-                    <div class="row d-flex justify-content-center">Games Uploaded</div>
-                    <div class="row display-4 justify-content-center">@Model.GamesUploaded</div>
-                </div>
-                <div class="col justify-content-center">
                     <div class="row d-flex justify-content-center">Time Recorded</div>
                     <div class="row display-4 justify-content-center">@Model.TimePlayed</div>
                 </div>
             </div>
             <div class="row">
+                <div class="col">
+                    <div class="row d-flex justify-content-center">Win Rate</div>
+                    <div class="row display-4 justify-content-center">@Model.WinRate</div>
+                </div>
                 <div class="col">
                     <div class="row d-flex justify-content-center">(K + A) / D</div>
                     <div class="row display-4 justify-content-center">@Model.KPB</div>

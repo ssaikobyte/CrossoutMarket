@@ -15,7 +15,10 @@ namespace Crossout.AspWeb.Models.Cod
         public string Nickname { get; set; }
         public int GamesRecorded { get; set; }
         public int GamesUploaded { get; set; }
+        public int PvpGames { get; set; }
+        public int WinCount { get; set; }
         public string TimePlayed { get; set; }
+        public string WinRate { get; set; }
         public string KPB { get; set; }
         public string MVPRate { get; set; }
         public List<string> Nicknames { get; set; }
@@ -29,19 +32,6 @@ namespace Crossout.AspWeb.Models.Cod
     }
 
     public class DrillDown
-    {
-        public string type { get; set; }
-        public int count { get; set; }
-        public List<DrillDownSeries> series { get; set; }
-    }
-
-    public class DrillDownSeries
-    {
-        public string name { get; set; }
-        public int count { get; set; }
-    }
-
-    public class DrillDownSelect
     {
         public string type { get; set; }
         public string name { get; set; }

@@ -600,7 +600,7 @@ namespace Crossout.AspWeb.Services
         public int SelectRecordedCount(int uid)
         {
             NPoco.Connection.Open();
-            int player_nickname = NPoco.ExecuteScalar<int>("SELECT count(distinct match_id) FROM crossout.cod_player_round_records WHERE uid = @0", uid);
+            int player_nickname = NPoco.ExecuteScalar<int>("SELECT count(distinct record.match_id) FROM crossout.cod_match_records record INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id WHERE player.uid = @0 AND match_type <> 'Custom Game'", uid);
             NPoco.Connection.Close();
             return player_nickname;
         }
@@ -609,6 +609,22 @@ namespace Crossout.AspWeb.Services
         {
             NPoco.Connection.Open();
             int player_nickname = NPoco.ExecuteScalar<int>("SELECT count(*) FROM crossout.cod_upload_records WHERE uid = @0", uid);
+            NPoco.Connection.Close();
+            return player_nickname;
+        }
+
+        public int SelectPvpGameCount(int uid)
+        {
+            NPoco.Connection.Open();
+            int player_nickname = NPoco.ExecuteScalar<int>("SELECT count(distinct record.match_id) FROM crossout.cod_match_records record INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id WHERE player.uid = @0 AND record.match_classification = 1", uid);
+            NPoco.Connection.Close();
+            return player_nickname;
+        }
+
+        public int SelectWinCount(int uid)
+        {
+            NPoco.Connection.Open();
+            int player_nickname = NPoco.ExecuteScalar<int>("SELECT count(distinct record.match_id) FROM crossout.cod_match_records record INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id WHERE player.uid = @0 AND match_type <> 'Custom Game' and record.winning_team = player.team", uid);
             NPoco.Connection.Close();
             return player_nickname;
         }
@@ -652,11 +668,11 @@ namespace Crossout.AspWeb.Services
 
         public List<DrillDown> PopulatePartDrillDown(int uid, string category, string match_type)
         {
-            List<DrillDownSelect> drill_down_return = new List<DrillDownSelect> { }; 
+            List<DrillDown> drill_down_return = new List<DrillDown> { }; 
 
             if (match_type == "ALL")
             {
-                drill_down_return = NPoco.Fetch<DrillDownSelect>(@"SELECT ocr.type, ocr.name, count(distinct record.match_id) as count
+                drill_down_return = NPoco.Fetch<DrillDown>(@"SELECT ocr.type, ocr.name, count(distinct record.match_id) as count
                                                                      FROM crossout.cod_match_records record
                                                                INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
                                                                INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
@@ -670,7 +686,7 @@ namespace Crossout.AspWeb.Services
             }
             else
             {
-                drill_down_return = NPoco.Fetch<DrillDownSelect>(@"SELECT ocr.type, ocr.name, COUNT(distinct record.match_id) as count
+                drill_down_return = NPoco.Fetch<DrillDown>(@"SELECT ocr.type, ocr.name, COUNT(distinct record.match_id) as count
                                                                      FROM crossout.cod_match_records record
                                                                INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
                                                                INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
@@ -683,40 +699,27 @@ namespace Crossout.AspWeb.Services
                                                                     GROUP BY ocr.type, ocr.name", uid, category, match_type);
             }
 
-            return FillDrillDownListFromSelect(drill_down_return);
+            return drill_down_return;
         }
 
         public List<DrillDown> PopulateGameModeDrillDown(int uid)
         {
-            List<DrillDownSelect> drill_down_return = new List<DrillDownSelect> { };
+            List<DrillDown> drill_down_return = new List<DrillDown> { };
 
-            drill_down_return = NPoco.Fetch<DrillDownSelect>(@"SELECT record.match_classification as type, record.match_type as name, COUNT(distinct record.match_id) as count
-                                                                 FROM crossout.cod_match_records record
+            drill_down_return = NPoco.Fetch<DrillDown>(@"SELECT CASE record.match_classification 
+			                                                          WHEN 1 THEN 'PvP'
+			                                                          WHEN 2 THEN 'PvE'
+			                                                          WHEN 3 THEN 'Brawl'
+			                                                          WHEN 4 THEN 'Bedlam'
+			                                                          WHEN 5 THEN 'Custom'
+			                                                                 ELSE 'Undefined' END as type, 
+                                                                      record.match_type as name, COUNT(distinct record.match_id) as count
+		                                                         FROM crossout.cod_match_records record
                                                            INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
-                                                                WHERE player.uid = @0
-                                                                GROUP BY record.match_classification, record.match_type", uid);
+		                                                        WHERE player.uid = @0
+		                                                        GROUP BY record.match_classification, record.match_type", uid);
 
-            return FillDrillDownListFromSelect(drill_down_return);
-        }
-
-        public List<DrillDown> FillDrillDownListFromSelect(List<DrillDownSelect> drill_down_select)
-        {
-            List<DrillDown> drill_down = new List<DrillDown> { };
-
-            foreach (DrillDownSelect item in drill_down_select)
-            {
-                if (!drill_down.Any(x => x.type == item.type))
-                    drill_down.Add(new DrillDown { type = item.type, series = new List<DrillDownSeries> { new DrillDownSeries { name = item.name, count = item.count } }, count = 0 });
-
-                DrillDown item_series = drill_down.First(x => x.type == item.type);
-
-                item_series.count += item.count;
-                item_series.series.Add(new DrillDownSeries { name = item.name, count = item.count });
-                item_series.series = item_series.series.OrderByDescending(x => x.count).ToList();
-            }
-
-            drill_down = drill_down.OrderByDescending(x => x.count).ToList();
-            return drill_down;
+            return drill_down_return;
         }
 
         public string TranslateFieldName(string toTranslate)
