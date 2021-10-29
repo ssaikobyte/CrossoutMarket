@@ -1,26 +1,78 @@
 ﻿@using Crossout.AspWeb.Helper
 @using Crossout.AspWeb.Models.Cod
+@model UserProfile
+@{
+    var loc = Model.Localizations;
+}
 
-@model Crossout.AspWeb.Models.Cod.TeamTable
+<div class="card my-1 mt-2 gamemode-overview" data-uid="@Model.Uid">
+    <ul class="nav nav-pills nav-fill">
+        <li class="nav-item">
+            <a class="nav-link" href="#!">Total</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="#!">PvP</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#!">PvE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#!">Brawl</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#!">Other</a>
+        </li>
+    </ul>
+    <ul class="nav nav-pills nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#!">Total</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#!">8v8</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#!">6v6</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#!">Clan Wars</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#!">Leviathian Clan Wars</a>
+        </li>
+    </ul>
 
-<div class="card my-1">
-    <div class="d-flex flex-row">
-        <b>Game Mode Overview</b>
-
-        <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-                @*@foreach (var round in Model.Rounds)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link @(round.Counter == 0 ? "active" : "")" data-toggle="tab" role="tab" href="#round@(round.Counter)">@round.Name</a>
-                    </li>
-                }*@
-            </ul>
+    <div class="d-flex flex-row mt-3">
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Games Recorded</p></div>
+            <div class="row display-4 justify-content-center">@Model.GamesRecorded</div>
         </div>
-        <div class="card-body">
-            <div class="tab-content" id="itemTabContent">
-
-            </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Win Rate</p></div>
+            <div class="row display-4 justify-content-center">@Model.WinRate</div>
+        </div>
+    </div>
+    <div class="d-flex flex-row mt-3">
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Kills</p></div>
+            <div class="row display-4 justify-content-center">5000</div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Assists</p></div>
+            <div class="row display-4 justify-content-center">7000</div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>(K + A) / G</p></div>
+            <div class="row display-4 justify-content-center">5.4</div>
+        </div>
+    </div>
+    <div class="d-flex flex-row mt-3">
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Medals</p></div>
+            <div class="row display-4 justify-content-center">@Model.GamesRecorded</div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>MVP Rate</p></div>
+            <div class="row display-4 justify-content-center">22%</div>
         </div>
     </div>
 </div>

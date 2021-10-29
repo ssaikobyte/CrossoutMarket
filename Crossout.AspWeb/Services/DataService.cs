@@ -668,7 +668,7 @@ namespace Crossout.AspWeb.Services
 
         public List<DrillDown> PopulatePartDrillDown(int uid, string category, string match_type)
         {
-            List<DrillDown> drill_down_return = new List<DrillDown> { }; 
+            List<DrillDown> drill_down_return = new List<DrillDown> { };
 
             if (match_type == "ALL")
             {
@@ -682,7 +682,8 @@ namespace Crossout.AspWeb.Services
                                                                     WHERE player.uid = @0
                                                                       AND ocr.category = @1
                                                                       AND record.match_type <> 'Custom Game'
-                                                                    GROUP BY ocr.type, ocr.name", uid, category);
+                                                                    GROUP BY ocr.type, ocr.name
+                                                                    ORDER BY count DESC", uid, category);
             }
             else
             {
@@ -696,9 +697,9 @@ namespace Crossout.AspWeb.Services
                                                                     WHERE player.uid = @0
                                                                       AND ocr.category = @1
                                                                       AND record.match_type = @2
-                                                                    GROUP BY ocr.type, ocr.name", uid, category, match_type);
+                                                                    GROUP BY ocr.type, ocr.name
+                                                                    ORDER BY count DESC", uid, category, match_type);
             }
-
             return drill_down_return;
         }
 
@@ -717,7 +718,8 @@ namespace Crossout.AspWeb.Services
 		                                                         FROM crossout.cod_match_records record
                                                            INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
 		                                                        WHERE player.uid = @0
-		                                                        GROUP BY record.match_classification, record.match_type", uid);
+		                                                        GROUP BY record.match_classification, record.match_type
+                                                                ORDER BY count DESC", uid);
 
             return drill_down_return;
         }

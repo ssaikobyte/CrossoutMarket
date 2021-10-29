@@ -1,5 +1,11 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
 
+Highcharts.setOptions({
+    lang: {
+        drillUpText: '< Back'
+    }
+});
+
 $.ajax({
 url: '/data/profile/overview_drilldowns/' + Uid,
 dataType: 'json',
@@ -15,7 +21,7 @@ function build_drilldown(id, title, drilldown_data) {
     var series_data = populate_series_data(drilldown_data);
     var drilldown_series_data = populate_drilldown_data(drilldown_data);
     var favorite = series_data.reduce((a, b) => a.y > b.y ? a : b);
-   
+
     Highcharts.chart(id, {
         chart: {
             type: 'pie'
@@ -38,10 +44,24 @@ function build_drilldown(id, title, drilldown_data) {
             }
         },
         plotOptions: {
-            series: {
+            pie: {
                 dataLabels: {
-                    enabled: false,
-                    format: '{point.name}: {point.y:.1f}%'
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white'
+                    },
+                    formatter: function () {
+
+                        if (this.point.isNull)
+                            return void 0;
+
+                        if (this.point.y < 10)
+                            return void 0;
+
+                        return this.point.name;
+                    }
                 }
             }
         },

@@ -23,7 +23,6 @@ namespace Crossout.AspWeb.Models.Cod
         public string MVPRate { get; set; }
         public List<string> Nicknames { get; set; }
     }
-
     public class OverviewCharts
     {
         public List<DrillDown> gamemode_preference { get; set; }
@@ -36,5 +35,27 @@ namespace Crossout.AspWeb.Models.Cod
         public string type { get; set; }
         public string name { get; set; }
         public int count { get; set; }
+    }
+
+
+
+    public class GameModeDetail
+    {
+        public int match_classification { get; set; }
+        public string game_type { get; set; }
+        public int games_recorded { get; set; }
+        public int wins { get; set; }
+        public int losses { get; set; }
+        public string time_spent { get; set; }
+        public int medals { get; set; }
+        public int kills { get; set; }
+        public int assists { get; set; }
+        public int drone_kills { get; set; }
+        public int deaths { get; set; }
+        public double score_avg { get; set; }
+        public double kill_avg { get; set; }
+        public double assist_avg { get; set; }
+        public double damage_avg { get; set; }
+        public double damage_rec_avg { get; set; }
     }
 }
