@@ -65,7 +65,7 @@ namespace ZicoreConnector.Zicore.Connector.Base
             ConnectorDescription = c;
             ConnectionString = ConnectorDescription.CreateConnectionString(ConnectionType);
             DbConnection connection = CreateConnection();
-            connection.Open(); // Test
+            connection.Open();
             connection.Close();
         }
 
