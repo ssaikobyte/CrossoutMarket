@@ -741,13 +741,20 @@ namespace Crossout.AspWeb.Services.API.v2
                 {
                     foreach (MatchPlayerEntry player in round.players)
                     {
-                        if (player.uid == 0)
-                            continue;
-
                         PlayerRoundPoco poco_player = new PlayerRoundPoco { };
                         poco_player.match_id = match.match_id;
                         poco_player.round_id = poco_match.round_id_1;
-                        poco_player.uid = player.uid;
+
+                        if (player.bot == 0)
+                        {
+                            poco_player.uid = player.uid;
+                        }
+                        else
+                        {
+                            foreach (char c in player.nickname)
+                                poco_player.uid -= c;
+                        }
+
                         poco_player.nickname = player.nickname;
                         poco_player.group_id = 0;
                         poco_player.team = player.team;
