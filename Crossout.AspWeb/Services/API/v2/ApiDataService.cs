@@ -741,6 +741,9 @@ namespace Crossout.AspWeb.Services.API.v2
                 {
                     foreach (MatchPlayerEntry player in round.players)
                     {
+                        if (player.bot == 0 && player.uid == 0)
+                            continue;
+
                         PlayerRoundPoco poco_player = new PlayerRoundPoco { };
                         poco_player.match_id = match.match_id;
                         poco_player.round_id = poco_match.round_id_1;
@@ -748,14 +751,20 @@ namespace Crossout.AspWeb.Services.API.v2
                         if (player.bot == 0)
                         {
                             poco_player.uid = player.uid;
+                            poco_player.nickname = player.nickname;
                         }
                         else
                         {
-                            foreach (char c in player.nickname)
-                                poco_player.uid -= c;
+                            for (int i = 0; i < player.nickname.Length; i++)
+                            {
+                                poco_player.uid -= player.nickname[i] - '0';
+
+                                if (i < 23)
+                                    poco_player.uid <<= 1;
+                            }
+                            poco_player.nickname = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(player.nickname.Replace("_", " "));
                         }
 
-                        poco_player.nickname = player.nickname;
                         poco_player.group_id = 0;
                         poco_player.team = player.team;
                         poco_player.build_hash = player.build_hash;
