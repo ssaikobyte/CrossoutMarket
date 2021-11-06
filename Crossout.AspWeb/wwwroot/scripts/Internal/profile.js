@@ -1,4 +1,6 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
+var gamemode_overview = [];
+
 
 Highcharts.setOptions({
     lang: {
@@ -15,6 +17,76 @@ success: function (json) {
     build_drilldown('movement_overview', 'Movement', json["movement_preference"]);
 }
 });
+
+$.ajax({
+    url: '/data/profile/gamemodes/' + Uid,
+    dataType: 'json',
+    success: function (json) {
+        gamemode_overview = json["game_modes"];
+        build_classification_list();
+        build_game_type_list();
+    }
+});
+
+function populate_gamemode_overview() {
+    var interest = $('ul#classification_list').find('li.active').data('interest');
+}
+
+
+function build_classification_list() {
+    var li = document.createElement('li');
+    var match_classification = [];
+
+    document.getElementById("classification_list").innerHTML = "";
+    
+    for (var i = 0; i < gamemode_overview.length; i++) {
+        if (!match_classification.includes(gamemode_overview[i]["match_classification"]))
+            match_classification.push(gamemode_overview[i]["match_classification"]);
+    }
+
+    li.classList.add('nav-item');
+    li.innerHTML = '<a class="nav-link" id="total-tab" data-toggle="pill" href="#pills-total" role="tab" aria-controls="total" aria-selected="false">Total</a>';
+    document.getElementById('classification_list').appendChild(li);
+
+    for (var i = 0; i < match_classification.length; i++) {
+        li = document.createElement('li');
+        li.classList.add('nav-item');
+        if (match_classification[i] == 'PvP') {
+            li.innerHTML = '<a class="nav-link active" id="' + match_classification[i] + '-tab" data-toggle="pill" href="#pills-' + match_classification[i] + '" role="tab" aria-controls="pills-' + match_classification[i]+'" aria-selected="true">' + match_classification[i] + '</a>';
+        }
+        else {
+            li.innerHTML = '<a class="nav-link" id="' + match_classification[i] + '-tab" data-toggle="pill" href="#pills-' + match_classification[i] + '" role="tab" aria-controls="pills-' + match_classification[i] +'" aria-selected="false">' + match_classification[i] + '</a>';
+        } 
+
+        document.getElementById('classification_list').appendChild(li);
+    }
+}
+
+function build_game_type_list() {
+    var li = document.createElement('li');
+    var game_types = [];
+    var active_classification = 'PvP';
+
+    document.getElementById("game_type_list").innerHTML = "";
+    
+    for (var i = 0; i < gamemode_overview.length; i++) {
+        if (!game_types.includes(gamemode_overview[i]["match_type"]) && gamemode_overview[i]["match_classification"] == active_classification)
+            game_types.push(gamemode_overview[i]["match_type"]);
+    }
+
+    li.classList.add('nav-item');
+    li.innerHTML = '<a class="nav-link active" id="total-tab" data-toggle="pill" href="#total" role="tab" aria-controls="total" aria-selected="true">Total</a>';
+    document.getElementById('game_type_list').appendChild(li);
+
+    for (var i = 0; i < game_types.length; i++) {
+        li = document.createElement('li');
+        li.classList.add('nav-item');
+        li.innerHTML = '<a class="nav-link" id="' + game_types[i] + '-tab" data-toggle="tab" href="#' + game_types[i] + '" role="tab" aria-controls="' + game_types[i] + '" aria-selected="false">' + game_types[i] + '</a>';
+
+        document.getElementById('game_type_list').appendChild(li);
+    }
+}
+
 
 function build_drilldown(id, title, drilldown_data) {
 

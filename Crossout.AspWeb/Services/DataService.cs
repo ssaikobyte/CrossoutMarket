@@ -724,6 +724,41 @@ namespace Crossout.AspWeb.Services
             return drill_down_return;
         }
 
+        public GameModeDetail PopulateGameModeDetail(int uid)
+        {
+            GameModeDetail game_mode_detail = new GameModeDetail { game_modes = new List<GameMode> { } };
+
+            NPoco.Connection.Open();
+            game_mode_detail.game_modes = PopulateGameModeDetailList(uid);
+            NPoco.Connection.Close();
+
+            return game_mode_detail;
+        }
+
+        public List<GameMode> PopulateGameModeDetailList(int uid)
+        {
+            List<GameMode> game_modes = new List<GameMode> { };
+
+            game_modes = NPoco.Fetch<GameMode>(@"SELECT CASE record.match_classification 
+						                                                WHEN 1 THEN 'PvP'
+						                                                WHEN 2 THEN 'PvE'
+						                                                WHEN 3 THEN 'Brawl'
+						                                                WHEN 4 THEN 'Bedlam'
+						                                                WHEN 5 THEN 'Custom'
+								                                                ELSE 'Undefined' END as match_classification, record.match_type, COUNT(DISTINCT record.match_id) as games, 
+			                                            COUNT(*) as rounds, count(distinct wins.match_id) as wins,  SUM(TO_SECONDS(record.match_end) - TO_SECONDS(record.match_start)) as time_spent,
+			                                            0 as medals, SUM(player.kills) as kills, SUM(player.assists) as assists, SUM(player.drone_kills) as drone_kills, SUM(player.deaths) as deaths, 
+			                                            SUM(player.damage) as damage, SUM(player.damage_taken) as damage_rec, SUM(player.score) as score
+			                                            FROM crossout.cod_match_records record
+	                                                INNER JOIN crossout.cod_player_round_records player on record.match_id = player.match_id
+                                                    LEFT JOIN crossout.cod_match_records wins on record.match_id = wins.match_id and player.team = wins.winning_team
+	                                                WHERE player.uid = @0
+	                                                GROUP BY record.match_type
+	                                                ORDER BY COUNT(DISTINCT record.match_id) DESC", uid);
+
+            return game_modes;
+        }
+
         public string TranslateFieldName(string toTranslate)
         {
             switch (toTranslate)

@@ -37,25 +37,26 @@ namespace Crossout.AspWeb.Models.Cod
         public int count { get; set; }
     }
 
-
-
     public class GameModeDetail
     {
-        public int match_classification { get; set; }
-        public string game_type { get; set; }
-        public int games_recorded { get; set; }
+        public List<GameMode> game_modes { get; set; }
+    }
+
+    public class GameMode
+    {
+        public string match_classification { get; set; }
+        public string match_type { get; set; }
+        public int games { get; set; }
+        public int rounds { get; set; }
         public int wins { get; set; }
-        public int losses { get; set; }
-        public string time_spent { get; set; }
+        public int time_spent { get; set; }
         public int medals { get; set; }
         public int kills { get; set; }
         public int assists { get; set; }
         public int drone_kills { get; set; }
         public int deaths { get; set; }
-        public double score_avg { get; set; }
-        public double kill_avg { get; set; }
-        public double assist_avg { get; set; }
-        public double damage_avg { get; set; }
-        public double damage_rec_avg { get; set; }
+        public double damage { get; set; }
+        public double damage_rec { get; set; }
+        public int score { get; set; }
     }
 }
