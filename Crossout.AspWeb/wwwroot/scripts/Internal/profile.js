@@ -1,5 +1,7 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
 var gamemode_overview = [];
+var active_classification = null;
+var active_game_type = null;
 
 
 Highcharts.setOptions({
@@ -23,15 +25,74 @@ $.ajax({
     dataType: 'json',
     success: function (json) {
         gamemode_overview = json["game_modes"];
+        active_classification = "PvP";
+        active_game_type = "Total";
         build_classification_list();
         build_game_type_list();
+        populate_gamemode_overview();
     }
 });
 
-function populate_gamemode_overview() {
-    var interest = $('ul#classification_list').find('li.active').data('interest');
-}
+$('#classification_list').on('click', 'a', function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+    active_classification = $(this).text();
+    active_game_type = "Total";
+    build_game_type_list();
+    populate_gamemode_overview();
+});
 
+$('#game_type_list').on('click', 'a', function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+    active_game_type = $(this).text();
+    populate_gamemode_overview();
+});
+
+function populate_gamemode_overview() {
+    var games = 0;
+    var rounds = 0;
+    var wins = 0;
+    var time_spent = 0;
+    var medals = 0;
+    var kills = 0;
+    var assists = 0;
+    var drone_kills = 0;
+    var deaths = 0;
+    var damage = 0;
+    var damage_rec = 0;
+    var score = 0;
+
+    for (var i = 0; i < gamemode_overview.length; i++) {
+
+        if (active_classification != 'Total' && active_classification != gamemode_overview[i]["match_classification"])
+            continue;
+
+        if (active_game_type != 'Total' && active_game_type != gamemode_overview[i]["match_type"])
+            continue;
+
+        games += gamemode_overview[i]["games"];
+        rounds += gamemode_overview[i]["rounds"];
+        wins += gamemode_overview[i]["wins"];
+        time_spent += gamemode_overview[i]["time_spent"];
+        medals += gamemode_overview[i]["medals"];
+        kills += gamemode_overview[i]["kills"];
+        assists += gamemode_overview[i]["assists"];
+        drone_kills += gamemode_overview[i]["drone_kills"];
+        deaths += gamemode_overview[i]["deaths"];
+        damage += gamemode_overview[i]["damage"];
+        damage_rec += gamemode_overview[i]["damage_rec"];
+        score += gamemode_overview[i]["score"];
+    }
+
+    $('#games_recorded').text(games);
+    $('#win_rate').text(((wins / games) * 100).toFixed(1) + '%');
+    $('#kills').text(kills);
+    $('#assists').text(assists);
+    $('#ka_g').text(((kills + assists) / games).toFixed(2));
+    $('#medals').text(medals);
+    $('#mvp').text(0.0);
+}
 
 function build_classification_list() {
     var li = document.createElement('li');
@@ -65,7 +126,6 @@ function build_classification_list() {
 function build_game_type_list() {
     var li = document.createElement('li');
     var game_types = [];
-    var active_classification = 'PvP';
 
     document.getElementById("game_type_list").innerHTML = "";
     
@@ -86,6 +146,7 @@ function build_game_type_list() {
         document.getElementById('game_type_list').appendChild(li);
     }
 }
+
 
 
 function build_drilldown(id, title, drilldown_data) {
