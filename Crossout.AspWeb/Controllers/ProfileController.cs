@@ -47,6 +47,8 @@ namespace Crossout.AspWeb.Controllers
             else
                 model.TimePlayed = string.Format("{0}h {1}m", time_played.Hours, time_played.Minutes);
 
+            Console.WriteLine("done loading user");
+
             this.RegisterHit("profile");
 
             return View("profile", model);

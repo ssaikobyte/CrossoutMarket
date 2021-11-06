@@ -30,6 +30,7 @@ $.ajax({
         build_classification_list();
         build_game_type_list();
         populate_gamemode_overview();
+        $('#gamemode_overview_card').removeClass('d-none');
     }
 });
 
