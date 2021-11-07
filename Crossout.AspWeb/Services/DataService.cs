@@ -760,6 +760,38 @@ namespace Crossout.AspWeb.Services
             return game_modes;
         }
 
+        public MatchHistoryDetail PopulateHistoryDetail(int uid)
+        {
+            MatchHistoryDetail history_detail = new MatchHistoryDetail { match_history = new List<UserMatchHistory> { } };
+
+            NPoco.Connection.Open();
+            history_detail.match_history = PopulateHistoryDetailList(uid);
+            NPoco.Connection.Close();
+
+            return history_detail;
+        }
+
+        public List<UserMatchHistory> PopulateHistoryDetailList(int uid)
+        {
+            List<UserMatchHistory> game_modes = new List<UserMatchHistory> { };
+
+            game_modes = NPoco.Fetch<UserMatchHistory>(@"SELECT record.match_id, 
+		                                                    CASE record.match_classification WHEN 1 THEN 'PvP' WHEN 2 THEN 'PvE' WHEN 3 THEN 'Brawl' WHEN 4 THEN 'Bedlam' WHEN 5 THEN 'Custom' ELSE 'Undefined' END as match_classification, 
+                                                            record.match_type, record.match_start, record.match_end, record.map_name as map, 
+                                                            player.power_score, player.kills, player.assists, player.drone_kills, player.damage, player.damage_taken as damage_rec, 
+	                                                        CASE record.winning_team WHEN player.team THEN 'Win' WHEN 0 THEN 'Draw' ELSE 'Loss' END as result,
+                                                            GROUP_CONCAT(DISTINCT CONCAT(resource.resource,':',resource.amount) SEPARATOR ',') AS resources 
+	                                                   FROM crossout.cod_match_records record
+                                                 INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
+                                                  LEFT JOIN crossout.cod_player_match_resources resource ON record.match_id = resource.match_id AND player.uid = resource.uid
+	                                                  WHERE player.uid = @0
+                                                      GROUP BY record.match_id
+                                                      ORDER BY match_id DESC
+                                                      LIMIT 1000;", uid);
+
+            return game_modes;
+        }
+
         public string TranslateFieldName(string toTranslate)
         {
             switch (toTranslate)

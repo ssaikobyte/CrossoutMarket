@@ -34,6 +34,15 @@ $.ajax({
     }
 });
 
+$.ajax({
+    url: '/data/profile/match_history/' + Uid,
+    dataType: 'json',
+    success: function (json) {
+        console.log(json["match_history"])
+        $('#match_history_overview_card').removeClass('d-none');
+    }
+});
+
 $('#classification_list').on('click', 'a', function (e) {
     e.preventDefault();
     $(this).tab('show');
