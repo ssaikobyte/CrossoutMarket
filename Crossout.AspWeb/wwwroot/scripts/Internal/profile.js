@@ -93,6 +93,11 @@ function populate_gamemode_overview() {
     $('#ka_g').text(((kills + assists) / games).toFixed(2));
     $('#medals').text(medals);
     $('#mvp').text(0.0);
+    $('#avg_score').text((score / games).toFixed(0));
+    $('#avg_kills').text((kills / games).toFixed(2));
+    $('#avg_assists').text((assists / games).toFixed(2));
+    $('#avg_damage').text((damage / games).toFixed(0));
+    $('#avg_damage_rec').text((damage_rec / games).toFixed(0));
 }
 
 function build_classification_list() {
@@ -138,6 +143,9 @@ function build_game_type_list() {
     li.classList.add('nav-item');
     li.innerHTML = '<a class="nav-link active" id="total-tab" data-toggle="pill" href="#total" role="tab" aria-controls="total" aria-selected="true">Total</a>';
     document.getElementById('game_type_list').appendChild(li);
+
+    if (game_types.length <= 1)
+        return;
 
     for (var i = 0; i < game_types.length; i++) {
         li = document.createElement('li');
