@@ -67,7 +67,7 @@ function populate_match_history_table() {
         var cols = "";
 
         cols += '<td>' + match_history[i]["match_type"] + '</td>';
-        cols += '<td>' + match_history[i]["match_end"] + '</td>';
+        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + match_history[i]["match_end"] + '</a></td>';
         cols += '<td>' + match_history[i]["map"] + '</td>';
         cols += '<td>' + match_history[i]["power_score"] + '</td>';
         cols += '<td>' + match_history[i]["score"] + '</td>';
@@ -76,7 +76,10 @@ function populate_match_history_table() {
         cols += '<td>' + (match_history[i]["damage"]).toFixed(0) + '</td>';
         cols += '<td>' + (match_history[i]["damage_rec"]).toFixed(0) + '</td>';
         cols += '<td>' + match_history[i]["result"] + '</td>';
-        cols += '<td>' + match_history[i]["resources"] + '</td>';
+
+        cols += '<td></td>';
+
+        //cols += '<td>' + match_history[i]["resources"] + '</td>';
 
         row.append(cols);
         $('#match_history_body').append(row);

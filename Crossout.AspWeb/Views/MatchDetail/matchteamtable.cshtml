@@ -44,7 +44,9 @@
                     <svg class="feather-help-circle minus d-none"><use xlink:href="/icons/feather-sprite.svg#minus-circle" /></svg>
                 </td>
                 <td>
-                    @player.FirstRound.nickname
+                    <a href="/profile/@player.UserId">
+                        @player.FirstRound.nickname
+                    </a>
                 </td>
                 <td>
                     @if (player.FirstRound.group_id != 0)
