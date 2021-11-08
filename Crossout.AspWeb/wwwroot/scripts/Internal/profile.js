@@ -1,5 +1,6 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
 var gamemode_overview = [];
+var match_history = [];
 var active_classification = null;
 var active_game_type = null;
 
@@ -38,7 +39,8 @@ $.ajax({
     url: '/data/profile/match_history/' + Uid,
     dataType: 'json',
     success: function (json) {
-        console.log(json["match_history"])
+        match_history = json["match_history"];
+        populate_match_history_table();
         $('#match_history_overview_card').removeClass('d-none');
     }
 });
@@ -58,6 +60,28 @@ $('#game_type_list').on('click', 'a', function (e) {
     active_game_type = $(this).text();
     populate_gamemode_overview();
 });
+
+function populate_match_history_table() {
+    for (var i = 0; i < match_history.length; i++) {
+        var row = $("<tr>");
+        var cols = "";
+
+        cols += '<td>' + match_history[i]["match_type"] + '</td>';
+        cols += '<td>' + match_history[i]["match_end"] + '</td>';
+        cols += '<td>' + match_history[i]["map"] + '</td>';
+        cols += '<td>' + match_history[i]["power_score"] + '</td>';
+        cols += '<td>' + match_history[i]["score"] + '</td>';
+        cols += '<td>' + match_history[i]["kills"] + '</td>';
+        cols += '<td>' + match_history[i]["assists"] + '</td>';
+        cols += '<td>' + (match_history[i]["damage"]).toFixed(0) + '</td>';
+        cols += '<td>' + (match_history[i]["damage_rec"]).toFixed(0) + '</td>';
+        cols += '<td>' + match_history[i]["result"] + '</td>';
+        cols += '<td>' + match_history[i]["resources"] + '</td>';
+
+        row.append(cols);
+        $('#match_history_body').append(row);
+    }
+}
 
 function populate_gamemode_overview() {
     var games = 0;
