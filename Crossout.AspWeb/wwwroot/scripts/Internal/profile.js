@@ -1,4 +1,5 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
+var overview_totals = null;
 var gamemode_overview = [];
 var match_history = [];
 var active_classification = null;
@@ -8,6 +9,15 @@ var active_game_type = null;
 Highcharts.setOptions({
     lang: {
         drillUpText: '< Back'
+    }
+});
+
+$.ajax({
+    url: '/data/profile/totals/' + Uid,
+    dataType: 'json',
+    success: function (json) {
+        overview_totals = json;
+        populate_overview_totals();
     }
 });
 
@@ -60,6 +70,14 @@ $('#game_type_list').on('click', 'a', function (e) {
     active_game_type = $(this).text();
     populate_gamemode_overview();
 });
+
+function populate_overview_totals() {
+    $('#total_games_recorded').text(overview_totals["GamesRecorded"]);
+    $('#total_time_recorded').text(overview_totals["TimePlayed"]);
+    $('#total_win_rate').text(overview_totals["WinRate"]);
+    $('#total_kag').text(overview_totals["KPB"]);
+    $('#total_mvp_rate').text(overview_totals["MVPRate"]);
+}
 
 function populate_match_history_table() {
     for (var i = 0; i < match_history.length; i++) {

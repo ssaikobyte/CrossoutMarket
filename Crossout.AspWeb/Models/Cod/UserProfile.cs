@@ -13,6 +13,11 @@ namespace Crossout.AspWeb.Models.Cod
         public string Title => "Profile ";
         public int Uid { get; set; }
         public string Nickname { get; set; }
+        public List<string> Nicknames { get; set; }
+    }
+
+    public class OverviewCard
+    {
         public int GamesRecorded { get; set; }
         public int GamesUploaded { get; set; }
         public int PvpGames { get; set; }
@@ -21,8 +26,8 @@ namespace Crossout.AspWeb.Models.Cod
         public string WinRate { get; set; }
         public string KPB { get; set; }
         public string MVPRate { get; set; }
-        public List<string> Nicknames { get; set; }
     }
+
     public class OverviewCharts
     {
         public List<DrillDown> gamemode_preference { get; set; }
