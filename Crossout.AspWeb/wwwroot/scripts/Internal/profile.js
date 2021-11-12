@@ -241,6 +241,7 @@ function build_drilldown(id, title, drilldown_data) {
         },
         plotOptions: {
             pie: {
+                borderColor: null,
                 dataLabels: {
                     enabled: true,
                     distance: -50,
@@ -273,6 +274,13 @@ function build_drilldown(id, title, drilldown_data) {
             }
         ],
         drilldown: {
+            drillUpButton: {
+                theme: {
+                    fill: 'transparent',
+                    'stroke-width': 0,
+                    r: 2
+                }
+            },
             series: drilldown_series_data
         }
     });

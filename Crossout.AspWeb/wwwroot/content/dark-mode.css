@@ -95,6 +95,9 @@
 .dark-mode .highcharts-button-box {
   fill: #343a40; }
 
+.dark-mode .highcharts-drillup-button text {
+  fill: #6c757d !important; }
+
 .dark-mode .highcharts-button-normal text {
   fill: #6c757d !important; }
 
@@ -115,7 +118,7 @@
   stroke: #343a40; }
 
 .dark-mode .highcharts-title,
-.dark-mode .highcharts-data-label text {
+.dark-mode .highcharts-data-label:not(.highcharts-drilldown-data-label) text {
   fill: #f8f9fa !important; }
 
 .dark-mode .highcharts-background {

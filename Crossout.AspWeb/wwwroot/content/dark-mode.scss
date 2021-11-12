@@ -159,6 +159,11 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
     fill: $gray-800;
 }
 
+.dark-mode .highcharts-drillup-button text {
+    fill: $gray-600 !important;
+}
+
+
 .dark-mode .highcharts-button-normal text {
     fill: $gray-600 !important;
 }
@@ -184,7 +189,7 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
 }
 
 .dark-mode .highcharts-title,
-.dark-mode .highcharts-data-label text {
+.dark-mode .highcharts-data-label:not(.highcharts-drilldown-data-label) text {
     fill: $dark-font-color-main !important;
 }
 
