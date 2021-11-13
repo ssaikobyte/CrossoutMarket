@@ -747,6 +747,7 @@ namespace Crossout.AspWeb.Services
 						                                                    WHEN 5 THEN 'Custom'
 							                                                        ELSE 'Undefined' END as match_classification, 
 		                                                    record.match_type, map.map_display_name as map, CASE record.winning_team WHEN 0 THEN 'Draw' WHEN player.team THEN 'Win' ELSE 'Loss' END as result, 
+                                                            player.build_hash, player.power_score,
 		                                                    COUNT(DISTINCT round.round_id) AS rounds,  record.match_start, TO_SECONDS(record.match_end) - TO_SECONDS(record.match_start) AS time_spent,
 		                                                    SUM(player.kills) AS kills, SUM(player.assists) AS assists, SUM(player.drone_kills) AS drone_kills, SUM(player.deaths) AS deaths, 
 		                                                    SUM(player.damage) AS damage, SUM(player.damage_taken) AS damage_rec, SUM(player.score) AS score, resources.resource_list, medals.medal_list

@@ -79,6 +79,9 @@ namespace Crossout.AspWeb.Models.Cod
         public string match_type { get; set; }
         public string map { get; set; }
         public string result { get; set; }
+        public string build_hash { get; set; }
+        public int power_score { get; set; }
+        public int rounds { get; set; }
         public DateTime match_start { get; set; }
         public int time_spent { get; set; }
         public int kills { get; set; }

@@ -4,7 +4,6 @@ var match_history = [];
 var active_classification = null;
 var active_game_type = null;
 
-
 Highcharts.setOptions({
     lang: {
         drillUpText: '< Back'
@@ -80,7 +79,7 @@ function populate_match_history_table() {
         var cols = "";
 
         cols += '<td>' + match_history[i]["match_type"] + '</td>';
-        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + match_history[i]["match_end"] + '</a></td>';
+        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + match_history[i]["match_start"] + '</a></td>';
         cols += '<td>' + match_history[i]["map"] + '</td>';
         cols += '<td>' + match_history[i]["power_score"] + '</td>';
         cols += '<td>' + match_history[i]["score"] + '</td>';
@@ -122,8 +121,6 @@ function populate_gamemode_overview() {
         if (active_game_type != 'Total' && active_game_type != match_history[i]["match_type"])
             continue;
 
-        //var medals_list = match_history[i]["medal_list"].split(',');
-
         games += 1;
         rounds += match_history[i]["rounds"];
 
@@ -131,9 +128,17 @@ function populate_gamemode_overview() {
             wins += 1;
 
         time_spent += match_history[i]["time_spent"];
-        //match_history[i]["medal_list"].split(',').forEach(x => medals += parseInt(x.match(/\d+$/)[0], 10));
 
-        mvp += match_history[i]["mvp"];
+        if (match_history[i]["medal_list"] != null) {
+            match_history[i]["medal_list"].split(',').forEach(x => {
+                var medal = x.split(':');
+                medals += parseInt(medal[1]);
+
+                if (medal[0] == 'PvpMvpWin')
+                    mvp += parseInt(medal[1]); 
+            });
+        }
+
         kills += match_history[i]["kills"];
         assists += match_history[i]["assists"];
         drone_kills += match_history[i]["drone_kills"];
