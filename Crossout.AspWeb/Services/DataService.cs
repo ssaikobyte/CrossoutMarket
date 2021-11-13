@@ -723,45 +723,6 @@ namespace Crossout.AspWeb.Services
 
             return drill_down_return;
         }
-
-        public GameModeDetail PopulateGameModeDetail(int uid)
-        {
-            GameModeDetail game_mode_detail = new GameModeDetail { game_modes = new List<GameMode> { } };
-
-            NPoco.Connection.Open();
-            game_mode_detail.game_modes = PopulateGameModeDetailList(uid);
-            NPoco.Connection.Close();
-
-            return game_mode_detail;
-        }
-
-        public List<GameMode> PopulateGameModeDetailList(int uid)
-        {
-            List<GameMode> game_modes = new List<GameMode> { };
-
-            game_modes = NPoco.Fetch<GameMode>(@"SELECT CASE record.match_classification 
-						                                WHEN 1 THEN 'PvP'
-						                                WHEN 2 THEN 'PvE'
-						                                WHEN 3 THEN 'Brawl'
-						                                WHEN 4 THEN 'Bedlam'
-						                                WHEN 5 THEN 'Custom'
-								                                ELSE 'Undefined' END as match_classification, 
-		                                record.match_type, COUNT(DISTINCT record.match_id) as games, 
-		                                COUNT(*) as rounds, count(distinct wins.match_id) as wins,  SUM(TO_SECONDS(record.match_end) - TO_SECONDS(record.match_start)) as time_spent,
-		                                0 as medals, IFNULL(SUM(mvp.amount),0) as mvp, SUM(player.kills) as kills, SUM(player.assists) as assists, SUM(player.drone_kills) as drone_kills, SUM(player.deaths) as deaths, 
-		                                SUM(player.damage) as damage, SUM(player.damage_taken) as damage_rec, SUM(player.score) as score
-		                                FROM crossout.cod_match_records record
-                                    INNER JOIN crossout.cod_player_round_records player on record.match_id = player.match_id
-                                    inner join crossout.cod_round_records round on record.match_id = round.match_id
-                                    left join crossout.cod_player_match_medals mvp on record.match_id = mvp.match_id and round.round_id = mvp.round_id and player.uid = mvp.uid and mvp.medal = 'PvpMvpWin'
-                                    LEFT JOIN crossout.cod_match_records wins on record.match_id = wins.match_id and player.team = wins.winning_team
-                                    WHERE player.uid = @0
-                                    GROUP BY record.match_type
-                                    ORDER BY record.match_classification", uid);
-
-            return game_modes;
-        }
-
         public MatchHistoryDetail PopulateHistoryDetail(int uid)
         {
             MatchHistoryDetail history_detail = new MatchHistoryDetail { match_history = new List<UserMatchHistory> { } };
@@ -777,19 +738,42 @@ namespace Crossout.AspWeb.Services
         {
             List<UserMatchHistory> game_modes = new List<UserMatchHistory> { };
 
-            game_modes = NPoco.Fetch<UserMatchHistory>(@"SELECT record.match_id, 
-		                                                    CASE record.match_classification WHEN 1 THEN 'PvP' WHEN 2 THEN 'PvE' WHEN 3 THEN 'Brawl' WHEN 4 THEN 'Bedlam' WHEN 5 THEN 'Custom' ELSE 'Undefined' END as match_classification, 
-                                                            record.match_type, record.match_start, record.match_end, record.map_name as map, 
-                                                            player.power_score, player.kills, player.assists, player.drone_kills, player.damage, player.damage_taken as damage_rec, 
-	                                                        CASE record.winning_team WHEN player.team THEN 'Win' WHEN 0 THEN 'Draw' ELSE 'Loss' END as result,
-                                                            GROUP_CONCAT(DISTINCT CONCAT(resource.resource,':',resource.amount) SEPARATOR ',') AS resources 
-	                                                   FROM crossout.cod_match_records record
-                                                 INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
-                                                  LEFT JOIN crossout.cod_player_match_resources resource ON record.match_id = resource.match_id AND player.uid = resource.uid
-	                                                  WHERE player.uid = @0
-                                                      GROUP BY record.match_id
-                                                      ORDER BY match_id DESC
-                                                      LIMIT 1000;", uid);
+            game_modes = NPoco.Fetch<UserMatchHistory>(@" SELECT record.match_id, 
+                                                            CASE record.match_classification 
+						                                                    WHEN 1 THEN 'PvP'
+						                                                    WHEN 2 THEN 'PvE'
+						                                                    WHEN 3 THEN 'Brawl'
+						                                                    WHEN 4 THEN 'Bedlam'
+						                                                    WHEN 5 THEN 'Custom'
+							                                                        ELSE 'Undefined' END as match_classification, 
+		                                                    record.match_type, map.map_display_name as map, CASE record.winning_team WHEN 0 THEN 'Draw' WHEN player.team THEN 'Win' ELSE 'Loss' END as result, 
+		                                                    COUNT(DISTINCT round.round_id) AS rounds,  record.match_start, TO_SECONDS(record.match_end) - TO_SECONDS(record.match_start) AS time_spent,
+		                                                    SUM(player.kills) AS kills, SUM(player.assists) AS assists, SUM(player.drone_kills) AS drone_kills, SUM(player.deaths) AS deaths, 
+		                                                    SUM(player.damage) AS damage, SUM(player.damage_taken) AS damage_rec, SUM(player.score) AS score, resources.resource_list, medals.medal_list
+		                                                    FROM crossout.cod_match_records record
+                                                        INNER JOIN crossout.cod_player_round_records player on record.match_id = player.match_id
+                                                        INNER JOIN crossout.cod_round_records round on record.match_id = round.match_id
+                                                        INNER JOIN crossout.cod_maps map on record.map_name = map.map_name
+                                                        INNER JOIN (
+					                                                    SELECT m.match_id, GROUP_CONCAT(DISTINCT CONCAT(r.resource,':',r.amount) SEPARATOR ',') AS resource_list 
+					                                                      FROM crossout.cod_match_records m
+				                                                    INNER JOIN crossout.cod_player_round_records p ON m.match_id = p.match_id
+				                                                     LEFT JOIN crossout.cod_player_match_resources r ON m.match_id = r.match_id AND p.uid = r.uid
+					                                                     WHERE p.uid = @0
+				                                                         GROUP BY m.match_id
+			                                                        ) resources ON resources.match_id = record.match_id 
+                                                        INNER JOIN (
+					                                                    SELECT m.match_id, GROUP_CONCAT(DISTINCT CONCAT(med.medal,':',med.amount) SEPARATOR ',') AS medal_list 
+					                                                      FROM crossout.cod_match_records m
+				                                                    INNER JOIN crossout.cod_round_records r ON m.match_id = r.match_id
+                                                                    INNER JOIN crossout.cod_player_round_records p ON m.match_id = p.match_id 
+				                                                     LEFT JOIN crossout.cod_player_match_medals med ON m.match_id = med.match_id AND r.round_id = med.round_id AND p.uid = med.uid
+					                                                     WHERE p.uid = @0
+				                                                         GROUP BY m.match_id
+			                                                        ) medals ON medals.match_id = record.match_id 
+                                                        WHERE player.uid = @0
+                                                        GROUP BY record.match_id
+                                                        ORDER BY record.match_id", uid);
 
             return game_modes;
         }
@@ -818,7 +802,6 @@ namespace Crossout.AspWeb.Services
                     return toTranslate;
             }
         }
-
         public static List<FactionModel> CreateAllFactionsForEdit(List<object[]> data)
         {
             List<FactionModel> items = new List<FactionModel>();

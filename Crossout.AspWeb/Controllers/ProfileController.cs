@@ -116,31 +116,6 @@ namespace Crossout.AspWeb.Controllers
             }
         }
 
-        [Route("data/profile/gamemodes/{id:long}")]
-        public IActionResult ProfileGameModeData(int id, string l)
-        {
-            sql.Open(WebSettings.Settings.CreateDescription());
-
-            DataService db = new DataService(sql);
-
-            Language lang = this.VerifyLanguage(sql, l);
-
-            GameModeDetail model = new GameModeDetail { };
-
-            try
-            {
-                model = db.PopulateGameModeDetail(id);
-
-                return Json(model);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("ERROR in MatchPlayerDetailDataController: " + ex.Message);
-
-                return StatusCode(500);
-            }
-        }
-
         [Route("data/profile/match_history/{id:long}")]
         public IActionResult ProfileHistoryData(int id, string l)
         {

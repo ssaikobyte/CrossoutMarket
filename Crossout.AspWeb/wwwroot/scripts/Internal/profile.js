@@ -1,6 +1,5 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
 var overview_totals = null;
-var gamemode_overview = [];
 var match_history = [];
 var active_classification = null;
 var active_game_type = null;
@@ -22,6 +21,26 @@ $.ajax({
 });
 
 $.ajax({
+    url: '/data/profile/match_history/' + Uid,
+    dataType: 'json',
+    success: function (json) {
+        match_history = json["match_history"];
+
+        active_classification = "PvP";
+        active_game_type = "Total";
+
+        build_classification_list();
+        build_game_type_list();
+        populate_gamemode_overview();
+
+        populate_match_history_table();
+
+        $('#gamemode_overview_card').removeClass('d-none');
+        $('#match_history_overview_card').removeClass('d-none');
+    }
+});
+
+$.ajax({
 url: '/data/profile/overview_drilldowns/' + Uid,
 dataType: 'json',
 success: function (json) {
@@ -29,30 +48,6 @@ success: function (json) {
     build_drilldown('weapons_overview', 'Weapons', json["weapon_preference"]);
     build_drilldown('movement_overview', 'Movement', json["movement_preference"]);
 }
-});
-
-$.ajax({
-    url: '/data/profile/gamemodes/' + Uid,
-    dataType: 'json',
-    success: function (json) {
-        gamemode_overview = json["game_modes"];
-        active_classification = "PvP";
-        active_game_type = "Total";
-        build_classification_list();
-        build_game_type_list();
-        populate_gamemode_overview();
-        $('#gamemode_overview_card').removeClass('d-none');
-    }
-});
-
-$.ajax({
-    url: '/data/profile/match_history/' + Uid,
-    dataType: 'json',
-    success: function (json) {
-        match_history = json["match_history"];
-        populate_match_history_table();
-        $('#match_history_overview_card').removeClass('d-none');
-    }
 });
 
 $('#classification_list').on('click', 'a', function (e) {
@@ -119,27 +114,33 @@ function populate_gamemode_overview() {
     var damage_rec = 0;
     var score = 0;
 
-    for (var i = 0; i < gamemode_overview.length; i++) {
+    for (var i = 0; i < match_history.length; i++) {
 
-        if (active_classification != 'Total' && active_classification != gamemode_overview[i]["match_classification"])
+        if (active_classification != 'Total' && active_classification != match_history[i]["match_classification"])
             continue;
 
-        if (active_game_type != 'Total' && active_game_type != gamemode_overview[i]["match_type"])
+        if (active_game_type != 'Total' && active_game_type != match_history[i]["match_type"])
             continue;
 
-        games += gamemode_overview[i]["games"];
-        rounds += gamemode_overview[i]["rounds"];
-        wins += gamemode_overview[i]["wins"];
-        time_spent += gamemode_overview[i]["time_spent"];
-        medals += gamemode_overview[i]["medals"];
-        mvp += gamemode_overview[i]["mvp"];
-        kills += gamemode_overview[i]["kills"];
-        assists += gamemode_overview[i]["assists"];
-        drone_kills += gamemode_overview[i]["drone_kills"];
-        deaths += gamemode_overview[i]["deaths"];
-        damage += gamemode_overview[i]["damage"];
-        damage_rec += gamemode_overview[i]["damage_rec"];
-        score += gamemode_overview[i]["score"];
+        //var medals_list = match_history[i]["medal_list"].split(',');
+
+        games += 1;
+        rounds += match_history[i]["rounds"];
+
+        if (match_history[i]["result"] === "Win")
+            wins += 1;
+
+        time_spent += match_history[i]["time_spent"];
+        //match_history[i]["medal_list"].split(',').forEach(x => medals += parseInt(x.match(/\d+$/)[0], 10));
+
+        mvp += match_history[i]["mvp"];
+        kills += match_history[i]["kills"];
+        assists += match_history[i]["assists"];
+        drone_kills += match_history[i]["drone_kills"];
+        deaths += match_history[i]["deaths"];
+        damage += match_history[i]["damage"];
+        damage_rec += match_history[i]["damage_rec"];
+        score += match_history[i]["score"];
     }
 
     $('#games_recorded').text(games);
@@ -148,7 +149,7 @@ function populate_gamemode_overview() {
     $('#assists').text(assists);
     $('#ka_g').text(((kills + assists) / games).toFixed(2));
     $('#medals').text(medals);
-    $('#mvp').text(((mvp / games) * 100).toFixed(1) + '%');
+    $('#mvp').text(((mvp / rounds) * 100).toFixed(1) + '%');
     $('#avg_score').text((score / games).toFixed(0));
     $('#avg_kills').text((kills / games).toFixed(2));
     $('#avg_assists').text((assists / games).toFixed(2));
@@ -162,9 +163,9 @@ function build_classification_list() {
 
     document.getElementById("classification_list").innerHTML = "";
     
-    for (var i = 0; i < gamemode_overview.length; i++) {
-        if (!match_classification.includes(gamemode_overview[i]["match_classification"]))
-            match_classification.push(gamemode_overview[i]["match_classification"]);
+    for (var i = 0; i < match_history.length; i++) {
+        if (!match_classification.includes(match_history[i]["match_classification"]))
+            match_classification.push(match_history[i]["match_classification"]);
     }
 
     li.classList.add('nav-item');
@@ -191,9 +192,9 @@ function build_game_type_list() {
 
     document.getElementById("game_type_list").innerHTML = "";
     
-    for (var i = 0; i < gamemode_overview.length; i++) {
-        if (!game_types.includes(gamemode_overview[i]["match_type"]) && gamemode_overview[i]["match_classification"] == active_classification)
-            game_types.push(gamemode_overview[i]["match_type"]);
+    for (var i = 0; i < match_history.length; i++) {
+        if (!game_types.includes(match_history[i]["match_type"]) && match_history[i]["match_classification"] == active_classification)
+            game_types.push(match_history[i]["match_type"]);
     }
 
     li.classList.add('nav-item');
