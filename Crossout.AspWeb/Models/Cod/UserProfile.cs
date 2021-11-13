@@ -56,6 +56,7 @@ namespace Crossout.AspWeb.Models.Cod
         public int wins { get; set; }
         public int time_spent { get; set; }
         public int medals { get; set; }
+        public int mvp { get; set; }
         public int kills { get; set; }
         public int assists { get; set; }
         public int drone_kills { get; set; }

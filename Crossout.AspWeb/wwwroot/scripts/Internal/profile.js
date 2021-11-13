@@ -110,6 +110,7 @@ function populate_gamemode_overview() {
     var wins = 0;
     var time_spent = 0;
     var medals = 0;
+    var mvp = 0;
     var kills = 0;
     var assists = 0;
     var drone_kills = 0;
@@ -131,6 +132,7 @@ function populate_gamemode_overview() {
         wins += gamemode_overview[i]["wins"];
         time_spent += gamemode_overview[i]["time_spent"];
         medals += gamemode_overview[i]["medals"];
+        mvp += gamemode_overview[i]["mvp"];
         kills += gamemode_overview[i]["kills"];
         assists += gamemode_overview[i]["assists"];
         drone_kills += gamemode_overview[i]["drone_kills"];
@@ -146,7 +148,7 @@ function populate_gamemode_overview() {
     $('#assists').text(assists);
     $('#ka_g').text(((kills + assists) / games).toFixed(2));
     $('#medals').text(medals);
-    $('#mvp').text(0.0);
+    $('#mvp').text(((mvp / games) * 100).toFixed(1) + '%');
     $('#avg_score').text((score / games).toFixed(0));
     $('#avg_kills').text((kills / games).toFixed(2));
     $('#avg_assists').text((assists / games).toFixed(2));
