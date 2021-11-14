@@ -90,9 +90,6 @@ function populate_match_history_table() {
         cols += '<td>' + match_history[i]["result"] + '</td>';
 
         cols += '<td></td>';
-
-        //cols += '<td>' + match_history[i]["resources"] + '</td>';
-
         row.append(cols);
         $('#match_history_body').append(row);
     }

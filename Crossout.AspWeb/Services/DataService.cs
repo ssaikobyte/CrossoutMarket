@@ -729,6 +729,7 @@ namespace Crossout.AspWeb.Services
 
             NPoco.Connection.Open();
             history_detail.match_history = PopulateHistoryDetailList(uid);
+            history_detail.builds = PopulatePlayerBuildList(uid);
             NPoco.Connection.Close();
 
             return history_detail;
@@ -777,6 +778,24 @@ namespace Crossout.AspWeb.Services
                                                         ORDER BY record.match_id", uid);
 
             return game_modes;
+        }
+
+        public List<PlayerBuild> PopulatePlayerBuildList(int uid)
+        {
+            List<PlayerBuild> builds = new List<PlayerBuild> { };
+
+            builds = NPoco.Fetch<PlayerBuild>(@"SELECT player.build_hash, player.power_score, GROUP_CONCAT(DISTINCT CONCAT(ocr.category,':',ocr.name,':',ocr.rarity,':',ocr.type) SEPARATOR ',') as parts
+			                                      FROM crossout.cod_match_records record
+	                                        INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
+	                                        INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
+	                                        INNER JOIN crossout.cod_build_parts part ON build.build_id = part.build_id
+	                                        INNER JOIN crossout.item item ON part.part_name = item.externalKey
+	                                        INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
+			                                     WHERE player.uid = @0
+			                                       AND ocr.category in ('Weapons', 'Cabins','Movement','Hardware')
+		                                         GROUP BY player.build_hash", uid);
+
+            return builds;
         }
 
         public string TranslateFieldName(string toTranslate)
