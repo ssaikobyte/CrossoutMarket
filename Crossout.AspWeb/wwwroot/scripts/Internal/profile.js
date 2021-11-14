@@ -1,6 +1,7 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
 var overview_totals = null;
 var match_history = [];
+var build_list = [];
 var active_classification = null;
 var active_game_type = null;
 
@@ -24,10 +25,12 @@ $.ajax({
     dataType: 'json',
     success: function (json) {
         match_history = json["match_history"];
+        build_list = json["builds"];
 
         active_classification = "PvP";
         active_game_type = "Total";
 
+        populate_part_dropdowns();
         build_classification_list();
         build_game_type_list();
         populate_gamemode_overview();
@@ -93,6 +96,41 @@ function populate_match_history_table() {
         row.append(cols);
         $('#match_history_body').append(row);
     }
+}
+
+function populate_part_dropdowns() {
+
+    var cabins = [];
+    var hardware = [];
+    var movement = [];
+    var weapons = [];
+
+    build_list.forEach(build => {
+        build["parts"].split(',').forEach(part_string => {
+            var parts = part_string.split(':');
+            //var li = document.createElement('li');
+            //li.innerHTML = '<a class="dropdown-item" data-keyname="' + parts[1] + '">' + parts[1] + '</a>';
+
+            if (parts[0] === 'Cabins' && !cabins.includes(parts[1]))
+                cabins.push(parts[1]);
+
+            if (parts[0] === 'Hardware' && !hardware.includes(parts[1]))
+                hardware.push(parts[1]);
+
+            if (parts[0] === 'Movement' && !movement.includes(parts[1]))
+                movement.push(parts[1]);
+
+            if (parts[0] === 'Weapons' && !weapons.includes(parts[1]))
+                weapons.push(parts[1]);
+        });
+    });
+
+    cabins.forEach(x => {
+
+        //var a = document.createElement('a');
+        //a.text = x;
+        //$('#cabin_menu').append(a);
+    });
 }
 
 function populate_gamemode_overview() {
