@@ -793,7 +793,8 @@ namespace Crossout.AspWeb.Services
 	                                        INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
 			                                     WHERE player.uid = @0
 			                                       AND ocr.category in ('Weapons', 'Cabins','Movement','Hardware')
-		                                         GROUP BY player.build_hash", uid);
+		                                         GROUP BY player.build_hash
+                                                 ORDER BY ocr.name", uid);
 
             return builds;
         }

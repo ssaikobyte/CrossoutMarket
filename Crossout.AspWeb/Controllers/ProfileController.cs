@@ -116,6 +116,30 @@ namespace Crossout.AspWeb.Controllers
             }
         }
 
+        [Route("data/profile/mmr/{id:long}")]
+        public IActionResult ReturnPlayerMmr(int id, string l)
+        {
+            sql.Open(WebSettings.Settings.CreateDescription());
+
+            Console.WriteLine("CALLED MMR SERVICE");
+
+            MmrService db = new MmrService(sql);
+
+            Language lang = this.VerifyLanguage(sql, l);
+
+            try
+            {
+                Dictionary<int, int> model = db.CalculateAllMmr("8v8");
+                return Json(model);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR in MatchPlayerDetailDataController: " + ex.Message);
+
+                return StatusCode(500);
+            }
+        }
+
         [Route("data/profile/match_history/{id:long}")]
         public IActionResult ProfileHistoryData(int id, string l)
         {

@@ -108,8 +108,6 @@ function populate_part_dropdowns() {
     build_list.forEach(build => {
         build["parts"].split(',').forEach(part_string => {
             var parts = part_string.split(':');
-            //var li = document.createElement('li');
-            //li.innerHTML = '<a class="dropdown-item" data-keyname="' + parts[1] + '">' + parts[1] + '</a>';
 
             if (parts[0] === 'Cabins' && !cabins.includes(parts[1]))
                 cabins.push(parts[1]);
@@ -126,10 +124,19 @@ function populate_part_dropdowns() {
     });
 
     cabins.forEach(x => {
+        $('#cabin_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+    });
 
-        //var a = document.createElement('a');
-        //a.text = x;
-        //$('#cabin_menu').append(a);
+    hardware.forEach(x => {
+        $('#hardware_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+    });
+
+    movement.forEach(x => {
+        $('#movement_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+    });
+
+    weapons.forEach(x => {
+        $('#weapon_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
 }
 

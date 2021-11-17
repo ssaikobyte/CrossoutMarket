@@ -22,6 +22,19 @@ namespace Crossout.AspWeb.Pocos
         public string status { get; set; }
     }
 
+    [TableName("cod_mode_rank")]
+    public class RankPoco
+    {
+        [Column("uid")]
+        public int uid { get; set; }
+
+        [Column("match_type")]
+        public string match_type { get; set; }
+
+        [Column("mmr")]
+        public int mmr { get; set; }
+    }
+
     [TableName("cod_match_records")]
     [PrimaryKey("match_id", AutoIncrement = false)]
     [ExplicitColumns]
