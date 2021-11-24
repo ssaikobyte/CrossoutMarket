@@ -31,6 +31,15 @@ namespace Crossout.AspWeb.Controllers
             return RouteSearchData(lang.Id);
         }
 
+        [Route("/data/playersearch")]
+        public IActionResult PlayerSearch(string search)
+        {
+            sql.Open(WebSettings.Settings.CreateDescription());
+            DataService db = new DataService(sql);
+            var result = db.SelectPlayersLikeNickname(search);
+            return Json(result);
+        }
+
         [Route("/data/localization/frontend")]
         public IActionResult FrontendLocalization(string category, string l)
         {

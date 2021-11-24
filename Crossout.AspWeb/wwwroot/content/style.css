@@ -1,38 +1,41 @@
 ﻿/* Most of this is probably not used, it was reused from another project */
 
 .main {
-  padding: 0;
+    padding: 0;
 }
 
-.main .page-header {
-  margin-top: 0;
-}
+    .main .page-header {
+        margin-top: 0;
+    }
 
 .placeholders {
-  margin-bottom: 30px;
-  text-align: center;
+    margin-bottom: 30px;
+    text-align: center;
 }
-.placeholders h4 {
-  margin-bottom: 0;
-}
+
+    .placeholders h4 {
+        margin-bottom: 0;
+    }
+
 .placeholder {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
-.placeholder img {
-  display: inline-block;
-  border-radius: 50%;
-}
+
+    .placeholder img {
+        display: inline-block;
+        border-radius: 50%;
+    }
 
 .modal-title {
     font-size: 18px;
 }
 
 html {
-  position: relative;
+    position: relative;
 }
 
 body {
-  background: white;
+    background: white;
 }
 
 .blue {
@@ -46,7 +49,6 @@ body {
 .fill {
     display: block;
     height: 100%;
-    
     margin-top: 0px;
     padding-bottom: 0px;
 }
@@ -54,12 +56,11 @@ body {
 .fillFull {
     display: block;
     height: 100%;
-    
     margin-top: 0px;
     padding-bottom: 20px;
 }
 
-.header-title li{
+.header-title li {
     color: white;
 }
 
@@ -74,9 +75,9 @@ body {
 
 /* Rarity Labels */
 
-.label-Common{
-  background: #696969;
-  color: white;
+.label-Common {
+    background: #696969;
+    color: white;
 }
 
 .label-Rare {
@@ -105,14 +106,14 @@ body {
 }
 
 .label-md {
-  display: block;
-  font-size: 100%;
-  font-weight: bold;
-  line-height: 1;
-  color: #595959;
-  text-align: right;
-  white-space: nowrap;
-  vertical-align: baseline;
+    display: block;
+    font-size: 100%;
+    font-weight: bold;
+    line-height: 1;
+    color: #595959;
+    text-align: right;
+    white-space: nowrap;
+    vertical-align: baseline;
 }
 
 .label-md-left {
@@ -127,8 +128,8 @@ body {
 }
 
 .vertical-center {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .tree-icon {
@@ -146,7 +147,7 @@ body {
 }
 
 .recipe-price {
-    display: block;   
+    display: block;
 }
 
 .rec-left {
@@ -192,13 +193,13 @@ body {
 }
 
 .item-image-search {
-    width:56px;
-    height:56px;
+    width: 56px;
+    height: 56px;
 }
 
 .item-image-big {
-    width:64px;
-    height:64px;
+    width: 64px;
+    height: 64px;
 }
 
 .item-image-med {
@@ -269,7 +270,7 @@ body {
 }
 
 .stat-title {
-    font-size:20px;
+    font-size: 20px;
 }
 
 .stat-title-row {
@@ -277,13 +278,13 @@ body {
 }
 
 .stat-text {
-  display: block;
-  font-size: 100%;
-  font-weight: bold;
-  line-height: 1;
-  color: #595959;
-  white-space: nowrap;
-  vertical-align: baseline;
+    display: block;
+    font-size: 100%;
+    font-weight: bold;
+    line-height: 1;
+    color: #595959;
+    white-space: nowrap;
+    vertical-align: baseline;
 }
 
 /* Stat Styles end*/
@@ -317,7 +318,7 @@ body {
 }
 
 /* Datatables Button correction */
-.dataTables_button{
+.dataTables_button {
     margin: 2px;
 }
 
@@ -391,17 +392,17 @@ body {
     fill: none;
 }
 
-.feather:hover {
-    stroke: rgba(255, 255, 255, 0.75);
-}
+    .feather:hover {
+        stroke: rgba(255, 255, 255, 0.75);
+    }
 
 li.active a svg {
     stroke: white;
 }
 
-li.active a svg:hover {
-    stroke: white;
-}
+    li.active a svg:hover {
+        stroke: white;
+    }
 
 .dropdown-menu a {
     cursor: pointer;
@@ -497,6 +498,28 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
     stroke: rgba(0, 0, 0, 0.75);
 }
 
+.player-search-toggle {
+    position: absolute;
+    top: 10px;
+    right: 32px;
+    z-index: 10;
+}
+
+.feather-user {
+    width: 18px;
+    height: 18px;
+    stroke: rgba(0, 0, 0, 0.5);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.feather-user:hover,
+.feather-user.active {
+    stroke: rgba(0, 0, 0, 0.75);
+}
+
 .update-card-preview {
     max-height: 400px;
     overflow: hidden;
@@ -532,9 +555,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
     fill: none;
 }
 
-.feather-help-circle:hover {
-    stroke: rgba(0, 0, 0, 1);
-}
+    .feather-help-circle:hover {
+        stroke: rgba(0, 0, 0, 1);
+    }
 
 .feather-general {
     stroke: rgba(0, 0, 0, 0.5);
@@ -561,6 +584,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
 .table-compact tr td {
     padding: 0px;
 }
+
 .table-compact tr th {
     padding: 0px;
 }

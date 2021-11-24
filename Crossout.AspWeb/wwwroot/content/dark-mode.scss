@@ -223,6 +223,15 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
     stroke: rgba(255, 255, 255, 0.75);
 }
 
+.dark-mode .feather-user {
+    stroke: rgba(255, 255, 255, 0.5);
+}
+
+.dark-mode .feather-user:hover,
+.dark-mode .feather-user.active {
+    stroke: rgba(255, 255, 255, 0.75);
+}
+
 .dark-mode .feather-help-circle {
     stroke: rgba(255, 255, 255, 0.5);
 }

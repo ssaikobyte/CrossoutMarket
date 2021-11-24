@@ -577,6 +577,14 @@ namespace Crossout.AspWeb.Services
             return playerRoundRecords;
         }
 
+        public List<PlayerSearchResult> SelectPlayersLikeNickname(string nickname)
+        {
+            NPoco.Connection.Open();
+            var playerSearchResults = NPoco.Fetch<PlayerSearchResult>("SELECT DISTINCT uid, nickname FROM cod_player_round_records WHERE nickname LIKE @0", $"%{nickname}%");
+            NPoco.Connection.Close();
+            return playerSearchResults;
+        }
+
         public bool ValidUID(int uid)
         {
             bool valid_uid = false;

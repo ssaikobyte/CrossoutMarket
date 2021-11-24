@@ -27,8 +27,14 @@
                     <div class="mr-2 input-group">
                         <input class="form-control" size="1" type="search" placeholder="Search" aria-label="Search" id="searchBarMobile">
                     </div>
+                    <div id="playerSearchResultMobile" class="dropdown-menu" data-toggle="dropdown">
+                        <a class="dropdown-item" href="#">No Results</a>
+                    </div>
                     <span id="inputClearMobile" class="input-clear">
                         <svg class="feather-input-clear"><use xlink:href="/icons/feather-sprite.svg#x-circle" /></svg>
+                    </span>
+                    <span id="playerSearchMobile" class="player-search-toggle">
+                        <svg class="feather-user"><use xlink:href="/icons/feather-sprite.svg#user" /></svg>
                     </span>
                 </div>
 
@@ -58,7 +64,7 @@
                     <li role="presentation" class="my-1 my-lg-0 nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Info" ? "active" : "")"><a class="nav-link" href="~/info"><loc model="loc" category="shared" name="header.nav.info">Info</loc></a></li>
                     <li role="presentation" class="my-1 my-lg-0 nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            
+
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
                             <a class="dropdown-item lang-select" data-lang="en">EN</a>
@@ -78,8 +84,14 @@
                 <div>
                     <input class="form-control mr-1 ml-auto" type="search" placeholder="Search" aria-label="Search" size="28" id="searchBar">
                 </div>
+                <div id="playerSearchResult" class="dropdown-menu" data-toggle="dropdown">
+                    <a class="dropdown-item" href="#">No Results</a>
+                </div>
                 <span id="inputClear" class="input-clear">
                     <svg class="feather-input-clear"><use xlink:href="/icons/feather-sprite.svg#x-circle" /></svg>
+                </span>
+                <span id="playerSearch" class="player-search-toggle">
+                    <svg class="feather-user"><use xlink:href="/icons/feather-sprite.svg#user" /></svg>
                 </span>
             </div>
         </nav>
@@ -101,7 +113,7 @@
     });
 
     adjustSearchBarSize();
-    
+
     // Keep search bars in sync
     $('#searchBar, #searchBarMobile').keyup(function () {
         var value = this.value;
@@ -114,9 +126,18 @@
 
     // Redirect to main page if on other site
     $('#searchBar, #searchBarMobile').keyup(function (e) {
-        if (@(ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "true" : "false") && e.which === 13)
-        {
-            location.href = '/#search=' + this.value + '.';
+        let playerToggle = $('#playerSearch svg.active').hasClass('active');
+        if (playerToggle) {
+            if (e.which === 13) {
+                searchPlayers(this.value)
+            } else if (this.value.length <= 0) {
+                $('#playerSearchResult').removeClass('show');
+            }
+        } else {
+            if (@(ViewContext.RouteData.Values["Action"].ToString() != "Index" ? "true" : "false") && e.which === 13)
+            {
+                location.href = '/#search=' + this.value + '.';
+            }
         }
     });
 
@@ -156,11 +177,42 @@
     $('#inputClear').click(function () {
         $('#searchBar').val('').trigger('keyup');
         $('#searchBarMobile').val('').trigger('keyup');
+        $('#playerSearchResult, #playerSearchResultMobile').removeClass('show');
+    });
+
+    $('#playerSearch, #playerSearchMobile').click(function () {
+        $('#playerSearch, #playerSearchMobile').children('svg').toggleClass('active');
+        if ($(this).children('svg').hasClass('active'))
+            searchPlayers($('#searchBar').val());
+        else
+            $('#playerSearchResult').removeClass('show');
+
     });
 
     $('#inputClearMobile').click(function () {
         $('#searchBar').val('').trigger('keyup');
         $('#searchBarMobile').val('').trigger('keyup');
+        $('#playerSearchResult, #playerSearchResultMobile').removeClass('show');
     });
+
+    function searchPlayers(searchString) {
+        if (searchString.length >= 3)
+            $.getJSON('/data/playersearch?search=' + searchString).done(showPlayerSearchResults);
+    }
+
+    function showPlayerSearchResults(data) {
+        let searchResults = $('#playerSearchResult, #playerSearchResultMobile');
+        searchResults.empty();
+
+        for (let i = 0; i < Math.min(data.length, 9); i++) {
+            searchResults.append('<a class="dropdown-item" href="' + window.origin + '/profile/' + data[i].userId + '">' + data[i].nickname + '</a>');
+        }
+
+        if (data.length < 1) {
+            searchResults.append('<a class="dropdown-item disabled" href="#">No Results</a>');
+        }
+
+        searchResults.addClass('show');
+    }
 
 </script>
