@@ -214,11 +214,12 @@ function build_classification_list() {
         if (!match_classification.includes(match_history[i]["match_classification"]))
             match_classification.push(match_history[i]["match_classification"]);
     }
-
-    li.classList.add('nav-item');
-    li.innerHTML = '<a class="nav-link" id="total-tab" data-toggle="pill" href="#pills-total" role="tab" aria-controls="total" aria-selected="false">Total</a>';
-    document.getElementById('classification_list').appendChild(li);
-
+    if (match_classification.length > 1) {
+        li.classList.add('nav-item');
+        li.innerHTML = '<a class="nav-link" id="total-tab" data-toggle="pill" href="#pills-total" role="tab" aria-controls="total" aria-selected="false">Total</a>';
+        document.getElementById('classification_list').appendChild(li);
+    }
+    
     for (var i = 0; i < match_classification.length; i++) {
         li = document.createElement('li');
         li.classList.add('nav-item');
@@ -244,12 +245,11 @@ function build_game_type_list() {
             game_types.push(match_history[i]["match_type"]);
     }
 
-    li.classList.add('nav-item');
-    li.innerHTML = '<a class="nav-link active" id="total-tab" data-toggle="pill" href="#total" role="tab" aria-controls="total" aria-selected="true">Total</a>';
-    document.getElementById('game_type_list').appendChild(li);
-
-    if (game_types.length <= 1)
-        return;
+    if (game_types.length > 1) {
+        li.classList.add('nav-item');
+        li.innerHTML = '<a class="nav-link active" id="total-tab" data-toggle="pill" href="#total" role="tab" aria-controls="total" aria-selected="true">Total</a>';
+        document.getElementById('game_type_list').appendChild(li);
+    }
 
     for (var i = 0; i < game_types.length; i++) {
         li = document.createElement('li');
@@ -259,8 +259,6 @@ function build_game_type_list() {
         document.getElementById('game_type_list').appendChild(li);
     }
 }
-
-
 
 function build_drilldown(id, title, drilldown_data) {
 
