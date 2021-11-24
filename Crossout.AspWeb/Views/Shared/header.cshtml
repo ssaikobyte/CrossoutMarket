@@ -195,6 +195,7 @@
         $('#playerSearchResult, #playerSearchResultMobile').removeClass('show');
     });
 
+
     function searchPlayers(searchString) {
         if (searchString.length >= 3)
             $.getJSON('/data/playersearch?search=' + searchString).done(showPlayerSearchResults);
@@ -211,6 +212,10 @@
         if (data.length < 1) {
             searchResults.append('<a class="dropdown-item disabled" href="#">No Results</a>');
         }
+
+        $('#playerSearchResult > a.dropdown-item, #playerSearchResultMobile > a.dropdown-item').click(function (e) {
+            e.stopPropagation();
+        });
 
         searchResults.addClass('show');
     }
