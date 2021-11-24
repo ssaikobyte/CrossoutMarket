@@ -154,6 +154,10 @@ function populate_gamemode_overview() {
     var damage = 0;
     var damage_rec = 0;
     var score = 0;
+    var damage_list = [];
+    var dmg_rec_list = [];
+    var kd_list = [];
+    var score_list = [];
 
     for (var i = 0; i < match_history.length; i++) {
 
@@ -188,7 +192,21 @@ function populate_gamemode_overview() {
         damage += match_history[i]["damage"];
         damage_rec += match_history[i]["damage_rec"];
         score += match_history[i]["score"];
+
+        if (match_history[i]["damage"] !== undefined)
+            damage_list.push(match_history[i]["damage"]);
+        if (match_history[i]["damage_rec"] !== undefined)
+            dmg_rec_list.push(match_history[i]["damage_rec"]);
+        if (match_history[i]["kills"] !== undefined && match_history[i]["assists"] !== undefined)
+            kd_list.push(match_history[i]["kills"] + match_history[i]["assists"]);
+        if (match_history[i]["score"] !== undefined)
+            score_list.push(match_history[i]["score"]);
     }
+
+    damage_list = damage_list.sort(function (a, b) { return a - b });
+    dmg_rec_list = dmg_rec_list.sort(function (a, b) { return a - b });
+    kd_list = kd_list.sort(function (a, b) { return a - b });
+    score_list = score_list.sort(function (a, b) { return a - b });
 
     $('#games_recorded').text(games);
     $('#win_rate').text(((wins / games) * 100).toFixed(1) + '%');
@@ -197,11 +215,10 @@ function populate_gamemode_overview() {
     $('#ka_g').text(((kills + assists) / games).toFixed(2));
     $('#medals').text(medals);
     $('#mvp').text(((mvp / rounds) * 100).toFixed(1) + '%');
-    $('#avg_score').text((score / games).toFixed(0));
-    $('#avg_kills').text((kills / games).toFixed(2));
-    $('#avg_assists').text((assists / games).toFixed(2));
-    $('#avg_damage').text((damage / games).toFixed(0));
-    $('#avg_damage_rec').text((damage_rec / games).toFixed(0));
+
+    build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
+    build_boxplot('kill_box_plot', ['KD'], boxplot_distribution(kd_list));
+    build_boxplot('score_box_plot', ['Score'], boxplot_distribution(score_list));
 }
 
 function build_classification_list() {
@@ -334,6 +351,54 @@ function build_drilldown(id, title, drilldown_data) {
     });
 }
 
+function build_boxplot(id, categories, boxplot_data) {
+
+    Highcharts.chart(id, {
+        chart: {
+            type: 'boxplot',
+            inverted: true,
+            height: '35%'
+        },
+        title: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            categories: categories
+        },
+        yAxis: {
+            title: {
+                text: null
+            }
+        },
+        plotOptions: {
+            boxplot: {
+                //fillColor: '#e2e5e8',
+                lineWidth: 3,
+                medianWidth: 3,
+                stemWidth: 1,
+                whiskerLength: '80%',
+                whiskerWidth: 3
+            }
+        },
+        series: [{
+            name: null,
+            pointPadding: 0,
+            groupPadding: 0.2,
+            borderWidth: 0,
+            data: boxplot_data,
+            tooltip: {
+                headerFormat: '<em>{point.key}</em><br/>'
+            }
+        }]
+    });
+}
+
 function populate_series_data(drilldown_data) {
     var data = [];
     var total = 0;
@@ -388,4 +453,28 @@ function populate_drilldown_data(drilldown_data) {
     }
 
     return data;
+}
+
+function boxplot_distribution(data) {
+    var distribution = [];
+    var inter_quartile_range = quartile(data, 0.75) - quartile(data, 0.25);
+
+    distribution.push(quartile(data, 0.25) - 1.5 * inter_quartile_range > 0 ? quartile(data, 0.25) - 1.5 * inter_quartile_range : 0);
+    distribution.push(quartile(data, 0.25));
+    distribution.push(quartile(data, 0.50));
+    distribution.push(quartile(data, 0.75));
+    distribution.push(quartile(data, 0.75) + 1.5 * inter_quartile_range);
+
+    return distribution;
+}
+
+function quartile(data, q) {
+    var pos = ((data.length) - 1) * q;
+    var base = Math.floor(pos);
+    var rest = pos - base;
+    if ((data[base + 1] !== undefined)) {
+        return data[base] + rest * (data[base + 1] - data[base]);
+    } else {
+        return data[base];
+    }
 }
