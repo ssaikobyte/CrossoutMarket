@@ -782,7 +782,7 @@ namespace Crossout.AspWeb.Services
 				                                                         GROUP BY m.match_id
 			                                                        ) medals ON medals.match_id = record.match_id 
                                                         WHERE player.uid = @0
-                                                        GROUP BY record.match_id
+                                                        GROUP BY record.match_id, match_classification, record.match_type, map, result, player.build_hash, player.power_score, resources.resource_list, medals.medal_list
                                                         ORDER BY record.match_id", uid);
 
             return game_modes;
@@ -801,8 +801,7 @@ namespace Crossout.AspWeb.Services
 	                                        INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
 			                                     WHERE player.uid = @0
 			                                       AND ocr.category in ('Weapons', 'Cabins','Movement','Hardware')
-		                                         GROUP BY player.build_hash
-                                                 ORDER BY ocr.name", uid);
+		                                         GROUP BY player.build_hash, player.power_score", uid);
 
             return builds;
         }
