@@ -75,12 +75,41 @@
         </div>
     </div>
     <div class="d-flex justify-content-center flex-row mt-3">
-        <div id="dmg_box_plot"></div>
+        <div class="col-sm justify-content-center">
+            <button id="expand_gamemode_visualization" class="btn btn-secondary" style="width: 70px; height: 70px; padding: 10px 16px; border-radius: 35px; font-size: 12px; text-align: center;" type="button" data-toggle="collapse" data-target="#averages_card" aria-expanded="false" aria-controls="averages_card">+</button>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Kills</p></div>
+            <div id="avg_kills" class="row display-4 justify-content-center"></div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Assists</p></div>
+            <div id="avg_assists" class="row display-4 justify-content-center"></div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Dmg</p></div>
+            <div id="avg_dmg" class="row display-4 justify-content-center"></div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Dmg Rec</p></div>
+            <div id="avg_dmg_rec" class="row display-4 justify-content-center"></div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-center"><p>Score</p></div>
+            <div id="avg_score" class="row display-4 justify-content-center"></div>
+        </div>
     </div>
-    <div class="d-flex justify-content-center flex-row mt-3">
-        <div id="kill_box_plot"></div>
-    </div>
-    <div class="d-flex justify-content-center flex-row mt-3">
-        <div id="score_box_plot"></div>
+    <div class="collapse" id="averages_card">
+        <div class="card card-body ml-2 mr-2 mb-2">
+            <div class="d-flex justify-content-center flex-row mt-3">
+                <div id="kill_box_plot"></div>
+            </div>
+            <div class="d-flex justify-content-center flex-row mt-3">
+                <div id="dmg_box_plot"></div>
+            </div>
+            <div class="d-flex justify-content-center flex-row mt-3">
+                <div id="score_box_plot"></div>
+            </div>
+        </div>
     </div>
 </div>

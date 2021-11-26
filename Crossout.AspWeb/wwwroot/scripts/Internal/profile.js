@@ -4,6 +4,10 @@ var match_history = [];
 var build_list = [];
 var active_classification = null;
 var active_game_type = null;
+var damage_list = [];
+var dmg_rec_list = [];
+var kd_list = [];
+var score_list = [];
 
 Highcharts.setOptions({
     lang: {
@@ -154,10 +158,11 @@ function populate_gamemode_overview() {
     var damage = 0;
     var damage_rec = 0;
     var score = 0;
-    var damage_list = [];
-    var dmg_rec_list = [];
-    var kd_list = [];
-    var score_list = [];
+
+    damage_list = [];
+    dmg_rec_list = [];
+    kd_list = [];
+    score_list = [];
 
     for (var i = 0; i < match_history.length; i++) {
 
@@ -193,14 +198,10 @@ function populate_gamemode_overview() {
         damage_rec += match_history[i]["damage_rec"];
         score += match_history[i]["score"];
 
-        if (match_history[i]["damage"] !== undefined)
-            damage_list.push(match_history[i]["damage"]);
-        if (match_history[i]["damage_rec"] !== undefined)
-            dmg_rec_list.push(match_history[i]["damage_rec"]);
-        if (match_history[i]["kills"] !== undefined && match_history[i]["assists"] !== undefined)
-            kd_list.push(match_history[i]["kills"] + match_history[i]["assists"]);
-        if (match_history[i]["score"] !== undefined)
-            score_list.push(match_history[i]["score"]);
+        damage_list.push(match_history[i]["damage"]);
+        dmg_rec_list.push(match_history[i]["damage_rec"]);
+        kd_list.push(match_history[i]["kills"] + match_history[i]["assists"]);
+        score_list.push(match_history[i]["score"]);
     }
 
     damage_list = damage_list.sort(function (a, b) { return a - b });
@@ -212,13 +213,19 @@ function populate_gamemode_overview() {
     $('#win_rate').text(((wins / games) * 100).toFixed(1) + '%');
     $('#kills').text(kills);
     $('#assists').text(assists);
-    $('#ka_g').text(((kills + assists) / games).toFixed(2));
+    $('#ka_g').text(((kills + assists) / rounds).toFixed(2));
     $('#medals').text(medals);
     $('#mvp').text(((mvp / rounds) * 100).toFixed(1) + '%');
 
+    $('#avg_kills').text((kills / rounds).toFixed(2));
+    $('#avg_assists').text((assists / rounds).toFixed(2));
+    $('#avg_dmg').text((damage / rounds).toFixed(0));
+    $('#avg_dmg_rec').text((damage_rec / rounds).toFixed(0));
+    $('#avg_score').text((score / rounds).toFixed(0));
+
     build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
-    build_boxplot('kill_box_plot', ['KD'], boxplot_distribution(kd_list));
-    build_boxplot('score_box_plot', ['Score'], boxplot_distribution(score_list));
+    build_boxplot('kill_box_plot', ['KD'], [boxplot_distribution(kd_list)]);
+    build_boxplot('score_box_plot', ['Score'], [boxplot_distribution(score_list)]);
 }
 
 function build_classification_list() {
@@ -283,7 +290,7 @@ function build_drilldown(id, title, drilldown_data) {
     var drilldown_series_data = populate_drilldown_data(drilldown_data);
     var favorite = series_data.reduce((a, b) => a.y > b.y ? a : b);
 
-    Highcharts.chart(id, {
+    var chart = Highcharts.chart(id, {
         chart: {
             type: 'pie'
         },
@@ -349,15 +356,20 @@ function build_drilldown(id, title, drilldown_data) {
             series: drilldown_series_data
         }
     });
+
+    return chart;
 }
 
 function build_boxplot(id, categories, boxplot_data) {
+    var height = (categories.length * 15) + '%';
+    var width = $("#averages_card").width();
 
     Highcharts.chart(id, {
         chart: {
             type: 'boxplot',
             inverted: true,
-            height: '35%'
+            height: height,
+            width: width
         },
         title: {
             text: null
@@ -379,11 +391,11 @@ function build_boxplot(id, categories, boxplot_data) {
         plotOptions: {
             boxplot: {
                 //fillColor: '#e2e5e8',
-                lineWidth: 3,
-                medianWidth: 3,
-                stemWidth: 1,
+                lineWidth: 5,
+                medianWidth: 5,
+                stemWidth: 5,
                 whiskerLength: '80%',
-                whiskerWidth: 3
+                whiskerWidth: 5
             }
         },
         series: [{
@@ -398,6 +410,31 @@ function build_boxplot(id, categories, boxplot_data) {
         }]
     });
 }
+
+//$("#expand_gamemode_visualization").on('click', function (e) {
+
+//    var expanded = $('#averages_card').attr("aria-expanded");
+
+//    console.log(expanded);
+
+//    ///* OPTIONAL: some variables you can use in your chart options for custom sizing */
+//    //var chartWidth = $("#kanwil-report-kepuasan").width();
+//    //var chartHeight = $("#kanwil-report-kepuasan").height();
+
+//    ///* draw the chart once the tab has been clicked and it is now visible */
+//    //$('#kanwil-report-kepuasan').highcharts({
+//    //    /* your chart options go here */
+//    //});
+
+//    //e.stopPropagation();
+
+//});
+
+$('#averages_card').on('shown.bs.collapse', function () {
+    build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
+    build_boxplot('kill_box_plot', ['KD'], [boxplot_distribution(kd_list)]);
+    build_boxplot('score_box_plot', ['Score'], [boxplot_distribution(score_list)]);
+});
 
 function populate_series_data(drilldown_data) {
     var data = [];
@@ -458,12 +495,20 @@ function populate_drilldown_data(drilldown_data) {
 function boxplot_distribution(data) {
     var distribution = [];
     var inter_quartile_range = quartile(data, 0.75) - quartile(data, 0.25);
+    var minimum = quartile(data, 0.25) - 1.5 * inter_quartile_range;
+    var maximum = quartile(data, 0.75) + 1.5 * inter_quartile_range;
 
-    distribution.push(quartile(data, 0.25) - 1.5 * inter_quartile_range > 0 ? quartile(data, 0.25) - 1.5 * inter_quartile_range : 0);
+    if (minimum < 0)
+        minimum = 0;
+
+    if (maximum > data[data.length - 1])
+        maximum = data[data.length - 1];
+
+    distribution.push(minimum);
     distribution.push(quartile(data, 0.25));
     distribution.push(quartile(data, 0.50));
     distribution.push(quartile(data, 0.75));
-    distribution.push(quartile(data, 0.75) + 1.5 * inter_quartile_range);
+    distribution.push(maximum);
 
     return distribution;
 }

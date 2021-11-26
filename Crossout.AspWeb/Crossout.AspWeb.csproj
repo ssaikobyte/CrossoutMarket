@@ -826,4 +826,9 @@
     </Content>
   </ItemGroup>
 
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="call start chrome https://localhost:5001/profile/7907969" />
+  </Target>
+
 </Project>
