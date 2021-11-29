@@ -101,6 +101,24 @@ function populate_match_history_table() {
         row.append(cols);
         $('#match_history_body').append(row);
     }
+
+    var domOption =
+        "<'row m-1'<'d-inline-flex justify-content-start'p><'d-inline-flex ml-auto text-secondary'l>>" +
+        "<tr>" +
+        "<'row m-1'<'d-inline-flex justify-content-start'p><'d-none d-sm-inline-flex ml-auto text-secondary'i>>";
+
+    var table = $('#match_history_table').DataTable({
+        order: [[1, 'desc']],
+        lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
+        pagingType: "simple_numbers",
+        dom: domOption,
+        paging: true,
+        searching: true,
+        search: {
+            smart: false,
+            regex: false
+        },
+    });
 }
 
 function populate_part_dropdowns() {
