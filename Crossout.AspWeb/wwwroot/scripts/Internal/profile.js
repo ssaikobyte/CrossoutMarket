@@ -82,11 +82,12 @@ function populate_overview_totals() {
 
 function populate_match_history_table() {
     for (var i = 0; i < match_history.length; i++) {
+        var start = getAdjustedTimestamp(match_history[i]["match_start"]);
         var row = $("<tr>");
         var cols = "";
 
         cols += '<td>' + match_history[i]["match_type"] + '</td>';
-        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + match_history[i]["match_start"] + '</a></td>';
+        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + start + '</a></td>';
         cols += '<td>' + match_history[i]["map"] + '</td>';
         cols += '<td>' + match_history[i]["power_score"] + '</td>';
         cols += '<td>' + match_history[i]["score"] + '</td>';
@@ -100,6 +101,24 @@ function populate_match_history_table() {
         row.append(cols);
         $('#match_history_body').append(row);
     }
+
+    var domOption =
+        "<'row m-1'<'d-inline-flex justify-content-start'p><'d-inline-flex ml-auto text-secondary'l>>" +
+        "<tr>" +
+        "<'row m-1'<'d-inline-flex justify-content-start'p><'d-none d-sm-inline-flex ml-auto text-secondary'i>>";
+
+    var table = $('#match_history_table').DataTable({
+        order: [[1, 'desc']],
+        lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
+        pagingType: "simple_numbers",
+        dom: domOption,
+        paging: true,
+        searching: true,
+        search: {
+            smart: false,
+            regex: false
+        },
+    });
 }
 
 function populate_part_dropdowns() {
