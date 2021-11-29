@@ -82,11 +82,12 @@ function populate_overview_totals() {
 
 function populate_match_history_table() {
     for (var i = 0; i < match_history.length; i++) {
+        var start = getAdjustedTimestamp(match_history[i]["match_start"]);
         var row = $("<tr>");
         var cols = "";
 
         cols += '<td>' + match_history[i]["match_type"] + '</td>';
-        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + match_history[i]["match_start"] + '</a></td>';
+        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + start + '</a></td>';
         cols += '<td>' + match_history[i]["map"] + '</td>';
         cols += '<td>' + match_history[i]["power_score"] + '</td>';
         cols += '<td>' + match_history[i]["score"] + '</td>';
