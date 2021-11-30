@@ -9,8 +9,8 @@ var dmg_rec_list = [];
 var kd_list = [];
 var score_list = [];
 
-const start_date = datepicker('#start_date', { id: 1, dateSelected: moment().subtract(6, 'days').toDate() })
-const end_date = datepicker('#end_date', { id: 1, dateSelected: moment().toDate() })
+const start_date = datepicker('#start_date', { id: 1, dateSelected: moment().subtract(6, 'days').toDate() });
+const end_date = datepicker('#end_date', { id: 1, dateSelected: moment().toDate() });
 
 
 Highcharts.setOptions({
@@ -75,6 +75,22 @@ $('#game_type_list').on('click', 'a', function (e) {
     active_game_type = $(this).text();
     populate_gamemode_overview();
 });
+
+$('.dropdown-menu').click(function (e) {
+    e.stopPropagation();
+});
+
+$('.dropdown-item').on('click', function (e) {
+    e.preventDefault();
+    console.log(this);
+});
+
+//$('.dropdown-item').click(function (e) {
+
+//    console.log(this);
+//    $(this).toggleClass('active');
+//    //e.preventDefault();
+//});
 
 function populate_overview_totals() {
     $('#total_games_recorded').text(overview_totals["GamesRecorded"]);
@@ -243,8 +259,6 @@ function populate_gamemode_overview() {
     $('#ka_g').text(((kills + assists) / rounds).toFixed(2));
     $('#medals').text(medals);
     $('#mvp').text(((mvp / rounds) * 100).toFixed(1) + '%');
-
-    $("#start_date").datepicker("setDate", min_date);
 
     $('#avg_kills').text((kills / rounds).toFixed(2));
     $('#avg_assists').text((assists / rounds).toFixed(2));

@@ -1,39 +1,54 @@
 ﻿@using Crossout.AspWeb.Helper
 @using Crossout.AspWeb.Models.Cod
 
+<link rel="stylesheet" href="~/content/datepicker.min.css">
+<script src="~/scripts/datepicker.min.js?@CacheBuster.Once"></script>
+
 <div id="gamemode_overview_card" class="card my-1 mt-2 d-none gamemode-overview">
-
-
     <div class="d-flex flex-row">
-        <input type="text" class="form-control" id="startDate" />
-        <div class="align-self-center mx-2">to</div>
-        <input type="text" class="form-control" id="endDate" />
+        <div class="align-self-start col my-1">
+            <input type="text" class="form-control" id="start_date" />
+        </div>
+        <div class="align-self-start col my-1">
+            <input type="text" class="form-control" id="end_date" />
+        </div>
+        <div class="btn-group btn-group-sm align-self-start col my-1">
+            <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Power Score
+            </button>
+            <div id="power_score_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+        </div>
+        <div class="btn-group btn-group-sm align-self-start col my-1">
+            <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Group Size
+            </button>
+            <div id="group_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+        </div>
     </div>
-
     <div class="d-flex flex-row">
         <div class="btn-group btn-group-sm align-self-start col my-1">
             <button id="cabin_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Cabin
             </button>
-            <div id="cabin_menu" class="dropdown-menu"></div>
+            <div id="cabin_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
         </div>
         <div class="btn-group btn-group-sm align-self-start col my-1">
             <button id="weapon_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Weapon
             </button>
-            <div id="weapon_menu" class="dropdown-menu"></div>
+            <div id="weapon_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
         </div>
         <div class="btn-group btn-group-sm align-self-start col my-1">
             <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Movement
             </button>
-            <div id="movement_menu" class="dropdown-menu"></div>
+            <div id="movement_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
         </div>
         <div class="btn-group btn-group-sm align-self-start col my-1">
             <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Hardware
             </button>
-            <div id="hardware_menu" class="dropdown-menu"></div>
+            <div id="hardware_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
         </div>
     </div>
 
