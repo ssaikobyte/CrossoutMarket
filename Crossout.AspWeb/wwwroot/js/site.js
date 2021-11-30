@@ -1,4 +1,4 @@
 ﻿import "../lib/jquery/dist/jquery";
 import "../lib/bootstrap/dist/js/bootstrap";
 
-import "../scripts/internal/locationhash";
+import "../scripts/Internal/locationhash";

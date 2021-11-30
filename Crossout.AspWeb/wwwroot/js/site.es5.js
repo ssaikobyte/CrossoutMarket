@@ -4,5 +4,5 @@ require("../lib/jquery/dist/jquery");
 
 require("../lib/bootstrap/dist/js/bootstrap");
 
-require("../scripts/internal/locationhash");
+require("../scripts/Internal/locationhash");
 

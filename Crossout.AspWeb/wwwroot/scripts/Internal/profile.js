@@ -9,6 +9,10 @@ var dmg_rec_list = [];
 var kd_list = [];
 var score_list = [];
 
+const start_date = datepicker('#start_date', { id: 1, dateSelected: moment().subtract(6, 'days').toDate() })
+const end_date = datepicker('#end_date', { id: 1, dateSelected: moment().toDate() })
+
+
 Highcharts.setOptions({
     lang: {
         drillUpText: '< Back'
@@ -177,6 +181,7 @@ function populate_gamemode_overview() {
     var damage = 0;
     var damage_rec = 0;
     var score = 0;
+    var min_date = new Date(8640000000000000);
 
     damage_list = [];
     dmg_rec_list = [];
@@ -209,6 +214,9 @@ function populate_gamemode_overview() {
             });
         }
 
+        if (match_history[i]["match_start"] < min_date)
+            min_date = match_history[i]["match_start"];
+
         kills += match_history[i]["kills"];
         assists += match_history[i]["assists"];
         drone_kills += match_history[i]["drone_kills"];
@@ -235,6 +243,8 @@ function populate_gamemode_overview() {
     $('#ka_g').text(((kills + assists) / rounds).toFixed(2));
     $('#medals').text(medals);
     $('#mvp').text(((mvp / rounds) * 100).toFixed(1) + '%');
+
+    $("#start_date").datepicker("setDate", min_date);
 
     $('#avg_kills').text((kills / rounds).toFixed(2));
     $('#avg_assists').text((assists / rounds).toFixed(2));
@@ -429,25 +439,6 @@ function build_boxplot(id, categories, boxplot_data) {
         }]
     });
 }
-
-//$("#expand_gamemode_visualization").on('click', function (e) {
-
-//    var expanded = $('#averages_card').attr("aria-expanded");
-
-//    console.log(expanded);
-
-//    ///* OPTIONAL: some variables you can use in your chart options for custom sizing */
-//    //var chartWidth = $("#kanwil-report-kepuasan").width();
-//    //var chartHeight = $("#kanwil-report-kepuasan").height();
-
-//    ///* draw the chart once the tab has been clicked and it is now visible */
-//    //$('#kanwil-report-kepuasan').highcharts({
-//    //    /* your chart options go here */
-//    //});
-
-//    //e.stopPropagation();
-
-//});
 
 $('#averages_card').on('shown.bs.collapse', function () {
     build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
