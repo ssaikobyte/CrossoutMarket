@@ -8,10 +8,10 @@ var damage_list = [];
 var dmg_rec_list = [];
 var kd_list = [];
 var score_list = [];
+var filter_delay;
 
 const start_date = datepicker('#start_date', { id: 1, dateSelected: moment().subtract(6, 'days').toDate() });
 const end_date = datepicker('#end_date', { id: 1, dateSelected: moment().toDate() });
-
 
 Highcharts.setOptions({
     lang: {
@@ -38,7 +38,7 @@ $.ajax({
         active_classification = "PvP";
         active_game_type = "Total";
 
-        populate_part_dropdowns();
+        populate_filter_dropdowns();
         build_classification_list();
         build_game_type_list();
         populate_gamemode_overview();
@@ -80,17 +80,16 @@ $('.dropdown-menu').click(function (e) {
     e.stopPropagation();
 });
 
-$('.dropdown-item').on('click', function (e) {
-    e.preventDefault();
-    console.log(this);
+$(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    $(this).toggleClass('active');
+    clearTimeout(filter_delay);
+
+    filter_delay = setTimeout(function () {
+        populate_gamemode_overview();
+    }, 500);
 });
-
-//$('.dropdown-item').click(function (e) {
-
-//    console.log(this);
-//    $(this).toggleClass('active');
-//    //e.preventDefault();
-//});
 
 function populate_overview_totals() {
     $('#total_games_recorded').text(overview_totals["GamesRecorded"]);
@@ -141,8 +140,9 @@ function populate_match_history_table() {
     });
 }
 
-function populate_part_dropdowns() {
-
+function populate_filter_dropdowns() {
+    var power_scores = ['0-2499', '2500-4499', '3500-4499', '4500-5499', '5500-6499', '6500-7499', '7500-8499', '8500-9499', '9500-12999', '13000+', 'Leviathian'];
+    var group_size = ['Solo', '2 man', '3 man', '4 man', 'Any Size Group'];
     var cabins = [];
     var hardware = [];
     var movement = [];
@@ -181,6 +181,14 @@ function populate_part_dropdowns() {
     weapons.forEach(x => {
         $('#weapon_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
+
+    power_scores.forEach(x => {
+        $('#power_score_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+    });
+
+    group_size.forEach(x => {
+        $('#group_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+    });
 }
 
 function populate_gamemode_overview() {
@@ -198,11 +206,35 @@ function populate_gamemode_overview() {
     var damage_rec = 0;
     var score = 0;
     var min_date = new Date(8640000000000000);
+    var cabins = [];
+    var hardware = [];
+    var movement = [];
+    var weapons = [];
 
     damage_list = [];
     dmg_rec_list = [];
     kd_list = [];
     score_list = [];
+
+    $("#cabin_menu a").each(function (index, element) {
+        if ($(this).hasClass('active'))
+            cabins.push($(this).attr("data-keyname"));
+    });
+
+    $("#hardware_menu a").each(function (index, element) {
+        if ($(this).hasClass('active'))
+            hardware.push($(this).attr("data-keyname"));
+    });
+
+    $("#movement_menu a").each(function (index, element) {
+        if ($(this).hasClass('active'))
+            movement.push($(this).attr("data-keyname"));
+    });
+
+    $("#weapon_menu a").each(function (index, element) {
+        if ($(this).hasClass('active'))
+            weapons.push($(this).attr("data-keyname"));
+    });
 
     for (var i = 0; i < match_history.length; i++) {
 
