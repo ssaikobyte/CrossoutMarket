@@ -260,5 +260,13 @@
       "Added new recipes",
       "Updated some existing item images"
     ]
+  },
+  {
+    "Id": 25,
+    "Name": "Master Cabin Update",
+    "Timestamp": "2021-12-02T08:15:00Z",
+    "Notes": [
+      "Added master cabin"
+    ]
   }
 ]
