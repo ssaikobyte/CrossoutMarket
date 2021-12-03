@@ -737,7 +737,6 @@ namespace Crossout.AspWeb.Services
 
             NPoco.Connection.Open();
             history_detail.match_history = PopulateHistoryDetailList(uid);
-            history_detail.builds = PopulatePlayerBuildList(uid);
             NPoco.Connection.Close();
 
             return history_detail;
@@ -747,63 +746,57 @@ namespace Crossout.AspWeb.Services
         {
             List<UserMatchHistory> game_modes = new List<UserMatchHistory> { };
 
-            game_modes = NPoco.Fetch<UserMatchHistory>(@" SELECT record.match_id, 
-                                                            CASE record.match_classification 
-						                                                    WHEN 1 THEN 'PvP'
-						                                                    WHEN 2 THEN 'PvE'
-						                                                    WHEN 3 THEN 'Brawl'
-						                                                    WHEN 4 THEN 'Bedlam'
-						                                                    WHEN 5 THEN 'Custom'
-							                                                        ELSE 'Undefined' END as match_classification, 
-		                                                    record.match_type, map.map_display_name as map, CASE record.winning_team WHEN 0 THEN 'Draw' WHEN player.team THEN 'Win' ELSE 'Loss' END as result, 
-                                                            player.build_hash, player.power_score,
-		                                                    COUNT(DISTINCT round.round_id) AS rounds,  record.match_start, TO_SECONDS(record.match_end) - TO_SECONDS(record.match_start) AS time_spent,
-		                                                    SUM(player.kills) AS kills, SUM(player.assists) AS assists, SUM(player.drone_kills) AS drone_kills, SUM(player.deaths) AS deaths, 
-		                                                    SUM(player.damage) AS damage, SUM(player.damage_taken) AS damage_rec, SUM(player.score) AS score, resources.resource_list, medals.medal_list
-		                                                    FROM crossout.cod_match_records record
-                                                        INNER JOIN crossout.cod_player_round_records player on record.match_id = player.match_id
-                                                        INNER JOIN crossout.cod_round_records round on record.match_id = round.match_id
-                                                        INNER JOIN crossout.cod_maps map on record.map_name = map.map_name
-                                                        INNER JOIN (
-					                                                    SELECT m.match_id, GROUP_CONCAT(DISTINCT CONCAT(r.resource,':',r.amount) SEPARATOR ',') AS resource_list 
-					                                                      FROM crossout.cod_match_records m
-				                                                    INNER JOIN crossout.cod_player_round_records p ON m.match_id = p.match_id
-				                                                     LEFT JOIN crossout.cod_player_match_resources r ON m.match_id = r.match_id AND p.uid = r.uid
-					                                                     WHERE p.uid = @0
-				                                                         GROUP BY m.match_id
-			                                                        ) resources ON resources.match_id = record.match_id 
-                                                        INNER JOIN (
-					                                                    SELECT m.match_id, GROUP_CONCAT(DISTINCT CONCAT(med.medal,':',med.amount) SEPARATOR ',') AS medal_list 
-					                                                      FROM crossout.cod_match_records m
-				                                                    INNER JOIN crossout.cod_round_records r ON m.match_id = r.match_id
-                                                                    INNER JOIN crossout.cod_player_round_records p ON m.match_id = p.match_id 
-				                                                     LEFT JOIN crossout.cod_player_match_medals med ON m.match_id = med.match_id AND r.round_id = med.round_id AND p.uid = med.uid
-					                                                     WHERE p.uid = @0
-				                                                         GROUP BY m.match_id
-			                                                        ) medals ON medals.match_id = record.match_id 
-                                                        WHERE player.uid = @0
-                                                        GROUP BY record.match_id, match_classification, record.match_type, map, result, player.build_hash, player.power_score, resources.resource_list, medals.medal_list
-                                                        ORDER BY record.match_id", uid);
+            game_modes = NPoco.Fetch<UserMatchHistory>(@"SELECT record.match_id, 
+		                                                            CASE record.match_classification 
+						                                                            WHEN 1 THEN 'PvP'
+						                                                            WHEN 2 THEN 'PvE'
+						                                                            WHEN 3 THEN 'Brawl'
+						                                                            WHEN 4 THEN 'Bedlam'
+						                                                            WHEN 5 THEN 'Custom'
+								                                                            ELSE 'Undefined' END as match_classification, 
+		                                                            record.match_type, map.map_display_name as map, CASE record.winning_team WHEN 0 THEN 'Draw' WHEN player.team THEN 'Win' ELSE 'Loss' END as result, 
+		                                                            player.build_hash, player.power_score,
+		                                                            COUNT(DISTINCT round.round_id) AS rounds,  record.match_start, TO_SECONDS(record.match_end) - TO_SECONDS(record.match_start) AS time_spent,
+		                                                            SUM(player.kills) AS kills, SUM(player.assists) AS assists, SUM(player.drone_kills) AS drone_kills, SUM(player.deaths) AS deaths, 
+		                                                            SUM(player.damage) AS damage, SUM(player.damage_taken) AS damage_rec, SUM(player.score) AS score, resources.resource_list, medals.medal_list, builds.parts
+		                                                            FROM crossout.cod_match_records record
+	                                                        INNER JOIN crossout.cod_player_round_records player on record.match_id = player.match_id
+	                                                        INNER JOIN crossout.cod_round_records round on record.match_id = round.match_id
+	                                                        INNER JOIN crossout.cod_maps map on record.map_name = map.map_name
+	                                                        INNER JOIN (
+					                                                        SELECT m.match_id, GROUP_CONCAT(DISTINCT CONCAT(r.resource,':',r.amount) SEPARATOR ',') AS resource_list 
+					                                                          FROM crossout.cod_match_records m
+				                                                        INNER JOIN crossout.cod_player_round_records p ON m.match_id = p.match_id
+				                                                         LEFT JOIN crossout.cod_player_match_resources r ON m.match_id = r.match_id AND p.uid = r.uid
+					                                                         WHERE p.uid = @0
+					                                                         GROUP BY m.match_id
+				                                                        ) resources ON resources.match_id = record.match_id 
+	                                                        INNER JOIN (
+					                                                        SELECT m.match_id, GROUP_CONCAT(DISTINCT CONCAT(med.medal,':',med.amount) SEPARATOR ',') AS medal_list 
+					                                                          FROM crossout.cod_match_records m
+				                                                        INNER JOIN crossout.cod_round_records r ON m.match_id = r.match_id
+				                                                        INNER JOIN crossout.cod_player_round_records p ON m.match_id = p.match_id 
+				                                                         LEFT JOIN crossout.cod_player_match_medals med ON m.match_id = med.match_id AND r.round_id = med.round_id AND p.uid = med.uid
+					                                                          WHERE p.uid = @0
+					                                                          GROUP BY m.match_id
+				                                                        ) medals ON medals.match_id = record.match_id 
+	                                                        INNER JOIN (
+					                                                        SELECT player.build_hash, player.power_score, GROUP_CONCAT(DISTINCT CONCAT(ocr.category,':',ocr.name,':',ocr.rarity,':',ocr.type) SEPARATOR ',') as parts
+					                                                          FROM crossout.cod_match_records record
+				                                                        INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
+				                                                        INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
+				                                                        INNER JOIN crossout.cod_build_parts part ON build.build_id = part.build_id
+				                                                        INNER JOIN crossout.item item ON part.part_name = item.externalKey
+				                                                        INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
+					                                                         WHERE player.uid = @0
+					                                                           AND ocr.category in ('Weapons', 'Cabins','Movement','Hardware')
+					                                                         GROUP BY player.build_hash, player.power_score
+				                                                        ) builds ON builds.build_hash = player.build_hash and builds.power_score = player.power_score
+	                                                        WHERE player.uid = @0
+	                                                        GROUP BY record.match_id, match_classification, record.match_type, map, result, player.build_hash, player.power_score, resources.resource_list, medals.medal_list
+	                                                        ORDER BY record.match_id", uid);
 
             return game_modes;
-        }
-
-        public List<PlayerBuild> PopulatePlayerBuildList(int uid)
-        {
-            List<PlayerBuild> builds = new List<PlayerBuild> { };
-
-            builds = NPoco.Fetch<PlayerBuild>(@"SELECT player.build_hash, player.power_score, GROUP_CONCAT(DISTINCT CONCAT(ocr.category,':',ocr.name,':',ocr.rarity,':',ocr.type) SEPARATOR ',') as parts
-			                                      FROM crossout.cod_match_records record
-	                                        INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
-	                                        INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
-	                                        INNER JOIN crossout.cod_build_parts part ON build.build_id = part.build_id
-	                                        INNER JOIN crossout.item item ON part.part_name = item.externalKey
-	                                        INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
-			                                     WHERE player.uid = @0
-			                                       AND ocr.category in ('Weapons', 'Cabins','Movement','Hardware')
-		                                         GROUP BY player.build_hash, player.power_score", uid);
-
-            return builds;
         }
 
         public string TranslateFieldName(string toTranslate)

@@ -1,7 +1,6 @@
 ﻿var Uid = window.location.pathname.split("/").pop();
 var overview_totals = null;
 var match_history = [];
-var build_list = [];
 var active_classification = null;
 var active_game_type = null;
 var damage_list = [];
@@ -33,7 +32,6 @@ $.ajax({
     dataType: 'json',
     success: function (json) {
         match_history = json["match_history"];
-        build_list = json["builds"];
 
         active_classification = "PvP";
         active_game_type = "Total";
@@ -148,7 +146,7 @@ function populate_filter_dropdowns() {
     var movement = [];
     var weapons = [];
 
-    build_list.forEach(build => {
+    match_history.forEach(build => {
         build["parts"].split(',').forEach(part_string => {
             var parts = part_string.split(':');
 
@@ -206,10 +204,7 @@ function populate_gamemode_overview() {
     var damage_rec = 0;
     var score = 0;
     var min_date = new Date(8640000000000000);
-    var cabins = [];
-    var hardware = [];
-    var movement = [];
-    var weapons = [];
+    var parts = [];
 
     damage_list = [];
     dmg_rec_list = [];
@@ -218,22 +213,22 @@ function populate_gamemode_overview() {
 
     $("#cabin_menu a").each(function (index, element) {
         if ($(this).hasClass('active'))
-            cabins.push($(this).attr("data-keyname"));
+            parts.push($(this).attr("data-keyname"));
     });
 
     $("#hardware_menu a").each(function (index, element) {
         if ($(this).hasClass('active'))
-            hardware.push($(this).attr("data-keyname"));
+            parts.push($(this).attr("data-keyname"));
     });
 
     $("#movement_menu a").each(function (index, element) {
         if ($(this).hasClass('active'))
-            movement.push($(this).attr("data-keyname"));
+            parts.push($(this).attr("data-keyname"));
     });
 
     $("#weapon_menu a").each(function (index, element) {
         if ($(this).hasClass('active'))
-            weapons.push($(this).attr("data-keyname"));
+            parts.push($(this).attr("data-keyname"));
     });
 
     for (var i = 0; i < match_history.length; i++) {
@@ -243,6 +238,17 @@ function populate_gamemode_overview() {
 
         if (active_game_type != 'Total' && active_game_type != match_history[i]["match_type"])
             continue;
+
+        if (parts && parts.length > 0 && match_history[i]["parts"] != null) {
+            let found_part = false;
+            parts.forEach(x => {
+                if (match_history[i]["parts"].includes(x)) {
+                    found_part = true;
+                }
+            });
+            if (!found_part)
+                continue;
+        }
 
         games += 1;
         rounds += match_history[i]["rounds"];

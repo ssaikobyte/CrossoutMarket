@@ -69,7 +69,6 @@ namespace Crossout.AspWeb.Models.Cod
     public class MatchHistoryDetail
     {
         public List<UserMatchHistory> match_history { get; set; }
-        public List<PlayerBuild> builds { get; set; }
     }
 
     public class UserMatchHistory
@@ -80,6 +79,7 @@ namespace Crossout.AspWeb.Models.Cod
         public string map { get; set; }
         public string result { get; set; }
         public string build_hash { get; set; }
+        public string parts { get; set; }
         public int power_score { get; set; }
         public int rounds { get; set; }
         public DateTime match_start { get; set; }
@@ -93,12 +93,5 @@ namespace Crossout.AspWeb.Models.Cod
         public int score { get; set; }
         public string resource_list { get; set; }
         public string medal_list { get; set; }
-    }
-
-    public class PlayerBuild
-    {
-        public string build_hash { get; set; }
-        public int power_score { get; set; }
-        public string parts { get; set; }
     }
 }
