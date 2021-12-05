@@ -163,11 +163,7 @@ $('#game_type_list').on('click', 'a', function (e) {
 });
 
 $('#reset_filters').click(function (e) {
-    $("div[id*=_selection_menu] a").each(function (index, element) {
-        if ($(this).hasClass('active'))
-            $(this).removeClass('active');
-    });
-
+    $("div[id*=_selection_menu] a.active").removeClass('active');
     populate_gamemode_overview();
 });
 
@@ -277,7 +273,7 @@ function populate_filter_dropdowns() {
     });
 
     hardware.forEach(x => {
-        $('#weapon_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+        $('#hardware_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
 
     movement.forEach(x => {
@@ -291,7 +287,6 @@ function populate_filter_dropdowns() {
 
 function populate_gamemode_overview() {
     let gamemode_data = new Stats();
-    var min_date = new Date(8640000000000000);
     var parts = [];
     
     damage_list = [];
@@ -299,9 +294,8 @@ function populate_gamemode_overview() {
     kd_list = [];
     score_list = [];
 
-    $("div[id*=part_selection_menu] a").each(function (index, element) {
-        if ($(this).hasClass('active'))
-            parts.push($(this).attr("data-keyname"));
+    $("div[id*=part_selection_menu] a.active").each(function (index, element) {
+        parts.push($(this).attr("data-keyname"));
     });
 
     for (var i = 0; i < match_history.length; i++) {
