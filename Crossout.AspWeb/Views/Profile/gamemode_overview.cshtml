@@ -16,13 +16,31 @@
             <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Power Score
             </button>
-            <div id="power_score_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+            <div id="power_score_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu">
+                <a class="dropdown-item" data-min-powerscore="0" data-max-powerscore="2499">0-2499</a>
+                <a class="dropdown-item" data-min-powerscore="2500" data-max-powerscore="3499">2500-3499</a>
+                <a class="dropdown-item" data-min-powerscore="3500" data-max-powerscore="4499">3500-4499</a>
+                <a class="dropdown-item" data-min-powerscore="4500" data-max-powerscore="5499">4500-5499</a>
+                <a class="dropdown-item" data-min-powerscore="5500" data-max-powerscore="6499">5500-6499</a>
+                <a class="dropdown-item" data-min-powerscore="6500" data-max-powerscore="7499">6500-7499</a>
+                <a class="dropdown-item" data-min-powerscore="7500" data-max-powerscore="8499">7500-8499</a>
+                <a class="dropdown-item" data-min-powerscore="8500" data-max-powerscore="9499">8500-9499</a>
+                <a class="dropdown-item" data-min-powerscore="9500" data-max-powerscore="12999">9500-12999</a>
+                <a class="dropdown-item" data-min-powerscore="13000" data-max-powerscore="24000">13000+</a>
+                <a class="dropdown-item" data-min-powerscore="24000" data-max-powerscore="99999">Leviathian</a>
+            </div>
         </div>
         <div class="btn-group btn-group-sm align-self-start col my-1">
             <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Group Size
             </button>
-            <div id="group_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+            <div id="group_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu">
+                <a class="dropdown-item" data-keyname="Solo">Solo</a>
+                <a class="dropdown-item" data-keyname="2">2 Man</a>
+                <a class="dropdown-item" data-keyname="3">3 Man</a>
+                <a class="dropdown-item" data-keyname="4">4 Man</a>
+                <a class="dropdown-item" data-keyname="All">Any Size Group</a>
+            </div>
         </div>
     </div>
     <div class="d-flex flex-row">
@@ -49,6 +67,11 @@
                 Hardware
             </button>
             <div id="hardware_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+        </div>
+        <div class="align-self-start col my-1">
+            <button id="reset_filters" type="button" class="btn-block btn-outline-secondary">
+                Reset
+            </button>
         </div>
     </div>
 

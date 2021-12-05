@@ -1,5 +1,100 @@
-﻿var Uid = window.location.pathname.split("/").pop();
-var overview_totals = null;
+﻿class Stats {
+    constructor() {
+        this.games = 0;
+        this.rounds = 0;
+        this.wins = 0;
+        this.kills = 0;
+        this.assists = 0;
+        this.deaths = 0;
+        this.drone_kills = 0;
+        this.mvp = 0;
+        this.medal = 0;
+        this.score = 0;
+        this.damage = 0;
+        this.damage_rec = 0;
+        this.time = 0;
+    }
+
+    add_game(game) {
+        let mvp = 0;
+        let medal = 0;
+
+        if (game["medal_list"] != null) {
+            game["medal_list"].split(',').forEach(x => {
+                let medals = x.split(':');
+                medal += parseInt(medals[1]);
+
+                if (medals[0] == 'PvpMvpWin')
+                    mvp += parseInt(medals[1]);
+            });
+        }
+
+        this.games += 1;
+        this.rounds += game["rounds"];
+        this.wins += game["result"] === "Win" ? 1 : 0;
+        this.kills += game["kills"];
+        this.assists += game["assists"];
+        this.deaths += game["deaths"];
+        this.drone_kills += game["drone_kills"];
+        this.mvp += mvp;
+        this.medal += medal;
+        this.score += game["score"];
+        this.damage += game["damage"];
+        this.damage_rec += game["damage_rec"];
+        this.time += game["time_spent"];
+    }
+
+    get kda() {
+        return ((this.kills + this.assists) / this.rounds).toFixed(2);
+    }
+
+    get win_rate() {
+        return (((this.wins) / this.games) * 100).toFixed(1) + '%';
+    }
+
+    get mvp_rate() {
+        return (((this.mvp) / this.games) * 100).toFixed(1) + '%';
+    }
+
+    get avg_kills() {
+        return (this.kills / this.rounds).toFixed(2);
+    }
+
+    get avg_assists() {
+        return (this.assists / this.rounds).toFixed(2);
+    }
+
+    get avg_damage() {
+        return (this.damage / this.rounds).toFixed(0);
+    }
+
+    get avg_damage_rec() {
+        return (this.damage_rec / this.rounds).toFixed(0);
+    }
+
+    get avg_score() {
+        return (this.score / this.rounds).toFixed(0);
+    }
+
+    get time_spent() {
+        let total_seconds = this.time;
+        let days = Math.floor(total_seconds / 86400);
+        total_seconds %= 86400;
+        let hours = Math.floor(total_seconds / 3600);
+        total_seconds %= 3600;
+        let minutes = Math.floor(total_seconds / 60);
+        total_seconds %= 60;
+
+        if (days > 0)
+            return days + 'd ' + hours + 'h';
+        if (hours > 0)
+            return hours + 'h ' + minutes + 'm';
+        if (minutes > 0)
+            return minutes + 'm ' + total_seconds + 's';
+    }
+};
+
+var Uid = window.location.pathname.split("/").pop();
 var match_history = [];
 var active_classification = null;
 var active_game_type = null;
@@ -19,15 +114,6 @@ Highcharts.setOptions({
 });
 
 $.ajax({
-    url: '/data/profile/totals/' + Uid,
-    dataType: 'json',
-    success: function (json) {
-        overview_totals = json;
-        populate_overview_totals();
-    }
-});
-
-$.ajax({
     url: '/data/profile/match_history/' + Uid,
     dataType: 'json',
     success: function (json) {
@@ -36,6 +122,7 @@ $.ajax({
         active_classification = "PvP";
         active_game_type = "Total";
 
+        populate_overview_totals();
         populate_filter_dropdowns();
         build_classification_list();
         build_game_type_list();
@@ -90,11 +177,22 @@ $(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
 });
 
 function populate_overview_totals() {
-    $('#total_games_recorded').text(overview_totals["GamesRecorded"]);
-    $('#total_time_recorded').text(overview_totals["TimePlayed"]);
-    $('#total_win_rate').text(overview_totals["WinRate"]);
-    $('#total_kag').text(overview_totals["KPB"]);
-    $('#total_mvp_rate').text(overview_totals["MVPRate"]);
+
+    let overview_data = new Stats();
+
+    for (var i = 0; i < match_history.length; i++) {
+        console.log(overview_data);
+        overview_data.add_game(match_history[i]);
+    }
+
+    $('#total_games_recorded').text(overview_data.games);
+    $('#total_time_recorded').text(overview_data.time_spent);
+    $('#total_win_rate').text(overview_data.win_rate);
+    $('#total_kag').text(overview_data.kda);
+    $('#total_mvp_rate').text(overview_data.mvp_rate);
+
+    $('#summary_row_1').removeClass('d-none');
+    $('#summary_row_2').removeClass('d-none');
 }
 
 function populate_match_history_table() {
@@ -139,8 +237,6 @@ function populate_match_history_table() {
 }
 
 function populate_filter_dropdowns() {
-    var power_scores = ['0-2499', '2500-4499', '3500-4499', '4500-5499', '5500-6499', '6500-7499', '7500-8499', '8500-9499', '9500-12999', '13000+', 'Leviathian'];
-    var group_size = ['Solo', '2 man', '3 man', '4 man', 'Any Size Group'];
     var cabins = [];
     var hardware = [];
     var movement = [];
@@ -179,33 +275,13 @@ function populate_filter_dropdowns() {
     weapons.forEach(x => {
         $('#weapon_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
-
-    power_scores.forEach(x => {
-        $('#power_score_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
-    });
-
-    group_size.forEach(x => {
-        $('#group_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
-    });
 }
 
 function populate_gamemode_overview() {
-    var games = 0;
-    var rounds = 0;
-    var wins = 0;
-    var time_spent = 0;
-    var medals = 0;
-    var mvp = 0;
-    var kills = 0;
-    var assists = 0;
-    var drone_kills = 0;
-    var deaths = 0;
-    var damage = 0;
-    var damage_rec = 0;
-    var score = 0;
+    let gamemode_data = new Stats();
     var min_date = new Date(8640000000000000);
     var parts = [];
-
+    
     damage_list = [];
     dmg_rec_list = [];
     kd_list = [];
@@ -250,34 +326,7 @@ function populate_gamemode_overview() {
                 continue;
         }
 
-        games += 1;
-        rounds += match_history[i]["rounds"];
-
-        if (match_history[i]["result"] === "Win")
-            wins += 1;
-
-        time_spent += match_history[i]["time_spent"];
-
-        if (match_history[i]["medal_list"] != null) {
-            match_history[i]["medal_list"].split(',').forEach(x => {
-                var medal = x.split(':');
-                medals += parseInt(medal[1]);
-
-                if (medal[0] == 'PvpMvpWin')
-                    mvp += parseInt(medal[1]); 
-            });
-        }
-
-        if (match_history[i]["match_start"] < min_date)
-            min_date = match_history[i]["match_start"];
-
-        kills += match_history[i]["kills"];
-        assists += match_history[i]["assists"];
-        drone_kills += match_history[i]["drone_kills"];
-        deaths += match_history[i]["deaths"];
-        damage += match_history[i]["damage"];
-        damage_rec += match_history[i]["damage_rec"];
-        score += match_history[i]["score"];
+        gamemode_data.add_game(match_history[i]);
 
         damage_list.push(match_history[i]["damage"]);
         dmg_rec_list.push(match_history[i]["damage_rec"]);
@@ -290,19 +339,19 @@ function populate_gamemode_overview() {
     kd_list = kd_list.sort(function (a, b) { return a - b });
     score_list = score_list.sort(function (a, b) { return a - b });
 
-    $('#games_recorded').text(games);
-    $('#win_rate').text(((wins / games) * 100).toFixed(1) + '%');
-    $('#kills').text(kills);
-    $('#assists').text(assists);
-    $('#ka_g').text(((kills + assists) / rounds).toFixed(2));
-    $('#medals').text(medals);
-    $('#mvp').text(((mvp / rounds) * 100).toFixed(1) + '%');
+    $('#games_recorded').text(gamemode_data.games);
+    $('#win_rate').text(gamemode_data.win_rate);
+    $('#kills').text(gamemode_data.kills);
+    $('#assists').text(gamemode_data.assists);
+    $('#ka_g').text(gamemode_data.kda);
+    $('#medals').text(gamemode_data.medal);
+    $('#mvp').text(gamemode_data.mvp_rate);
 
-    $('#avg_kills').text((kills / rounds).toFixed(2));
-    $('#avg_assists').text((assists / rounds).toFixed(2));
-    $('#avg_dmg').text((damage / rounds).toFixed(0));
-    $('#avg_dmg_rec').text((damage_rec / rounds).toFixed(0));
-    $('#avg_score').text((score / rounds).toFixed(0));
+    $('#avg_kills').text(gamemode_data.avg_kills);
+    $('#avg_assists').text(gamemode_data.avg_assists);
+    $('#avg_dmg').text(gamemode_data.avg_damage);
+    $('#avg_dmg_rec').text(gamemode_data.avg_damage_rec);
+    $('#avg_score').text(gamemode_data.avg_score);
 
     build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
     build_boxplot('kill_box_plot', ['KD'], [boxplot_distribution(kd_list)]);
