@@ -29,10 +29,15 @@ namespace Crossout.AspWeb.Controllers
             if (!db.ValidUID(id))
                 return View("profile", model);
 
+            List<string> nicknames = db.SelectNicknames(id);
+
             model.Uid = id;
-            model.Nicknames = db.SelectNicknames(id);
-            model.Nickname = model.Nicknames.FirstOrDefault();
-            
+            model.Nickname = nicknames.FirstOrDefault();
+
+            if (nicknames.Count > 1)
+                model.Nicknames = String.Join(", ", nicknames.Skip(1));
+            else
+                model.Nicknames = "";
 
             Console.WriteLine("done loading user");
 

@@ -600,7 +600,12 @@ namespace Crossout.AspWeb.Services
         public List<string> SelectNicknames(int uid)
         {
             NPoco.Connection.Open();
-            List<string> player_nickname = NPoco.Fetch<PlayerRoundPoco>("WHERE uid = @0", uid).Select(x => x.nickname).ToList() ?? new List<string> { "Invalid UID" };
+            List<string> player_nickname = NPoco.Fetch<string>(@"SELECT player.nickname
+		                                                           FROM crossout.cod_player_round_records player
+		                                                          WHERE player.uid = @0
+                                                                  GROUP BY player.nickname
+                                                                  ORDER BY count(*) DESC", uid);
+
             NPoco.Connection.Close();
             return player_nickname;
         }

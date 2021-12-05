@@ -123,6 +123,7 @@ $.ajax({
         active_game_type = "Total";
 
         populate_overview_totals();
+
         populate_filter_dropdowns();
         build_classification_list();
         build_game_type_list();
@@ -161,6 +162,15 @@ $('#game_type_list').on('click', 'a', function (e) {
     populate_gamemode_overview();
 });
 
+$('#reset_filters').click(function (e) {
+    $("div[id*=_selection_menu] a").each(function (index, element) {
+        if ($(this).hasClass('active'))
+            $(this).removeClass('active');
+    });
+
+    populate_gamemode_overview();
+});
+
 $('.dropdown-menu').click(function (e) {
     e.stopPropagation();
 });
@@ -173,17 +183,15 @@ $(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
 
     filter_delay = setTimeout(function () {
         populate_gamemode_overview();
-    }, 500);
+    }, 350);
 });
 
 function populate_overview_totals() {
 
     let overview_data = new Stats();
 
-    for (var i = 0; i < match_history.length; i++) {
-        console.log(overview_data);
+    for (var i = 0; i < match_history.length; i++) 
         overview_data.add_game(match_history[i]);
-    }
 
     $('#total_games_recorded').text(overview_data.games);
     $('#total_time_recorded').text(overview_data.time_spent);
@@ -193,6 +201,10 @@ function populate_overview_totals() {
 
     $('#summary_row_1').removeClass('d-none');
     $('#summary_row_2').removeClass('d-none');
+
+    if ($('#known_as').innerHTML != "") {
+        $('#known_as').removeClass('d-none');
+    }
 }
 
 function populate_match_history_table() {
@@ -261,19 +273,19 @@ function populate_filter_dropdowns() {
     });
 
     cabins.forEach(x => {
-        $('#cabin_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+        $('#cabin_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
 
     hardware.forEach(x => {
-        $('#hardware_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+        $('#weapon_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
 
     movement.forEach(x => {
-        $('#movement_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+        $('#movement_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
 
     weapons.forEach(x => {
-        $('#weapon_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
+        $('#weapon_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
     });
 }
 
@@ -287,22 +299,7 @@ function populate_gamemode_overview() {
     kd_list = [];
     score_list = [];
 
-    $("#cabin_menu a").each(function (index, element) {
-        if ($(this).hasClass('active'))
-            parts.push($(this).attr("data-keyname"));
-    });
-
-    $("#hardware_menu a").each(function (index, element) {
-        if ($(this).hasClass('active'))
-            parts.push($(this).attr("data-keyname"));
-    });
-
-    $("#movement_menu a").each(function (index, element) {
-        if ($(this).hasClass('active'))
-            parts.push($(this).attr("data-keyname"));
-    });
-
-    $("#weapon_menu a").each(function (index, element) {
+    $("div[id*=part_selection_menu] a").each(function (index, element) {
         if ($(this).hasClass('active'))
             parts.push($(this).attr("data-keyname"));
     });

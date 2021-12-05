@@ -13,7 +13,7 @@ namespace Crossout.AspWeb.Models.Cod
         public string Title => "Profile ";
         public int Uid { get; set; }
         public string Nickname { get; set; }
-        public List<string> Nicknames { get; set; }
+        public string Nicknames { get; set; }
     }
 
     public class OverviewCard
