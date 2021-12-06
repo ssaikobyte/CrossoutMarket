@@ -317,6 +317,19 @@ function populate_gamemode_overview() {
                 continue;
         }
 
+        let valid_power_score = true;
+        $("#power_score_selection_menu a.active").each(function (index, element) {
+            if ($(this).attr("data-min-powerscore"))
+                if (match_history[i]["power_score"] < $(this).attr("data-min-powerscore"))
+                    valid_power_score = false;
+
+            if ($(this).attr("data-max-powerscore"))
+                if (match_history[i]["power_score"] > $(this).attr("data-max-powerscore"))
+                    valid_power_score = false;
+        });
+        if (!valid_power_score)
+            continue;        
+
         gamemode_data.add_game(match_history[i]);
 
         damage_list.push(match_history[i]["damage"]);
