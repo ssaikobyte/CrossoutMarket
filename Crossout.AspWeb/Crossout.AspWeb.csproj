@@ -69,6 +69,9 @@
     <Content Remove="Resources\PremiumPackages\triadthepatron.json" />
     <Content Remove="Resources\PremiumPackages\triadthepatrondeluxe.json" />
     <Content Remove="Resources\PremiumPackages\triadthepatronlite.json" />
+    <Content Remove="Resources\PremiumPackages\triadtherascal.json" />
+    <Content Remove="Resources\PremiumPackages\triadtherascaldeluxe.json" />
+    <Content Remove="Resources\PremiumPackages\triadtherascallite.json" />
     <Content Remove="Views\edit.cshtml" />
     <Content Remove="Views\editpart.cshtml" />
     <Content Remove="Views\NotMigrated\admin.cshtml" />
@@ -454,6 +457,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Events\KnightRiders2019\teutonicstripes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\triadtherascaldeluxe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\triadtherascallite.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\triadtherascal.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\PremiumPackages\thecreation.json">
