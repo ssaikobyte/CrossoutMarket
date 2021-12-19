@@ -7,13 +7,14 @@
 
 <div class="card my-1 mt-2 profile-overview" data-uid="@Model.Uid">
     <div class="d-flex flex-row">
-        <div class="col">
+        <div class="col-lg">
             <div class="row jumbotron">
                 <div class="container">
                     <h1 class="row display-1 justify-content-center">@Model.Nickname</h1>
                     <p class="row d-none lead justify-content-center" id="known_as">@Model.Nicknames</p>
                 </div>
             </div>
+            <partial name="stat_filter" />
             <div id="summary_row_1" class="row d-none">
                 <div class="col">
                     <div class="row d-flex justify-content-center">Games Recorded</div>
@@ -24,7 +25,7 @@
                     <div id="total_time_recorded" class="row display-4 justify-content-center"></div>
                 </div>
             </div>
-            <div id ="summary_row_2" class="row d-none">
+            <div id="summary_row_2" class="row d-none mb-2">
                 <div class="col">
                     <div class="row d-flex justify-content-center">Win Rate</div>
                     <div id="total_win_rate" class="row display-4 justify-content-center"></div>

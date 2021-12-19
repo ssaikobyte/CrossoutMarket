@@ -28,44 +28,6 @@ namespace Crossout.AspWeb.Models.Cod
         public string MVPRate { get; set; }
     }
 
-    public class OverviewCharts
-    {
-        public List<DrillDown> gamemode_preference { get; set; }
-        public List<DrillDown> weapon_preference { get; set; }
-        public List<DrillDown> movement_preference { get; set; }
-    }
-
-    public class DrillDown
-    {
-        public string type { get; set; }
-        public string name { get; set; }
-        public int count { get; set; }
-    }
-
-    public class GameModeDetail
-    {
-        public List<GameMode> game_modes { get; set; }
-    }
-
-    public class GameMode
-    {
-        public string match_classification { get; set; }
-        public string match_type { get; set; }
-        public int games { get; set; }
-        public int rounds { get; set; }
-        public int wins { get; set; }
-        public int time_spent { get; set; }
-        public int medals { get; set; }
-        public int mvp { get; set; }
-        public int kills { get; set; }
-        public int assists { get; set; }
-        public int drone_kills { get; set; }
-        public int deaths { get; set; }
-        public double damage { get; set; }
-        public double damage_rec { get; set; }
-        public int score { get; set; }
-    }
-
     public class MatchHistoryDetail
     {
         public List<UserMatchHistory> match_history { get; set; }
@@ -74,6 +36,8 @@ namespace Crossout.AspWeb.Models.Cod
     public class UserMatchHistory
     {
         public long match_id { get; set; }
+        public string host_name { get; set; }
+        public string client_version { get; set; }
         public string match_classification { get; set; }
         public string match_type { get; set; }
         public string map { get; set; }

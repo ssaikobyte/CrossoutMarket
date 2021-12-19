@@ -610,76 +610,6 @@ namespace Crossout.AspWeb.Services
             return player_nickname;
         }
 
-        public OverviewCharts SelectOverviewBreakdowns(int uid)
-        {
-            OverviewCharts overview_dropdowns = new OverviewCharts { };
-
-            NPoco.Connection.Open();
-            overview_dropdowns.gamemode_preference = PopulateGameModeDrillDown(uid);
-            overview_dropdowns.weapon_preference = PopulatePartDrillDown(uid, "Weapons", "ALL");
-            overview_dropdowns.movement_preference = PopulatePartDrillDown(uid, "Movement", "ALL");
-            NPoco.Connection.Close();
-
-            return overview_dropdowns;
-        }
-
-        public List<DrillDown> PopulatePartDrillDown(int uid, string category, string match_type)
-        {
-            List<DrillDown> drill_down_return = new List<DrillDown> { };
-
-            if (match_type == "ALL")
-            {
-                drill_down_return = NPoco.Fetch<DrillDown>(@"SELECT ocr.type, ocr.name, count(distinct record.match_id) as count
-                                                                     FROM crossout.cod_match_records record
-                                                               INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
-                                                               INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
-                                                               INNER JOIN crossout.cod_build_parts part ON build.build_id = part.build_id
-                                                               INNER JOIN crossout.item item ON part.part_name = item.externalKey
-                                                               INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
-                                                                    WHERE player.uid = @0
-                                                                      AND ocr.category = @1
-                                                                      AND record.match_type <> 'Custom Game'
-                                                                    GROUP BY ocr.type, ocr.name
-                                                                    ORDER BY count DESC", uid, category);
-            }
-            else
-            {
-                drill_down_return = NPoco.Fetch<DrillDown>(@"SELECT ocr.type, ocr.name, COUNT(distinct record.match_id) as count
-                                                                     FROM crossout.cod_match_records record
-                                                               INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
-                                                               INNER JOIN crossout.cod_builds build ON player.build_hash = build.build_hash and player.power_score = build.power_score
-                                                               INNER JOIN crossout.cod_build_parts part ON build.build_id = part.build_id
-                                                               INNER JOIN crossout.item item ON part.part_name = item.externalKey
-                                                               INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
-                                                                    WHERE player.uid = @0
-                                                                      AND ocr.category = @1
-                                                                      AND record.match_type = @2
-                                                                    GROUP BY ocr.type, ocr.name
-                                                                    ORDER BY count DESC", uid, category, match_type);
-            }
-            return drill_down_return;
-        }
-
-        public List<DrillDown> PopulateGameModeDrillDown(int uid)
-        {
-            List<DrillDown> drill_down_return = new List<DrillDown> { };
-
-            drill_down_return = NPoco.Fetch<DrillDown>(@"SELECT CASE record.match_classification 
-			                                                          WHEN 1 THEN 'PvP'
-			                                                          WHEN 2 THEN 'PvE'
-			                                                          WHEN 3 THEN 'Brawl'
-			                                                          WHEN 4 THEN 'Bedlam'
-			                                                          WHEN 5 THEN 'Custom'
-			                                                                 ELSE 'Undefined' END as type, 
-                                                                      record.match_type as name, COUNT(distinct record.match_id) as count
-		                                                         FROM crossout.cod_match_records record
-                                                           INNER JOIN crossout.cod_player_round_records player ON record.match_id = player.match_id
-		                                                        WHERE player.uid = @0
-		                                                        GROUP BY record.match_classification, record.match_type
-                                                                ORDER BY COUNT(DISTINCT record.match_id) DESC", uid);
-
-            return drill_down_return;
-        }
         public MatchHistoryDetail PopulateHistoryDetail(int uid)
         {
             MatchHistoryDetail history_detail = new MatchHistoryDetail { match_history = new List<UserMatchHistory> { } };
@@ -695,7 +625,7 @@ namespace Crossout.AspWeb.Services
         {
             List<UserMatchHistory> game_modes = new List<UserMatchHistory> { };
 
-            game_modes = NPoco.Fetch<UserMatchHistory>(@"SELECT record.match_id, 
+            game_modes = NPoco.Fetch<UserMatchHistory>(@"SELECT record.match_id, record.host_name, record.client_version,
 		                                                            CASE record.match_classification 
 						                                                            WHEN 1 THEN 'PvP'
 						                                                            WHEN 2 THEN 'PvE'
@@ -738,11 +668,10 @@ namespace Crossout.AspWeb.Services
 				                                                        INNER JOIN crossout.item item ON part.part_name = item.externalKey
 				                                                        INNER JOIN crossout.ocrstats ocr ON item.id = ocr.itemnumber
 					                                                         WHERE player.uid = @0
-					                                                           AND ocr.category in ('Weapons', 'Cabins','Movement','Hardware')
 					                                                         GROUP BY player.build_hash, player.power_score
 				                                                        ) builds ON builds.build_hash = player.build_hash and builds.power_score = player.power_score
 	                                                        WHERE player.uid = @0
-	                                                        GROUP BY record.match_id, match_classification, record.match_type, map, result, player.build_hash, player.power_score, resources.resource_list, medals.medal_list
+	                                                        GROUP BY record.match_id, record.host_name, record.client_version, match_classification, record.match_type, map, result, player.build_hash, player.power_score, resources.resource_list, medals.medal_list
 	                                                        ORDER BY record.match_id", uid);
 
             return game_modes;

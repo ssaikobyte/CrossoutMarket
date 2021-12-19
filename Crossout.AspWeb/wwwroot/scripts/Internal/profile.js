@@ -13,6 +13,9 @@
         this.damage = 0;
         this.damage_rec = 0;
         this.time = 0;
+        this.gamemode = [];
+        this.weapons = [];
+        this.movement = [];
     }
 
     add_game(game) {
@@ -94,15 +97,240 @@
     }
 };
 
+class FilterItem {
+    constructor(name, count) {
+        this.name = name;
+        this.count = count;
+    }
+
+    increment() {
+        this.count += 1;
+    }
+}
+
+class StatFilter {
+    constructor() {
+        this.categories = [];
+        this.match_types = [];
+        this.start_time = null;
+        this.end_time = null;
+        this.region = [];
+        this.hosts = [];
+        this.client_version = [];
+        this.maps = [];
+        this.group_size = [];
+        this.group = [];
+        this.power_score = [];
+        this.hardware = [];
+        this.cabins = [];
+        this.movement = [];
+        this.weapons = [];
+        this.decor = [];
+        this.structure = [];
+        this.game_result = [];
+        this.survived = [];
+    }
+
+    add_or_increment(category, name, count = 1) {
+        let found = category.find((o, i) => {
+            if (o.name === name) {
+                category[i].increment();
+                return true;
+            }
+        });
+
+        if (!found)
+            category.push(new FilterItem(name, count));
+    }
+
+    reset_counts() {
+        this.categories.forEach(x => { x.count = 0 });
+        this.match_types.forEach(x => { x.count = 0 });
+        this.region.forEach(x => { x.count = 0 });
+        this.hosts.forEach(x => { x.count = 0 });
+        this.client_version.forEach(x => { x.count = 0 });
+        this.maps.forEach(x => { x.count = 0 });
+        this.group_size.forEach(x => { x.count = 0 });
+        this.group.forEach(x => { x.count = 0 });
+        this.power_score.forEach(x => { x.count = 0 });
+        this.hardware.forEach(x => { x.count = 0 });
+        this.cabins.forEach(x => { x.count = 0 });
+        this.movement.forEach(x => { x.count = 0 });
+        this.weapons.forEach(x => { x.count = 0 });
+        this.decor.forEach(x => { x.count = 0 });
+        this.structure.forEach(x => { x.count = 0 });
+        this.game_result.forEach(x => { x.count = 0 });
+        this.survived.forEach(x => { x.count = 0 });
+    }
+
+    populate_static() {
+        this.add_or_increment(this.power_score, "0-2499", 0);
+        this.add_or_increment(this.power_score, "2500-3499", 0);
+        this.add_or_increment(this.power_score, "3500-4499", 0);
+        this.add_or_increment(this.power_score, "4500-5499", 0);
+        this.add_or_increment(this.power_score, "5500-6499", 0);
+        this.add_or_increment(this.power_score, "6500-7499", 0);
+        this.add_or_increment(this.power_score, "7500-8499", 0);
+        this.add_or_increment(this.power_score, "8500-9499", 0);
+        this.add_or_increment(this.power_score, "9500-12999", 0);
+        this.add_or_increment(this.power_score, "13000+", 0);
+        this.add_or_increment(this.group_size, "Solo", 0);
+        this.add_or_increment(this.group_size, "Any Group Size", 0);
+        this.add_or_increment(this.group_size, "2 Man", 0);
+        this.add_or_increment(this.group_size, "3 Man", 0);
+        this.add_or_increment(this.group_size, "4 Man", 0);
+        this.add_or_increment(this.survived, "Survived", 0);
+        this.add_or_increment(this.survived, "Died", 0);
+        this.add_or_increment(this.survived, "Unscathed", 0);
+    }
+
+    populate_filters(history) {
+        this.populate_static();
+        this.reset_counts();
+        history.forEach(match => {
+            let ps = match["power_score"];
+
+            this.add_or_increment(this.categories, match["match_classification"]);
+            this.add_or_increment(this.match_types, match["match_type"]);
+            this.add_or_increment(this.maps, match["map"]);
+            this.add_or_increment(this.hosts, match["host_name"]);
+            this.add_or_increment(this.client_version, match["client_version"]);
+            this.add_or_increment(this.game_result, match["result"]);
+
+            if (ps <= 2499) {
+                this.add_or_increment(this.power_score, "0-2499");
+            }
+            else if (ps <= 3499) {
+                this.add_or_increment(this.power_score, "2500-3499");
+            }
+            else if (ps <= 4499) {
+                this.add_or_increment(this.power_score, "3500-4499");
+            }
+            else if (ps <= 5499) {
+                this.add_or_increment(this.power_score, "4500-5499");
+            }
+            else if (ps <= 6499) {
+                this.add_or_increment(this.power_score, "5500-6499");
+            }
+            else if (ps <= 7499) {
+                this.add_or_increment(this.power_score, "6500-7499");
+            }
+            else if (ps <= 8499) {
+                this.add_or_increment(this.power_score, "7500-8499");
+            }
+            else if (ps <= 9499) {
+                this.add_or_increment(this.power_score, "8500-9499");
+            }
+            else if (ps <= 12999) {
+                this.add_or_increment(this.power_score, "9500-12999");
+            }
+            else if (ps <= 22500) {
+                this.add_or_increment(this.power_score, "13000+");
+            }
+            else if (ps > 22500) {
+                this.add_or_increment(this.power_score, "Leviathian");
+            }
+            else {
+                this.add_or_increment(this.power_score, "Unknown");
+            }
+
+            if (match["host_name"].includes("-ru")) {
+                this.add_or_increment(this.region, "Russia");
+            }
+            else if (match["host_name"].includes("-nl")) {
+                this.add_or_increment(this.region, "Europe");
+            }
+            else if (match["host_name"].includes("-us")) {
+                this.add_or_increment(this.region, "North America");
+            }
+            else if (match["host_name"].includes("-jp")) {
+                this.add_or_increment(this.region, "Asia");
+            }
+            else if (match["host_name"].includes("-au")) {
+                this.add_or_increment(this.region, "Australia");
+            }
+            else {
+                this.add_or_increment(this.region, "Unknown");
+            }
+
+            if (match["deaths"] === 0 && match["damage_rec"] < 1) {
+                this.add_or_increment(this.survived, "Unscathed");
+            }
+            else if (match["deaths"] === 0) {
+                this.add_or_increment(this.survived, "Survived");
+            }
+            else if (match["deaths"] > 0) {
+                this.add_or_increment(this.survived, "Died");
+            }
+            else {
+                this.add_or_increment(this.survived, "Uknown");
+            }
+
+            match["parts"].split(',').forEach(part_string => {
+                var parts = part_string.split(':');
+
+                if (parts[0] === 'Cabins') {
+                    this.add_or_increment(this.cabins, parts[1]);
+                }
+                else
+                if (parts[0] === 'Hardware') {
+                    this.add_or_increment(this.hardware, parts[1]);
+                }
+                else
+                if (parts[0] === 'Movement') {
+                    this.add_or_increment(this.movement, parts[1]);
+                }
+                else
+                if (parts[0] === 'Weapons') {
+                    this.add_or_increment(this.weapons, parts[1]);
+                }
+                else
+                if (parts[0] === 'Decor' || parts[0] === 'Customization') {
+                    this.add_or_increment(this.decor, parts[1]);
+                }
+                else
+                if (parts[0] === 'Structure' || parts[0] === 'Frames') {
+                    this.add_or_increment(this.structure, parts[1]);
+                }
+            });
+        });
+    }
+
+    build_dropdowns() {
+        this.build_dropdown_list('#game_category_selection_menu', this.categories);
+        this.build_dropdown_list('#game_type_selection_menu', this.match_types);
+        this.build_dropdown_list('#region_selection_menu', this.region);
+        this.build_dropdown_list('#host_selection_menu', this.hosts);
+        this.build_dropdown_list('#version_selection_menu', this.client_version);
+        this.build_dropdown_list('#map_selection_menu', this.maps);
+        this.build_dropdown_list('#power_score_selection_menu', this.power_score);
+        this.build_dropdown_list('#group_selection_menu', this.group_size);
+        this.build_dropdown_list('#cabin_part_selection_menu', this.cabins);
+        this.build_dropdown_list('#hardware_part_selection_menu', this.hardware);
+        this.build_dropdown_list('#movement_part_selection_menu', this.movement);
+        this.build_dropdown_list('#weapon_part_selection_menu', this.weapons);
+        this.build_dropdown_list('#decor_selection_menu', this.decor);
+        this.build_dropdown_list('#structure_selection_menu', this.structure);
+        this.build_dropdown_list('#game_result_selection_menu', this.game_result);
+        this.build_dropdown_list('#survived_selection_menu', this.survived);
+    }
+
+
+    build_dropdown_list(element, list) {
+        list.forEach(x => {
+            $(element).append('<a class="dropdown-item" data-keyname="' + x.name + '" title= "' + x.count + ' Results">' + x.name + '</a>');
+        });
+    }
+
+    valid_match(match) {
+        return true;
+    }
+};
+
 var Uid = window.location.pathname.split("/").pop();
-var match_history = [];
-var active_classification = null;
-var active_game_type = null;
-var damage_list = [];
-var dmg_rec_list = [];
-var kd_list = [];
-var score_list = [];
-var filter_delay;
+let filter = new StatFilter();
+let match_history = [];
+let filter_delay;
 
 const start_date = datepicker('#start_date', { id: 1, dateSelected: moment().subtract(6, 'days').toDate() });
 const end_date = datepicker('#end_date', { id: 1, dateSelected: moment().toDate() });
@@ -119,14 +347,10 @@ $.ajax({
     success: function (json) {
         match_history = json["match_history"];
 
-        active_classification = "PvP";
-        active_game_type = "Total";
-
         populate_overview_totals();
-
-        populate_filter_dropdowns();
-        build_classification_list();
-        build_game_type_list();
+        filter.populate_filters(match_history);
+        filter.build_dropdowns();
+        
         populate_gamemode_overview();
 
         populate_match_history_table();
@@ -134,32 +358,6 @@ $.ajax({
         $('#gamemode_overview_card').removeClass('d-none');
         $('#match_history_overview_card').removeClass('d-none');
     }
-});
-
-$.ajax({
-url: '/data/profile/overview_drilldowns/' + Uid,
-dataType: 'json',
-success: function (json) {
-    build_drilldown('gamemode_overview', 'Game Modes', json["gamemode_preference"]);
-    build_drilldown('weapons_overview', 'Weapons', json["weapon_preference"]);
-    build_drilldown('movement_overview', 'Movement', json["movement_preference"]);
-}
-});
-
-$('#classification_list').on('click', 'a', function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-    active_classification = $(this).text();
-    active_game_type = "Total";
-    build_game_type_list();
-    populate_gamemode_overview();
-});
-
-$('#game_type_list').on('click', 'a', function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-    active_game_type = $(this).text();
-    populate_gamemode_overview();
 });
 
 $('#reset_filters').click(function (e) {
@@ -244,67 +442,19 @@ function populate_match_history_table() {
     });
 }
 
-function populate_filter_dropdowns() {
-    var cabins = [];
-    var hardware = [];
-    var movement = [];
-    var weapons = [];
-
-    match_history.forEach(build => {
-        build["parts"].split(',').forEach(part_string => {
-            var parts = part_string.split(':');
-
-            if (parts[0] === 'Cabins' && !cabins.includes(parts[1]))
-                cabins.push(parts[1]);
-
-            if (parts[0] === 'Hardware' && !hardware.includes(parts[1]))
-                hardware.push(parts[1]);
-
-            if (parts[0] === 'Movement' && !movement.includes(parts[1]))
-                movement.push(parts[1]);
-
-            if (parts[0] === 'Weapons' && !weapons.includes(parts[1]))
-                weapons.push(parts[1]);
-        });
-    });
-
-    cabins.forEach(x => {
-        $('#cabin_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
-    });
-
-    hardware.forEach(x => {
-        $('#hardware_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
-    });
-
-    movement.forEach(x => {
-        $('#movement_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
-    });
-
-    weapons.forEach(x => {
-        $('#weapon_part_selection_menu').append('<a class="dropdown-item" data-keyname="' + x + '">' + x + '</a>');
-    });
-}
-
 function populate_gamemode_overview() {
     let gamemode_data = new Stats();
     var parts = [];
-    
-    damage_list = [];
-    dmg_rec_list = [];
-    kd_list = [];
-    score_list = [];
+    let damage_list = [];
+    let dmg_rec_list = [];
+    let kd_list = [];
+    let score_list = [];
 
     $("div[id*=part_selection_menu] a.active").each(function (index, element) {
         parts.push($(this).attr("data-keyname"));
     });
 
     for (var i = 0; i < match_history.length; i++) {
-
-        if (active_classification != 'Total' && active_classification != match_history[i]["match_classification"])
-            continue;
-
-        if (active_game_type != 'Total' && active_game_type != match_history[i]["match_type"])
-            continue;
 
         if (parts && parts.length > 0 && match_history[i]["parts"] != null) {
             let found_part = false;
@@ -360,62 +510,6 @@ function populate_gamemode_overview() {
     build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
     build_boxplot('kill_box_plot', ['KD'], [boxplot_distribution(kd_list)]);
     build_boxplot('score_box_plot', ['Score'], [boxplot_distribution(score_list)]);
-}
-
-function build_classification_list() {
-    var li = document.createElement('li');
-    var match_classification = [];
-
-    document.getElementById("classification_list").innerHTML = "";
-    
-    for (var i = 0; i < match_history.length; i++) {
-        if (!match_classification.includes(match_history[i]["match_classification"]))
-            match_classification.push(match_history[i]["match_classification"]);
-    }
-    if (match_classification.length > 1) {
-        li.classList.add('nav-item');
-        li.innerHTML = '<a class="nav-link" id="total-tab" data-toggle="pill" href="#pills-total" role="tab" aria-controls="total" aria-selected="false">Total</a>';
-        document.getElementById('classification_list').appendChild(li);
-    }
-    
-    for (var i = 0; i < match_classification.length; i++) {
-        li = document.createElement('li');
-        li.classList.add('nav-item');
-        if (match_classification[i] == 'PvP') {
-            li.innerHTML = '<a class="nav-link active" id="' + match_classification[i] + '-tab" data-toggle="pill" href="#pills-' + match_classification[i] + '" role="tab" aria-controls="pills-' + match_classification[i]+'" aria-selected="true">' + match_classification[i] + '</a>';
-        }
-        else {
-            li.innerHTML = '<a class="nav-link" id="' + match_classification[i] + '-tab" data-toggle="pill" href="#pills-' + match_classification[i] + '" role="tab" aria-controls="pills-' + match_classification[i] +'" aria-selected="false">' + match_classification[i] + '</a>';
-        } 
-
-        document.getElementById('classification_list').appendChild(li);
-    }
-}
-
-function build_game_type_list() {
-    var li = document.createElement('li');
-    var game_types = [];
-
-    document.getElementById("game_type_list").innerHTML = "";
-    
-    for (var i = 0; i < match_history.length; i++) {
-        if (!game_types.includes(match_history[i]["match_type"]) && match_history[i]["match_classification"] == active_classification)
-            game_types.push(match_history[i]["match_type"]);
-    }
-
-    if (game_types.length > 1) {
-        li.classList.add('nav-item');
-        li.innerHTML = '<a class="nav-link active" id="total-tab" data-toggle="pill" href="#total" role="tab" aria-controls="total" aria-selected="true">Total</a>';
-        document.getElementById('game_type_list').appendChild(li);
-    }
-
-    for (var i = 0; i < game_types.length; i++) {
-        li = document.createElement('li');
-        li.classList.add('nav-item');
-        li.innerHTML = '<a class="nav-link" id="' + game_types[i] + '-tab" data-toggle="tab" href="#' + game_types[i] + '" role="tab" aria-controls="' + game_types[i] + '" aria-selected="false">' + game_types[i] + '</a>';
-
-        document.getElementById('game_type_list').appendChild(li);
-    }
 }
 
 function build_drilldown(id, title, drilldown_data) {
