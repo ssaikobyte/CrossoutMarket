@@ -101,6 +101,7 @@ class FilterItem {
     constructor(name, count) {
         this.name = name;
         this.count = count;
+        this.selected = false;
     }
 
     increment() {
@@ -161,6 +162,26 @@ class StatFilter {
         this.structure.forEach(x => { x.count = 0 });
         this.game_result.forEach(x => { x.count = 0 });
         this.survived.forEach(x => { x.count = 0 });
+    }
+
+    reset_selected() {
+        this.categories.forEach(x => { x.selected = false });
+        this.match_types.forEach(x => { x.selected = false });
+        this.region.forEach(x => { x.selected = false });
+        this.hosts.forEach(x => { x.selected = false });
+        this.client_version.forEach(x => { x.selected = false });
+        this.maps.forEach(x => { x.selected = false });
+        this.group_size.forEach(x => { x.selected = false });
+        this.group.forEach(x => { x.selected = false });
+        this.power_score.forEach(x => { x.selected = false });
+        this.hardware.forEach(x => { x.selected = false });
+        this.cabins.forEach(x => { x.selected = false });
+        this.movement.forEach(x => { x.selected = false });
+        this.weapons.forEach(x => { x.selected = false });
+        this.decor.forEach(x => { x.selected = false });
+        this.structure.forEach(x => { x.selected = false });
+        this.game_result.forEach(x => { x.selected = false });
+        this.survived.forEach(x => { x.selected = false });
     }
 
     populate_static() {
@@ -315,6 +336,56 @@ class StatFilter {
         this.build_dropdown_list('#survived_selection_menu', this.survived);
     }
 
+    select_filter_item(parent, item, selected) {
+        if (parent === 'game_category_selection_menu') {
+            this.categories.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'game_type_selection_menu') {
+            this.match_types.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'region_selection_menu') {
+            this.region.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'host_selection_menu') {
+            this.hosts.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'version_selection_menu') {
+            this.client_version.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'map_selection_menu') {
+            this.maps.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'group_selection_menu') {
+            this.group_size.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'cabin_part_selection_menu') {
+            this.cabins.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'hardware_part_selection_menu') {
+            this.hardware.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'movement_part_selection_menu') {
+            this.movement.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'weapon_part_selection_menu') {
+            this.weapons.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'decor_selection_menu') {
+            this.decor.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'structure_selection_menu') {
+            this.structure.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'game_result_selection_menu') {
+            this.game_result.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'survived_selection_menu') {
+            this.survived.find(x => x.name === item).selected = selected;
+        }
+
+        console.log(this);
+    }
+
 
     build_dropdown_list(element, list) {
         list.forEach(x => {
@@ -323,7 +394,9 @@ class StatFilter {
     }
 
     valid_match(match) {
-        return true;
+        let valid = true; 
+
+        return valid;
     }
 };
 
@@ -347,10 +420,10 @@ $.ajax({
     success: function (json) {
         match_history = json["match_history"];
 
-        populate_overview_totals();
         filter.populate_filters(match_history);
         filter.build_dropdowns();
-        
+
+        populate_overview_totals();
         populate_gamemode_overview();
 
         populate_match_history_table();
@@ -362,6 +435,8 @@ $.ajax({
 
 $('#reset_filters').click(function (e) {
     $("div[id*=_selection_menu] a.active").removeClass('active');
+    filter.reset_selected();
+    filter.populate_filters(match_history);
     populate_gamemode_overview();
 });
 
@@ -373,6 +448,7 @@ $(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
     e.stopPropagation();
     e.stopImmediatePropagation();
     $(this).toggleClass('active');
+    filter.select_filter_item($(this).parent().attr("id"), $(this).attr("data-keyname"), $(this).hasClass('active'));
     clearTimeout(filter_delay);
 
     filter_delay = setTimeout(function () {
@@ -444,49 +520,26 @@ function populate_match_history_table() {
 
 function populate_gamemode_overview() {
     let gamemode_data = new Stats();
-    var parts = [];
+    let temp_history = [];
     let damage_list = [];
     let dmg_rec_list = [];
     let kd_list = [];
     let score_list = [];
 
-    $("div[id*=part_selection_menu] a.active").each(function (index, element) {
-        parts.push($(this).attr("data-keyname"));
-    });
-
     for (var i = 0; i < match_history.length; i++) {
-
-        if (parts && parts.length > 0 && match_history[i]["parts"] != null) {
-            let found_part = false;
-            parts.forEach(x => {
-                if (match_history[i]["parts"].includes(x)) {
-                    found_part = true;
-                }
-            });
-            if (!found_part)
-                continue;
-        }
-
-        let valid_power_score = true;
-        $("#power_score_selection_menu a.active").each(function (index, element) {
-            if ($(this).attr("data-min-powerscore"))
-                if (match_history[i]["power_score"] < $(this).attr("data-min-powerscore"))
-                    valid_power_score = false;
-
-            if ($(this).attr("data-max-powerscore"))
-                if (match_history[i]["power_score"] > $(this).attr("data-max-powerscore"))
-                    valid_power_score = false;
-        });
-        if (!valid_power_score)
-            continue;        
+        if (!filter.valid_match(match_history[i]))
+            continue;
 
         gamemode_data.add_game(match_history[i]);
-
+        
         damage_list.push(match_history[i]["damage"]);
         dmg_rec_list.push(match_history[i]["damage_rec"]);
         kd_list.push(match_history[i]["kills"] + match_history[i]["assists"]);
         score_list.push(match_history[i]["score"]);
+        temp_history.push(match_history[i]);
     }
+
+    filter.populate_filters(temp_history);
 
     damage_list = damage_list.sort(function (a, b) { return a - b });
     dmg_rec_list = dmg_rec_list.sort(function (a, b) { return a - b });
