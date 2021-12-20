@@ -382,8 +382,6 @@ class StatFilter {
         else if (parent === 'survived_selection_menu') {
             this.survived.find(x => x.name === item).selected = selected;
         }
-
-        console.log(this);
     }
 
 
@@ -395,6 +393,11 @@ class StatFilter {
 
     valid_match(match) {
         let valid = true; 
+
+        if (this.categories.some(x => x.selected === true)) {
+            if (!this.categories.find(x => x.name === match["match_classification"] && x.selected === true))
+                valid = false;
+        }
 
         return valid;
     }
