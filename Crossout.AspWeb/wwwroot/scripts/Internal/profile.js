@@ -144,7 +144,7 @@ class StatFilter {
             category.push(new FilterItem(name, count));
     }
 
-    reset_counts() {
+    reset() {
         this.categories.forEach(x => { x.count = 0 });
         this.match_types.forEach(x => { x.count = 0 });
         this.region.forEach(x => { x.count = 0 });
@@ -165,6 +165,8 @@ class StatFilter {
     }
 
     reset_selected() {
+        this.start_time = null;
+        this.end_time = null;
         this.categories.forEach(x => { x.selected = false });
         this.match_types.forEach(x => { x.selected = false });
         this.region.forEach(x => { x.selected = false });
@@ -205,11 +207,9 @@ class StatFilter {
         this.add_or_increment(this.survived, "Unscathed", 0);
     }
 
-    
-
     populate_filters(history) {
         this.populate_static();
-        this.reset_counts();
+        this.reset();
         history.forEach(match => {
             this.add_or_increment(this.categories, match["match_classification"]);
             this.add_or_increment(this.match_types, match["match_type"]);
@@ -251,81 +251,11 @@ class StatFilter {
         });
     }
 
-    find_ps_range(ps) {
-        if (ps <= 2499) {
-            return "0-2499";
-        }
-        else if (ps <= 3499) {
-            return "2500-3499";
-        }
-        else if (ps <= 4499) {
-            return "3500-4499";
-        }
-        else if (ps <= 5499) {
-            return "4500-5499";
-        }
-        else if (ps <= 6499) {
-            return "5500-6499";
-        }
-        else if (ps <= 7499) {
-            return "6500-7499";
-        }
-        else if (ps <= 8499) {
-            return "7500-8499";
-        }
-        else if (ps <= 9499) {
-            return "8500-9499";
-        }
-        else if (ps <= 12999) {
-            return "9500-12999";
-        }
-        else if (ps <= 22500) {
-            return "13000+";
-        }
-        else if (ps > 22500) {
-            return "Leviathian";
-        }
-        else {
-            return "Unknown";
-        }
+    set_dates(start_date, end_date) {
+        this.start_time = start_date;
+        this.end_time = end_date;
     }
-
-    find_host_region(host_name) {
-        if (host_name.includes("-ru")) {
-            return "Russia";
-        }
-        else if (host_name.includes("-nl")) {
-            return "Europe";
-        }
-        else if (host_name.includes("-us")) {
-            return "North America";
-        }
-        else if (host_name.includes("-jp")) {
-            return "Asia";
-        }
-        else if (host_name.includes("-au")) {
-            return "Australia";
-        }
-        else {
-            return "Unknown";
-        }
-    }
-
-    find_survived(deaths, damage_rec) {
-        if (deaths === 0 && damage_rec < 1) {
-            return "Unscathed";
-        }
-        else if (deaths === 0) {
-            return "Survived";
-        }
-        else if (deaths > 0) {
-            return "Died";
-        }
-        else {
-            return "Uknown";
-        }
-    }
-
+    
     build_dropdowns() {
         this.build_dropdown_list('#game_category_selection_menu', this.categories);
         this.build_dropdown_list('#game_type_selection_menu', this.match_types);
@@ -406,6 +336,11 @@ class StatFilter {
     valid_match(match) {
         let valid = true; 
 
+        if (this.start_time !== null && this.end_time !== null) {
+            if (Date.parse(match["match_start"]) < Date.parse(this.start_time.format('YYYY-MM-DD')) || Date.parse(match["match_start"]) > Date.parse(this.end_time.format('YYYY-MM-DD')))
+                valid = false;
+        }
+
         if (this.categories.some(x => x.selected === true)) {
             if (!this.categories.find(x => x.selected === true && x.name === match["match_classification"]))
                 valid = false;
@@ -463,6 +398,88 @@ class StatFilter {
 
         return valid;
     }
+
+    find_ps_range(ps) {
+        if (ps <= 2499) {
+            return "0-2499";
+        }
+        else if (ps <= 3499) {
+            return "2500-3499";
+        }
+        else if (ps <= 4499) {
+            return "3500-4499";
+        }
+        else if (ps <= 5499) {
+            return "4500-5499";
+        }
+        else if (ps <= 6499) {
+            return "5500-6499";
+        }
+        else if (ps <= 7499) {
+            return "6500-7499";
+        }
+        else if (ps <= 8499) {
+            return "7500-8499";
+        }
+        else if (ps <= 9499) {
+            return "8500-9499";
+        }
+        else if (ps <= 12999) {
+            return "9500-12999";
+        }
+        else if (ps <= 22500) {
+            return "13000+";
+        }
+        else if (ps > 22500) {
+            return "Leviathian";
+        }
+        else {
+            return "Unknown";
+        }
+    }
+
+    find_host_region(host_name) {
+        if (host_name.includes("-ru")) {
+            return "Russia";
+        }
+        else if (host_name.includes("-nl")) {
+            return "Europe";
+        }
+        else if (host_name.includes("-us")) {
+            return "North America";
+        }
+        else if (host_name.includes("-jp")) {
+            return "Asia";
+        }
+        else if (host_name.includes("-au")) {
+            return "Australia";
+        }
+        else {
+            return "Unknown";
+        }
+    }
+
+    find_survived(deaths, damage_rec) {
+        if (deaths === 0 && damage_rec < 1) {
+            return "Unscathed";
+        }
+        else if (deaths === 0) {
+            return "Survived";
+        }
+        else if (deaths > 0) {
+            return "Died";
+        }
+        else {
+            return "Uknown";
+        }
+    }
+
+    build_title() {
+        title = null;
+
+
+        return title;
+    }
 };
 
 var Uid = window.location.pathname.split("/").pop();
@@ -470,8 +487,7 @@ let filter = new StatFilter();
 let match_history = [];
 let filter_delay;
 
-const start_date = datepicker('#start_date', { id: 1, dateSelected: moment().subtract(6, 'days').toDate() });
-const end_date = datepicker('#end_date', { id: 1, dateSelected: moment().toDate() });
+
 
 Highcharts.setOptions({
     lang: {
@@ -519,6 +535,28 @@ $(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
     filter_delay = setTimeout(function () {
         populate_gamemode_overview();
     }, 350);
+});
+
+$(function () {
+    $('input[name="daterange"]').daterangepicker({
+        autoApply: true,
+        drops: 'down',
+        alwaysShowCalendars: true,
+        startDate: moment().subtract(13, 'days'),
+        endDate: moment(),
+        opens: 'left',
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, function (start, end, label) {
+        filter.set_dates(start, end);
+        populate_gamemode_overview();
+    });
 });
 
 function populate_overview_totals() {
