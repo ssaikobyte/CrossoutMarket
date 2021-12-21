@@ -205,87 +205,21 @@ class StatFilter {
         this.add_or_increment(this.survived, "Unscathed", 0);
     }
 
+    
+
     populate_filters(history) {
         this.populate_static();
         this.reset_counts();
         history.forEach(match => {
-            let ps = match["power_score"];
-
             this.add_or_increment(this.categories, match["match_classification"]);
             this.add_or_increment(this.match_types, match["match_type"]);
             this.add_or_increment(this.maps, match["map"]);
             this.add_or_increment(this.hosts, match["host_name"]);
             this.add_or_increment(this.client_version, match["client_version"]);
             this.add_or_increment(this.game_result, match["result"]);
-
-            if (ps <= 2499) {
-                this.add_or_increment(this.power_score, "0-2499");
-            }
-            else if (ps <= 3499) {
-                this.add_or_increment(this.power_score, "2500-3499");
-            }
-            else if (ps <= 4499) {
-                this.add_or_increment(this.power_score, "3500-4499");
-            }
-            else if (ps <= 5499) {
-                this.add_or_increment(this.power_score, "4500-5499");
-            }
-            else if (ps <= 6499) {
-                this.add_or_increment(this.power_score, "5500-6499");
-            }
-            else if (ps <= 7499) {
-                this.add_or_increment(this.power_score, "6500-7499");
-            }
-            else if (ps <= 8499) {
-                this.add_or_increment(this.power_score, "7500-8499");
-            }
-            else if (ps <= 9499) {
-                this.add_or_increment(this.power_score, "8500-9499");
-            }
-            else if (ps <= 12999) {
-                this.add_or_increment(this.power_score, "9500-12999");
-            }
-            else if (ps <= 22500) {
-                this.add_or_increment(this.power_score, "13000+");
-            }
-            else if (ps > 22500) {
-                this.add_or_increment(this.power_score, "Leviathian");
-            }
-            else {
-                this.add_or_increment(this.power_score, "Unknown");
-            }
-
-            if (match["host_name"].includes("-ru")) {
-                this.add_or_increment(this.region, "Russia");
-            }
-            else if (match["host_name"].includes("-nl")) {
-                this.add_or_increment(this.region, "Europe");
-            }
-            else if (match["host_name"].includes("-us")) {
-                this.add_or_increment(this.region, "North America");
-            }
-            else if (match["host_name"].includes("-jp")) {
-                this.add_or_increment(this.region, "Asia");
-            }
-            else if (match["host_name"].includes("-au")) {
-                this.add_or_increment(this.region, "Australia");
-            }
-            else {
-                this.add_or_increment(this.region, "Unknown");
-            }
-
-            if (match["deaths"] === 0 && match["damage_rec"] < 1) {
-                this.add_or_increment(this.survived, "Unscathed");
-            }
-            else if (match["deaths"] === 0) {
-                this.add_or_increment(this.survived, "Survived");
-            }
-            else if (match["deaths"] > 0) {
-                this.add_or_increment(this.survived, "Died");
-            }
-            else {
-                this.add_or_increment(this.survived, "Uknown");
-            }
+            this.add_or_increment(this.power_score, this.find_ps_range(match["power_score"]));
+            this.add_or_increment(this.region, this.find_host_region(match["host_name"]));
+            this.add_or_increment(this.survived, this.find_survived(match["deaths"], match["damage_rec"]));
 
             match["parts"].split(',').forEach(part_string => {
                 var parts = part_string.split(':');
@@ -315,6 +249,81 @@ class StatFilter {
                 }
             });
         });
+    }
+
+    find_ps_range(ps) {
+        if (ps <= 2499) {
+            return "0-2499";
+        }
+        else if (ps <= 3499) {
+            return "2500-3499";
+        }
+        else if (ps <= 4499) {
+            return "3500-4499";
+        }
+        else if (ps <= 5499) {
+            return "4500-5499";
+        }
+        else if (ps <= 6499) {
+            return "5500-6499";
+        }
+        else if (ps <= 7499) {
+            return "6500-7499";
+        }
+        else if (ps <= 8499) {
+            return "7500-8499";
+        }
+        else if (ps <= 9499) {
+            return "8500-9499";
+        }
+        else if (ps <= 12999) {
+            return "9500-12999";
+        }
+        else if (ps <= 22500) {
+            return "13000+";
+        }
+        else if (ps > 22500) {
+            return "Leviathian";
+        }
+        else {
+            return "Unknown";
+        }
+    }
+
+    find_host_region(host_name) {
+        if (host_name.includes("-ru")) {
+            return "Russia";
+        }
+        else if (host_name.includes("-nl")) {
+            return "Europe";
+        }
+        else if (host_name.includes("-us")) {
+            return "North America";
+        }
+        else if (host_name.includes("-jp")) {
+            return "Asia";
+        }
+        else if (host_name.includes("-au")) {
+            return "Australia";
+        }
+        else {
+            return "Unknown";
+        }
+    }
+
+    find_survived(deaths, damage_rec) {
+        if (deaths === 0 && damage_rec < 1) {
+            return "Unscathed";
+        }
+        else if (deaths === 0) {
+            return "Survived";
+        }
+        else if (deaths > 0) {
+            return "Died";
+        }
+        else {
+            return "Uknown";
+        }
     }
 
     build_dropdowns() {
@@ -358,6 +367,9 @@ class StatFilter {
         else if (parent === 'group_selection_menu') {
             this.group_size.find(x => x.name === item).selected = selected;
         }
+        else if (parent === 'power_score_selection_menu') {
+            this.power_score.find(x => x.name === item).selected = selected;
+        }
         else if (parent === 'cabin_part_selection_menu') {
             this.cabins.find(x => x.name === item).selected = selected;
         }
@@ -395,7 +407,57 @@ class StatFilter {
         let valid = true; 
 
         if (this.categories.some(x => x.selected === true)) {
-            if (!this.categories.find(x => x.name === match["match_classification"] && x.selected === true))
+            if (!this.categories.find(x => x.selected === true && x.name === match["match_classification"]))
+                valid = false;
+        }
+
+        if (this.match_types.some(x => x.selected === true)) {
+            if (!this.match_types.find(x => x.selected === true && x.name === match["match_type"]))
+                valid = false;
+        }
+
+        if (this.region.some(x => x.selected === true)) {
+            if (!this.region.find(x => x.selected === true && x.name === this.find_host_region(match["host_name"])))
+                valid = false;
+        }
+
+        if (this.hosts.some(x => x.selected === true)) {
+            if (!this.hosts.find(x => x.selected === true && x.name === match["host_name"]))
+                valid = false;
+        }
+
+        if (this.client_version.some(x => x.selected === true)) {
+            if (!this.client_version.find(x => x.selected === true && x.name === match["client_version"]))
+                valid = false;
+        }
+
+        if (this.maps.some(x => x.selected === true)) {
+            if (!this.maps.find(x => x.selected === true && x.name === match["map"]))
+                valid = false;
+        }
+
+        if (this.power_score.some(x => x.selected === true)) {
+            if (!this.power_score.find(x => x.selected === true && x.name === this.find_ps_range(match["power_score"])))
+                valid = false;
+        }
+
+        if (this.cabins.some(x => x.selected === true) ||
+            this.weapons.some(x => x.selected === true) ||
+            this.movement.some(x => x.selected === true) ||
+            this.hardware.some(x => x.selected === true) ||
+            this.decor.some(x => x.selected === true) ||
+            this.structure.some(x => x.selected === true)) {
+            if (!this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.game_result.some(x => x.selected === true)) {
+            if (!this.game_result.find(x => x.selected === true && x.name === match["result"]))
+                valid = false;
+        }
+
+        if (this.survived.some(x => x.selected === true)) {
+            if (!this.survived.find(x => x.selected === true && x.name === this.find_survived(match["deaths"], match["damage_rec"])))
                 valid = false;
         }
 
