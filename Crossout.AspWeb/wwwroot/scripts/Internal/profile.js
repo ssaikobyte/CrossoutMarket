@@ -326,11 +326,102 @@ class StatFilter {
         }
     }
 
-
     build_dropdown_list(element, list) {
         list.forEach(x => {
             $(element).append('<a class="dropdown-item" data-keyname="' + x.name + '" title= "' + x.count + ' Results">' + x.name + '</a>');
         });
+    }
+
+    build_title() {
+        let title = "All ";
+
+        if (this.categories.some(x => x.selected === true)) {
+            if (this.categories.filter(x => x.selected === true).length > 1)
+                title = title.concat('(', this.categories.filter(x => x.selected === true).map(x => x.name).join(", "), ') Matches ');
+            else 
+                title = title.concat(this.categories.filter(x => x.selected === true).map(x => x.name).join(", "), ' Matches ');
+
+            if (this.match_types.some(x => x.selected === true))
+                title = title.concat('Limited to ');
+        }
+
+        if (this.match_types.some(x => x.selected === true)) {
+            if (this.match_types.filter(x => x.selected === true).length > 1)
+                title = title.concat('(', this.match_types.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else 
+                title = title.concat(this.match_types.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (!this.categories.some(x => x.selected === true))
+            title = title.concat('Matches ');
+
+        if (this.start_time != null && this.end_time != null) {
+            title = title.concat('From ', this.start_time.format('YYYY-MM-DD'), ' To ', this.end_time.format('YYYY-MM-DD'), ' ');
+        }
+
+        if (this.region.some(x => x.selected === true)) {
+            if (this.region.filter(x => x.selected === true).length > 1)
+                title = title.concat('In Regions (', this.region.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else 
+                title = title.concat('In Region ', this.region.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (this.hosts.some(x => x.selected === true)) {
+            if (this.hosts.filter(x => x.selected === true).length > 1)
+                title = title.concat('On Servers (', this.hosts.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else 
+                title = title.concat('On Server ', this.hosts.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (this.client_version.some(x => x.selected === true)) {
+            if (this.client_version.filter(x => x.selected === true).length > 1)
+                title = title.concat('Using Client Versions (', this.client_version.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else 
+                title = title.concat('Using Client Version ', this.client_version.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (this.maps.some(x => x.selected === true)) {
+            if (this.maps.filter(x => x.selected === true).length > 1)
+                title = title.concat('On Maps (', this.maps.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else
+                title = title.concat('On Map ', this.maps.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (this.power_score.some(x => x.selected === true)) {
+            if (this.power_score.filter(x => x.selected === true).length > 1)
+                title = title.concat('Within Power Score Ranges (', this.power_score.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else
+                title = title.concat('Within Power Score Range ', this.power_score.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (this.cabins.some(x => x.selected === true) ||
+            this.weapons.some(x => x.selected === true) ||
+            this.movement.some(x => x.selected === true) ||
+            this.hardware.some(x => x.selected === true) ||
+            this.decor.some(x => x.selected === true) ||
+            this.structure.some(x => x.selected === true)) {
+
+            if (this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).filter(x => x.selected === true).length > 1)
+                title = title.concat('Using Builds Equipped With (', this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else
+                title = title.concat('Using ', this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (this.game_result.some(x => x.selected === true)) {
+            if (this.game_result.filter(x => x.selected === true).length > 1)
+                title = title.concat('Resulting in a (', this.game_result.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else
+                title = title.concat('Resulting in a ', this.game_result.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        if (this.survived.some(x => x.selected === true)) {
+            if (this.survived.filter(x => x.selected === true).length > 1)
+                title = title.concat('Where you (', this.survived.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            else
+                title = title.concat('Where you ', this.survived.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+        }
+
+        return title;
     }
 
     valid_match(match) {
@@ -474,12 +565,7 @@ class StatFilter {
         }
     }
 
-    build_title() {
-        title = null;
-
-
-        return title;
-    }
+    
 };
 
 var Uid = window.location.pathname.split("/").pop();
@@ -628,6 +714,8 @@ function populate_gamemode_overview() {
     let dmg_rec_list = [];
     let kd_list = [];
     let score_list = [];
+
+    $('#stat_title').text(filter.build_title());
 
     for (var i = 0; i < match_history.length; i++) {
         if (!filter.valid_match(match_history[i]))
