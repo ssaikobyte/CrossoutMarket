@@ -1,9 +1,11 @@
-﻿<div class="d-flex flex-row">
-    <Stack direction="horizontal" gap={3}>
-        <div id="stat_title" class="h1"></div>
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filter_collapse" aria-expanded="false" aria-controls="filter_collapse">Expand Filter</button>
-        <button id="reset_filters" type="button" class="btn-outline-secondary">Reset</button>
-    </Stack>
+﻿<div class="row mx-0 my-1 px-0">
+    <div class="col">
+        <div id="stat_title" class="lead text-sm-center">All Matches</div>
+    </div>
+    <div class="col-12 col-sm-auto pr-1">
+        <button class="btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#filter_collapse" aria-expanded="false" aria-controls="filter_collapse">Filter</button>
+        <button class="btn btn-outline-secondary" id="reset_filters" >Reset</button>
+    </div>
 </div>
 <div id="filter_collapse" class="collapse">
     <Stack direction="horizontal" gap={3}>

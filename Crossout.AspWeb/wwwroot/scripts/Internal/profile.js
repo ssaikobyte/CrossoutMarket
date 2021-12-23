@@ -361,9 +361,9 @@ class StatFilter {
 
         if (this.region.some(x => x.selected === true)) {
             if (this.region.filter(x => x.selected === true).length > 1)
-                title = title.concat('In Regions (', this.region.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+                title = title.concat('In (', this.region.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
             else 
-                title = title.concat('In Region ', this.region.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+                title = title.concat('In ', this.region.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
         }
 
         if (this.hosts.some(x => x.selected === true)) {
