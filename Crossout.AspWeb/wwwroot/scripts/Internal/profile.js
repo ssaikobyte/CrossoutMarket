@@ -333,13 +333,13 @@ class StatFilter {
     }
 
     build_title() {
-        let title = "All ";
+        let title = "";
 
         if (this.categories.some(x => x.selected === true)) {
             if (this.categories.filter(x => x.selected === true).length > 1)
-                title = title.concat('(', this.categories.filter(x => x.selected === true).map(x => x.name).join(", "), ') Matches ');
+                title = title.concat('(', this.categories.filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
             else 
-                title = title.concat(this.categories.filter(x => x.selected === true).map(x => x.name).join(", "), ' Matches ');
+                title = title.concat(this.categories.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
 
             if (this.match_types.some(x => x.selected === true))
                 title = title.concat('Limited to ');
@@ -352,8 +352,8 @@ class StatFilter {
                 title = title.concat(this.match_types.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
         }
 
-        if (!this.categories.some(x => x.selected === true))
-            title = title.concat('Matches ');
+        //if (!this.categories.some(x => x.selected === true))
+        //    title = title.concat('Matches ');
 
         if (this.start_time != null && this.end_time != null) {
             title = title.concat('From ', this.start_time.format('YYYY-MM-DD'), ' To ', this.end_time.format('YYYY-MM-DD'), ' ');
@@ -420,6 +420,9 @@ class StatFilter {
             else
                 title = title.concat('Where you ', this.survived.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
         }
+
+        if (title === "Matches ")
+            title = "";
 
         return title;
     }
@@ -590,10 +593,7 @@ $.ajax({
         filter.populate_filters(match_history);
         filter.build_dropdowns();
 
-        populate_overview_totals();
-        populate_gamemode_overview();
-
-        populate_match_history_table();
+        populate_profile();
 
         $('#gamemode_overview_card').removeClass('d-none');
         $('#match_history_overview_card').removeClass('d-none');
@@ -604,7 +604,7 @@ $('#reset_filters').click(function (e) {
     $("div[id*=_selection_menu] a.active").removeClass('active');
     filter.reset_selected();
     filter.populate_filters(match_history);
-    populate_gamemode_overview();
+    populate_profile();
 });
 
 $('.dropdown-menu').click(function (e) {
@@ -619,7 +619,7 @@ $(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
     clearTimeout(filter_delay);
 
     filter_delay = setTimeout(function () {
-        populate_gamemode_overview();
+        populate_profile();
     }, 350);
 });
 
@@ -641,7 +641,7 @@ $(function () {
         }
     }, function (start, end, label) {
         filter.set_dates(start, end);
-        populate_gamemode_overview();
+        populate_profile();
     });
 });
 
@@ -667,27 +667,6 @@ function populate_overview_totals() {
 }
 
 function populate_match_history_table() {
-    for (var i = 0; i < match_history.length; i++) {
-        var start = getAdjustedTimestamp(match_history[i]["match_start"]);
-        var row = $("<tr>");
-        var cols = "";
-
-        cols += '<td>' + match_history[i]["match_type"] + '</td>';
-        cols += '<td><a href="/match/' + match_history[i]["match_id"] + '">' + start + '</a></td>';
-        cols += '<td>' + match_history[i]["map"] + '</td>';
-        cols += '<td>' + match_history[i]["power_score"] + '</td>';
-        cols += '<td>' + match_history[i]["score"] + '</td>';
-        cols += '<td>' + match_history[i]["kills"] + '</td>';
-        cols += '<td>' + match_history[i]["assists"] + '</td>';
-        cols += '<td>' + (match_history[i]["damage"]).toFixed(0) + '</td>';
-        cols += '<td>' + (match_history[i]["damage_rec"]).toFixed(0) + '</td>';
-        cols += '<td>' + match_history[i]["result"] + '</td>';
-
-        cols += '<td></td>';
-        row.append(cols);
-        $('#match_history_body').append(row);
-    }
-
     var domOption =
         "<'row m-1'<'d-inline-flex justify-content-start'p><'d-inline-flex ml-auto text-secondary'l>>" +
         "<tr>" +
@@ -707,7 +686,28 @@ function populate_match_history_table() {
     });
 }
 
-function populate_gamemode_overview() {
+function append_match_to_history(match) {
+    var start = getAdjustedTimestamp(match["match_start"]);
+    var row = $("<tr>");
+    var cols = "";
+
+    cols += '<td>' + match["match_type"] + '</td>';
+    cols += '<td><a href="/match/' + match["match_id"] + '">' + start + '</a></td>';
+    cols += '<td>' + match["map"] + '</td>';
+    cols += '<td>' + match["power_score"] + '</td>';
+    cols += '<td>' + match["score"] + '</td>';
+    cols += '<td>' + match["kills"] + '</td>';
+    cols += '<td>' + match["assists"] + '</td>';
+    cols += '<td>' + (match["damage"]).toFixed(0) + '</td>';
+    cols += '<td>' + (match["damage_rec"]).toFixed(0) + '</td>';
+    cols += '<td>' + match["result"] + '</td>';
+
+    cols += '<td></td>';
+    row.append(cols);
+    $('#match_history_body').append(row);
+}
+
+function populate_profile() {
     let gamemode_data = new Stats();
     let temp_history = [];
     let damage_list = [];
@@ -722,11 +722,13 @@ function populate_gamemode_overview() {
             continue;
 
         gamemode_data.add_game(match_history[i]);
+        append_match_to_history(match_history[i]);
         
         damage_list.push(match_history[i]["damage"]);
         dmg_rec_list.push(match_history[i]["damage_rec"]);
         kd_list.push(match_history[i]["kills"] + match_history[i]["assists"]);
         score_list.push(match_history[i]["score"]);
+
         temp_history.push(match_history[i]);
     }
 
@@ -736,6 +738,12 @@ function populate_gamemode_overview() {
     dmg_rec_list = dmg_rec_list.sort(function (a, b) { return a - b });
     kd_list = kd_list.sort(function (a, b) { return a - b });
     score_list = score_list.sort(function (a, b) { return a - b });
+
+    $('#total_games_recorded').text(gamemode_data.games);
+    $('#total_time_recorded').text(gamemode_data.time_spent);
+    $('#total_win_rate').text(gamemode_data.win_rate);
+    $('#total_kag').text(gamemode_data.kda);
+    $('#total_mvp_rate').text(gamemode_data.mvp_rate);
 
     $('#games_recorded').text(gamemode_data.games);
     $('#win_rate').text(gamemode_data.win_rate);
@@ -751,9 +759,17 @@ function populate_gamemode_overview() {
     $('#avg_dmg_rec').text(gamemode_data.avg_damage_rec);
     $('#avg_score').text(gamemode_data.avg_score);
 
+    if ($('#known_as').innerHTML != "") {
+        $('#known_as').removeClass('d-none');
+
+    $('#summary_row_1').removeClass('d-none');
+    $('#summary_row_2').removeClass('d-none');
+
     build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
     build_boxplot('kill_box_plot', ['KD'], [boxplot_distribution(kd_list)]);
     build_boxplot('score_box_plot', ['Score'], [boxplot_distribution(score_list)]);
+
+    populate_match_history_table();
 }
 
 function build_drilldown(id, title, drilldown_data) {
