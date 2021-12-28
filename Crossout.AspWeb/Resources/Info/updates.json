@@ -277,5 +277,13 @@
       "Added new items",
       "Added new packs"
     ]
+  },
+  {
+    "Id": 27,
+    "Name": "Snowstorm Update",
+    "Timestamp": "2021-12-28T10:45:00Z",
+    "Notes": [
+      "Added new items"
+    ]
   }
 ]
