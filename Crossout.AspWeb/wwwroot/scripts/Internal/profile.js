@@ -196,6 +196,18 @@ class FilterItem {
     }
 }
 
+//class DrilldownItem {
+//    constructor(id, value) {
+//        this.id = id;
+//        this.name = id;
+//        this.value = value;
+//    }
+
+//    add(value) {
+//        this.value += value;
+//    }
+//}
+
 class StatFilter {
     constructor() {
         this.categories = [];
@@ -657,8 +669,13 @@ var Uid = window.location.pathname.split("/").pop();
 let filter = new StatFilter();
 let gamemode_data = new Stats();
 let match_history = [];
+let gamemode_series = [];
+let weapon_series = [];
+let movement_series = [];
+let gamemode_drilldown = [];
+let weapon_drilldown = [];
+let movement_drilldown = [];
 let filter_delay;
-
 
 Highcharts.setOptions({
     lang: {
@@ -685,7 +702,6 @@ $.ajax({
 $('#breakdown_list').on('click', 'a', function (e) {
     e.preventDefault();
     $(this).tab('show');
-    console.log($(this).text());
     populate_aggregate_data();
 });
 
@@ -778,7 +794,7 @@ function append_match_to_history(match) {
 
 function populate_profile() {
     let temp_history = [];
-
+    
     gamemode_data = new Stats();
     $("#match_history_body tr").remove();
     $('#stat_title').text(filter.build_title());
@@ -792,6 +808,7 @@ function populate_profile() {
         temp_history.push(match_history[i]);
     }
 
+    append_to_drilldown(temp_history);
     filter.populate_filters(temp_history);
 
     $('#total_games_recorded').text(gamemode_data.games.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
@@ -806,12 +823,78 @@ function populate_profile() {
     $('#summary_row_1').removeClass('d-none');
     $('#summary_row_2').removeClass('d-none');
 
-    //build_drilldown('gamemode_overview', 'Game Modes', temp_history);
-    //build_drilldown('weapons_overview', 'Weapons', temp_history);
-    //build_drilldown('movement_overview', 'Movement', temp_history);
+    build_drilldown('gamemode_overview', 'Game Modes', gamemode_series, gamemode_drilldown);
+    build_drilldown('weapons_overview', 'Weapons', weapon_series, weapon_drilldown);
+    build_drilldown('movement_overview', 'Movement', movement_series, movement_drilldown);
 
     populate_aggregate_data();
     populate_match_history_table();
+}
+
+function append_to_drilldown(match_list) {
+    gamemode_series = [];
+    weapon_series = [];
+    movement_series = [];
+    gamemode_drilldown = [];
+    weapon_drilldown = [];
+    movement_drilldown = [];
+    
+    for (let i = 0; i < match_list.length; i++) {
+        add_or_push_to_series(gamemode_series, match_list[i]["match_classification"]);
+        add_or_push_to_drilldown(gamemode_drilldown, match_list[i]["match_classification"], match_list[i]["match_type"]);
+        match_list[i]["parts"].split(',').forEach(part_string => {
+            let parts = part_string.split(':');
+            if (parts[0] === 'Weapons') {
+                add_or_push_to_series(weapon_series, parts[3]);
+                add_or_push_to_drilldown(weapon_drilldown, parts[3], parts[1]);
+            }
+            else if (parts[0] === 'Movement') {
+                add_or_push_to_series(movement_series, parts[3]);
+                add_or_push_to_drilldown(movement_drilldown, parts[3], parts[1]);
+            }
+        });
+    }
+}
+
+function add_or_push_to_series(list, value) {
+    if (list.filter(function (e) { return e.name === value; }).length > 0) {
+        list[list.findIndex(x => x.name === value)].y += 1;
+    }
+    else {
+        list.push({
+            name: value,
+            y: 1,
+            drilldown: value
+        });
+    }
+}
+
+function add_or_push_to_drilldown(list, type, value) {
+    let found_series = false;
+
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].name == type) {
+            if (list[i].data.filter(function (x) { return x[0] === value; }).length > 0) {
+                list[i].data[list[i].data.findIndex(x => x[0] === value)][1] += 1;
+            }
+            else {
+                list[i].data.push(
+                    [value, 1]
+                );
+            }
+
+            found_series = true;
+            break;
+        }
+    }
+
+    if (!found_series) {
+        list.push({
+            'name': type,
+            'id': type,
+            'data': [[value, 1]]
+        });
+    }
 }
 
 function populate_aggregate_data() {
@@ -876,12 +959,9 @@ function time_to_readable(time) {
         return minutes + 'm ' + total_seconds + 's';
 }
 
-function build_drilldown(id, title, drilldown_data) {
-    var series_data = populate_series_data(drilldown_data);
-    var drilldown_series_data = populate_drilldown_data(drilldown_data);
+function build_drilldown(id, title, series_data, drilldown_series_data) {
     var favorite = series_data.reduce((a, b) => a.y > b.y ? a : b);
-
-
+    let total = series_data.reduce((a, b) => a + (b['y'] || 0), 0);
 
     var chart = Highcharts.chart(id, {
         chart: {
@@ -894,14 +974,11 @@ function build_drilldown(id, title, drilldown_data) {
             enabled: false
         },
         subtitle: {
-            text: 'Preference ' + favorite.name + ' (' + Math.round(favorite.y, 2) + '%)'
+            text: 'Preference ' + favorite.name + ' (' + ((favorite.y / total) * 100).toFixed(0) + '%)'
         },
         accessibility: {
             announceNewData: {
                 enabled: true
-            },
-            point: {
-                valueSuffix: '%'
             }
         },
         plotOptions: {
@@ -929,7 +1006,7 @@ function build_drilldown(id, title, drilldown_data) {
         },
         tooltip: {
             headerFormat: '<span style="font-size:11px">{point.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.1f}%</b> of total<br/>'
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
         },
         series: [
             {
