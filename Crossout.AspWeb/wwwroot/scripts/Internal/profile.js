@@ -167,10 +167,14 @@ class Aggregate {
     get max_text() {
         let text = '<a href="/match/' + this.maximum_guid + '" class="text-dark link-secondary">' + this.maximum.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</a>';
 
-        if (this.minimum_count > 1)
+        if (this.maximum_count > 1)
             text += "<div class=\"lead\" style=\"font - size: 0.4rem;\">x" + this.maximum_count + "</div>";
 
         return text;
+    }
+
+    get max_only_text() {
+        return '<a href="/match/' + this.maximum_guid + '" class="text-dark link-secondary">' + this.maximum.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</a>';
     }
 
     get avg_text() {
@@ -195,18 +199,6 @@ class FilterItem {
         this.count += 1;
     }
 }
-
-//class DrilldownItem {
-//    constructor(id, value) {
-//        this.id = id;
-//        this.name = id;
-//        this.value = value;
-//    }
-
-//    add(value) {
-//        this.value += value;
-//    }
-//}
 
 class StatFilter {
     constructor() {
@@ -691,11 +683,14 @@ $.ajax({
 
         filter.populate_filters(match_history);
         filter.build_dropdowns();
-
         populate_profile();
+
+        populate_match_history_table();
 
         $('#gamemode_overview_card').removeClass('d-none');
         $('#match_history_overview_card').removeClass('d-none');
+        $('#min_max_card').removeClass('d-none');
+        $('#filter_div').removeClass('d-none');
     }
 });
 
@@ -751,6 +746,9 @@ $(function () {
 });
 
 function populate_match_history_table() {
+    for (var i = 0; i < match_history.length; i++)
+        append_match_to_history(match_history[i]);
+
     var domOption =
         "<'row m-1'<'d-inline-flex justify-content-start'p><'d-inline-flex ml-auto text-secondary'l>>" +
         "<tr>" +
@@ -758,7 +756,7 @@ function populate_match_history_table() {
 
     var table = $('#match_history_table').DataTable({
         order: [[1, 'desc']],
-        destroy: true,
+        //destroy: true,
         lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
         pagingType: "simple_numbers",
         dom: domOption,
@@ -804,7 +802,6 @@ function populate_profile() {
             continue;
 
         gamemode_data.add_game(match_history[i]);
-        append_match_to_history(match_history[i]);
         temp_history.push(match_history[i]);
     }
 
@@ -828,7 +825,7 @@ function populate_profile() {
     build_drilldown('movement_overview', 'Movement', movement_series, movement_drilldown);
 
     populate_aggregate_data();
-    populate_match_history_table();
+    
 }
 
 function append_to_drilldown(match_list) {
@@ -899,7 +896,6 @@ function add_or_push_to_drilldown(list, type, value) {
 
 function populate_aggregate_data() {
     let tab = $("ul#breakdown_list a.active").text();
-    console.log(tab);
     if (tab === "Total") {
         document.getElementById("kills").innerHTML = gamemode_data.kills_aggregate.total_text;
         document.getElementById("assists").innerHTML = gamemode_data.assists_aggregate.total_text;
@@ -923,7 +919,7 @@ function populate_aggregate_data() {
     else if (tab === "Maximum") {
         document.getElementById("kills").innerHTML = gamemode_data.kills_aggregate.max_text;
         document.getElementById("assists").innerHTML = gamemode_data.assists_aggregate.max_text;
-        document.getElementById("deaths").innerHTML = gamemode_data.deaths_aggregate.max_text;
+        document.getElementById("deaths").innerHTML = gamemode_data.deaths_aggregate.max_only_text;
         document.getElementById("damage").innerHTML = gamemode_data.damage_aggregate.max_text;
         document.getElementById("damage_recieved").innerHTML = gamemode_data.damage_rec_aggregate.max_text;
         document.getElementById("medals").innerHTML = gamemode_data.medals_aggregate.max_text;
@@ -963,6 +959,8 @@ function build_drilldown(id, title, series_data, drilldown_series_data) {
     var favorite = series_data.reduce((a, b) => a.y > b.y ? a : b);
     let total = series_data.reduce((a, b) => a + (b['y'] || 0), 0);
 
+    series_data.sort((a, b) => (a.y < b.y) ? 1 : -1);
+
     var chart = Highcharts.chart(id, {
         chart: {
             type: 'pie'
@@ -996,7 +994,7 @@ function build_drilldown(id, title, series_data, drilldown_series_data) {
                         if (this.point.isNull)
                             return void 0;
 
-                        if (this.point.y < 10)
+                        if (this.point.y < total / 10)
                             return void 0;
 
                         return this.point.name;

@@ -6,15 +6,17 @@
 }
 
 <div class="card my-1 mt-2 profile-overview" data-uid="@Model.Uid">
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row mb-4">
         <div class="col-lg px-0">
             <div class="row jumbotron mx-0 mb-0 py-6">
                 <div class="container">
-                    <h1 style="font-size:8vw;" class="row display-1 justify-content-center">@Model.Nickname</h1>
+                    <h1 style="font-size: min(8vw, 128px);" class="row display-1 justify-content-center">@Model.Nickname</h1>
                     <p class="row d-none lead justify-content-center" id="known_as">@Model.Nicknames</p>
                 </div>
+            </div> 
+            <div id="filter_div" class="d-none">
+                <partial name="stat_filter" />
             </div>
-            <partial name="stat_filter" />
             <div id="summary_row_1" class="row d-none">
                 <div class="col">
                     <div class="row d-flex justify-content-center">Games Recorded</div>
@@ -41,7 +43,7 @@
             </div>
         </div>
     </div>
-    <div class="card m-3 mt-6 pb-4">
+    <div id="min_max_card" class="card m-3 mt-6 pb-4 d-none">
         <div class="card-header">
             <ul class="nav nav-tabs nav-fill card-header-tabs" id="breakdown_list" role="tablist">
                 <li class="nav-item">
