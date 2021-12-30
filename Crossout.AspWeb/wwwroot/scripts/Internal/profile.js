@@ -13,6 +13,15 @@
         this.damage = 0;
         this.damage_rec = 0;
         this.time = 0;
+        this.score_aggregate = new Aggregate();
+        this.kills_aggregate = new Aggregate();
+        this.assists_aggregate = new Aggregate();
+        this.deaths_aggregate = new Aggregate();
+        this.drone_kills_aggregate = new Aggregate();
+        this.medals_aggregate = new Aggregate();
+        this.damage_aggregate = new Aggregate();
+        this.damage_rec_aggregate = new Aggregate();
+        this.time_aggregate = new Aggregate();
         this.gamemode = [];
         this.weapons = [];
         this.movement = [];
@@ -45,6 +54,16 @@
         this.damage += game["damage"];
         this.damage_rec += game["damage_rec"];
         this.time += game["time_spent"];
+
+        this.score_aggregate.check_aggregates(game["match_id"], game["score"]);
+        this.kills_aggregate.check_aggregates(game["match_id"], game["kills"]);
+        this.assists_aggregate.check_aggregates(game["match_id"], game["assists"]);
+        this.deaths_aggregate.check_aggregates(game["match_id"], game["deaths"]);
+        this.drone_kills_aggregate.check_aggregates(game["match_id"], game["drone_kills"]);
+        this.medals_aggregate.check_aggregates(game["match_id"], medal);
+        this.damage_aggregate.check_aggregates(game["match_id"], game["damage"]);
+        this.damage_rec_aggregate.check_aggregates(game["match_id"], game["damage_rec"]);
+        this.time_aggregate.check_aggregates(game["match_id"], game["time_spent"]);
     }
 
     get kda() {
@@ -96,6 +115,74 @@
             return minutes + 'm ' + total_seconds + 's';
     }
 };
+
+class Aggregate {
+    constructor() {
+        this.total = 0;
+        this.count = 0;
+        this.minimum = 999999;
+        this.mimimum_count = 0;
+        this.minimum_guid = 0;
+        this.maximum = 0;
+        this.maximum_count = 0;
+        this.maximum_guid = 0;
+    }
+
+    check_aggregates(guid, value) {
+        this.total += value;
+        this.count += 1;
+
+        if (value < this.minimum) {
+            this.minimum = value;
+            this.mimimum_count = 1;
+            this.minimum_guid = guid;
+        }
+        else if (value === this.minimum) {
+            this.mimimum_count += 1;
+        }
+
+        if (value > this.maximum) {
+            this.maximum = value;
+            this.maximum_count = 1;
+            this.maximum_guid = guid;
+        }
+        else if (value === this.maximum) {
+            this.maximum_count += 1;
+        }
+    }
+
+    get total_text() {
+        return (this.total).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
+    }
+
+    get min_text() {
+        let text = '<a href="/match/' + this.minimum_guid + '" class="text-dark link-secondary">' + this.minimum.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</a>';
+
+        if (this.minimum_count > 1)
+            text += "<div class=\"lead\" style=\"font - size: 0.4rem;\">x" + this.minimum_count + "</div>";
+
+        return text;
+    }
+
+    get max_text() {
+        let text = '<a href="/match/' + this.maximum_guid + '" class="text-dark link-secondary">' + this.maximum.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</a>';
+
+        if (this.minimum_count > 1)
+            text += "<div class=\"lead\" style=\"font - size: 0.4rem;\">x" + this.maximum_count + "</div>";
+
+        return text;
+    }
+
+    get avg_text() {
+        let avg = this.total / this.count;
+
+        if (avg > 10) {
+            return (avg).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        return (avg).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+}
 
 class FilterItem {
     constructor(name, count) {
@@ -352,9 +439,6 @@ class StatFilter {
                 title = title.concat(this.match_types.filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
         }
 
-        //if (!this.categories.some(x => x.selected === true))
-        //    title = title.concat('Matches ');
-
         if (this.start_time != null && this.end_time != null) {
             title = title.concat('From ', this.start_time.format('YYYY-MM-DD'), ' To ', this.end_time.format('YYYY-MM-DD'), ' ');
         }
@@ -567,15 +651,13 @@ class StatFilter {
             return "Uknown";
         }
     }
-
-    
 };
 
 var Uid = window.location.pathname.split("/").pop();
 let filter = new StatFilter();
+let gamemode_data = new Stats();
 let match_history = [];
 let filter_delay;
-
 
 
 Highcharts.setOptions({
@@ -598,6 +680,13 @@ $.ajax({
         $('#gamemode_overview_card').removeClass('d-none');
         $('#match_history_overview_card').removeClass('d-none');
     }
+});
+
+$('#breakdown_list').on('click', 'a', function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+    console.log($(this).text());
+    populate_aggregate_data();
 });
 
 $('#reset_filters').click(function (e) {
@@ -645,27 +734,6 @@ $(function () {
     });
 });
 
-function populate_overview_totals() {
-
-    let overview_data = new Stats();
-
-    for (var i = 0; i < match_history.length; i++) 
-        overview_data.add_game(match_history[i]);
-
-    $('#total_games_recorded').text(overview_data.games);
-    $('#total_time_recorded').text(overview_data.time_spent);
-    $('#total_win_rate').text(overview_data.win_rate);
-    $('#total_kag').text(overview_data.kda);
-    $('#total_mvp_rate').text(overview_data.mvp_rate);
-
-    $('#summary_row_1').removeClass('d-none');
-    $('#summary_row_2').removeClass('d-none');
-
-    if ($('#known_as').innerHTML != "") {
-        $('#known_as').removeClass('d-none');
-    }
-}
-
 function populate_match_history_table() {
     var domOption =
         "<'row m-1'<'d-inline-flex justify-content-start'p><'d-inline-flex ml-auto text-secondary'l>>" +
@@ -674,6 +742,7 @@ function populate_match_history_table() {
 
     var table = $('#match_history_table').DataTable({
         order: [[1, 'desc']],
+        destroy: true,
         lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
         pagingType: "simple_numbers",
         dom: domOption,
@@ -708,75 +777,111 @@ function append_match_to_history(match) {
 }
 
 function populate_profile() {
-    let gamemode_data = new Stats();
     let temp_history = [];
-    let damage_list = [];
-    let dmg_rec_list = [];
-    let kd_list = [];
-    let score_list = [];
 
+    gamemode_data = new Stats();
+    $("#match_history_body tr").remove();
     $('#stat_title').text(filter.build_title());
-
+    
     for (var i = 0; i < match_history.length; i++) {
         if (!filter.valid_match(match_history[i]))
             continue;
 
         gamemode_data.add_game(match_history[i]);
         append_match_to_history(match_history[i]);
-        
-        damage_list.push(match_history[i]["damage"]);
-        dmg_rec_list.push(match_history[i]["damage_rec"]);
-        kd_list.push(match_history[i]["kills"] + match_history[i]["assists"]);
-        score_list.push(match_history[i]["score"]);
-
         temp_history.push(match_history[i]);
     }
 
     filter.populate_filters(temp_history);
 
-    damage_list = damage_list.sort(function (a, b) { return a - b });
-    dmg_rec_list = dmg_rec_list.sort(function (a, b) { return a - b });
-    kd_list = kd_list.sort(function (a, b) { return a - b });
-    score_list = score_list.sort(function (a, b) { return a - b });
-
-    $('#total_games_recorded').text(gamemode_data.games);
+    $('#total_games_recorded').text(gamemode_data.games.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#total_time_recorded').text(gamemode_data.time_spent);
     $('#total_win_rate').text(gamemode_data.win_rate);
     $('#total_kag').text(gamemode_data.kda);
     $('#total_mvp_rate').text(gamemode_data.mvp_rate);
 
-    $('#games_recorded').text(gamemode_data.games);
-    $('#win_rate').text(gamemode_data.win_rate);
-    $('#kills').text(gamemode_data.kills);
-    $('#assists').text(gamemode_data.assists);
-    $('#ka_g').text(gamemode_data.kda);
-    $('#medals').text(gamemode_data.medal);
-    $('#mvp').text(gamemode_data.mvp_rate);
-
-    $('#avg_kills').text(gamemode_data.avg_kills);
-    $('#avg_assists').text(gamemode_data.avg_assists);
-    $('#avg_dmg').text(gamemode_data.avg_damage);
-    $('#avg_dmg_rec').text(gamemode_data.avg_damage_rec);
-    $('#avg_score').text(gamemode_data.avg_score);
-
-    if ($('#known_as').innerHTML != "") {
+    if ($('#known_as').innerHTML != "") 
         $('#known_as').removeClass('d-none');
 
     $('#summary_row_1').removeClass('d-none');
     $('#summary_row_2').removeClass('d-none');
 
-    build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
-    build_boxplot('kill_box_plot', ['KD'], [boxplot_distribution(kd_list)]);
-    build_boxplot('score_box_plot', ['Score'], [boxplot_distribution(score_list)]);
+    //build_drilldown('gamemode_overview', 'Game Modes', temp_history);
+    //build_drilldown('weapons_overview', 'Weapons', temp_history);
+    //build_drilldown('movement_overview', 'Movement', temp_history);
 
+    populate_aggregate_data();
     populate_match_history_table();
 }
 
-function build_drilldown(id, title, drilldown_data) {
+function populate_aggregate_data() {
+    let tab = $("ul#breakdown_list a.active").text();
+    console.log(tab);
+    if (tab === "Total") {
+        document.getElementById("kills").innerHTML = gamemode_data.kills_aggregate.total_text;
+        document.getElementById("assists").innerHTML = gamemode_data.assists_aggregate.total_text;
+        document.getElementById("deaths").innerHTML = gamemode_data.deaths_aggregate.total_text;
+        document.getElementById("damage").innerHTML = gamemode_data.damage_aggregate.total_text;
+        document.getElementById("damage_recieved").innerHTML = gamemode_data.damage_rec_aggregate.total_text;
+        document.getElementById("medals").innerHTML = gamemode_data.medals_aggregate.total_text;
+        document.getElementById("score").innerHTML = gamemode_data.score_aggregate.total_text;
+        document.getElementById("time").innerHTML = time_to_readable(gamemode_data.time_aggregate.total);
+    }
+    else if (tab === "Minimum") {
+        document.getElementById("kills").innerHTML = gamemode_data.kills_aggregate.min_text;
+        document.getElementById("assists").innerHTML = gamemode_data.assists_aggregate.min_text;
+        document.getElementById("deaths").innerHTML = gamemode_data.deaths_aggregate.min_text;
+        document.getElementById("damage").innerHTML = gamemode_data.damage_aggregate.min_text;
+        document.getElementById("damage_recieved").innerHTML = gamemode_data.damage_rec_aggregate.min_text;
+        document.getElementById("medals").innerHTML = gamemode_data.medals_aggregate.min_text;
+        document.getElementById("score").innerHTML = gamemode_data.score_aggregate.min_text;
+        document.getElementById("time").innerHTML = '<a href="/match/' + gamemode_data.time_aggregate.minimum_guid + '" class="text-dark link-secondary">' + time_to_readable(gamemode_data.time_aggregate.minimum) + '</a>';
+    }
+    else if (tab === "Maximum") {
+        document.getElementById("kills").innerHTML = gamemode_data.kills_aggregate.max_text;
+        document.getElementById("assists").innerHTML = gamemode_data.assists_aggregate.max_text;
+        document.getElementById("deaths").innerHTML = gamemode_data.deaths_aggregate.max_text;
+        document.getElementById("damage").innerHTML = gamemode_data.damage_aggregate.max_text;
+        document.getElementById("damage_recieved").innerHTML = gamemode_data.damage_rec_aggregate.max_text;
+        document.getElementById("medals").innerHTML = gamemode_data.medals_aggregate.max_text;
+        document.getElementById("score").innerHTML = gamemode_data.score_aggregate.max_text;
+        document.getElementById("time").innerHTML = '<a href="/match/' + gamemode_data.time_aggregate.maximum_guid + '" class="text-dark link-secondary">' + time_to_readable(gamemode_data.time_aggregate.maximum) + '</a>';
+    }
+    else if (tab === "Average") {
+        document.getElementById("kills").innerHTML = gamemode_data.kills_aggregate.avg_text;
+        document.getElementById("assists").innerHTML = gamemode_data.assists_aggregate.avg_text;
+        document.getElementById("deaths").innerHTML = gamemode_data.deaths_aggregate.avg_text;
+        document.getElementById("damage").innerHTML = gamemode_data.damage_aggregate.avg_text;
+        document.getElementById("damage_recieved").innerHTML = gamemode_data.damage_rec_aggregate.avg_text;
+        document.getElementById("medals").innerHTML = gamemode_data.medals_aggregate.avg_text;
+        document.getElementById("score").innerHTML = gamemode_data.score_aggregate.avg_text;
+        document.getElementById("time").innerHTML = time_to_readable((gamemode_data.time_aggregate.total /gamemode_data.time_aggregate.count).toFixed(0));
+    }
+}
 
+function time_to_readable(time) {
+    let total_seconds = time;
+    let days = Math.floor(total_seconds / 86400);
+    total_seconds %= 86400;
+    let hours = Math.floor(total_seconds / 3600);
+    total_seconds %= 3600;
+    let minutes = Math.floor(total_seconds / 60);
+    total_seconds %= 60;
+
+    if (days > 0)
+        return days + 'd ' + hours + 'h';
+    if (hours > 0)
+        return hours + 'h ' + minutes + 'm';
+    if (minutes > 0)
+        return minutes + 'm ' + total_seconds + 's';
+}
+
+function build_drilldown(id, title, drilldown_data) {
     var series_data = populate_series_data(drilldown_data);
     var drilldown_series_data = populate_drilldown_data(drilldown_data);
     var favorite = series_data.reduce((a, b) => a.y > b.y ? a : b);
+
+
 
     var chart = Highcharts.chart(id, {
         chart: {
@@ -899,12 +1004,6 @@ function build_boxplot(id, categories, boxplot_data) {
     });
 }
 
-$('#averages_card').on('shown.bs.collapse', function () {
-    build_boxplot('dmg_box_plot', ['Dmg', 'Dmg Rec'], [boxplot_distribution(damage_list), boxplot_distribution(dmg_rec_list)]);
-    build_boxplot('kill_box_plot', ['KD'], [boxplot_distribution(kd_list)]);
-    build_boxplot('score_box_plot', ['Score'], [boxplot_distribution(score_list)]);
-});
-
 function populate_series_data(drilldown_data) {
     var data = [];
     var total = 0;
@@ -959,36 +1058,4 @@ function populate_drilldown_data(drilldown_data) {
     }
 
     return data;
-}
-
-function boxplot_distribution(data) {
-    var distribution = [];
-    var inter_quartile_range = quartile(data, 0.75) - quartile(data, 0.25);
-    var minimum = quartile(data, 0.25) - 1.5 * inter_quartile_range;
-    var maximum = quartile(data, 0.75) + 1.5 * inter_quartile_range;
-
-    if (minimum < 0)
-        minimum = 0;
-
-    if (maximum > data[data.length - 1])
-        maximum = data[data.length - 1];
-
-    distribution.push(minimum);
-    distribution.push(quartile(data, 0.25));
-    distribution.push(quartile(data, 0.50));
-    distribution.push(quartile(data, 0.75));
-    distribution.push(maximum);
-
-    return distribution;
-}
-
-function quartile(data, q) {
-    var pos = ((data.length) - 1) * q;
-    var base = Math.floor(pos);
-    var rest = pos - base;
-    if ((data[base + 1] !== undefined)) {
-        return data[base] + rest * (data[base + 1] - data[base]);
-    } else {
-        return data[base];
-    }
 }

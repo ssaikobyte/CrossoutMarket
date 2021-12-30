@@ -10,7 +10,7 @@
         <div class="col-lg px-0">
             <div class="row jumbotron mx-0 mb-0">
                 <div class="container">
-                    <h1 class="row display-1 justify-content-center">@Model.Nickname</h1>
+                    <h1 style="font-size:8vw;" class="row display-1 justify-content-center">@Model.Nickname</h1>
                     <p class="row d-none lead justify-content-center" id="known_as">@Model.Nicknames</p>
                 </div>
             </div>
@@ -41,26 +41,64 @@
             </div>
         </div>
     </div>
-    
-    <div class="card m-1">
-        <ul class="nav nav-tabs nav-fill mb-3" id="breakdown_list" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Total</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Minimum</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Maximum</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Average</a>
-            </li>
-        </ul>
-
-
+    <div class="card m-3 mt-6 pb-4">
+        <div class="card-header">
+            <ul class="nav nav-tabs nav-fill card-header-tabs" id="breakdown_list" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Total</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Minimum</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Maximum</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Average</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-row mt-3">
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Kills</p></div>
+                    <div id="kills" class="row display-4 justify-content-center"></div>
+                </div>
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Assists</p></div>
+                    <div id="assists" class="row display-4 justify-content-center"></div>
+                </div>
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Deaths</p></div>
+                    <div id="deaths" class="row display-4 justify-content-center"></div>
+                </div>
+            </div>
+            <div class="d-flex flex-row mt-3">
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Damage</p></div>
+                    <div id="damage" class="row display-4 justify-content-center"></div>
+                </div>
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Damage Recieved</p></div>
+                    <div id="damage_recieved" class="row display-4 justify-content-center"></div>
+                </div>
+            </div>
+            <div class="d-flex flex-row mt-3">
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Medals</p></div>
+                    <div id="medals" class="row display-4 justify-content-center"></div>
+                </div>
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Score</p></div>
+                    <div id="score" class="row display-4 justify-content-center"></div>
+                </div>
+                <div class="col">
+                    <div class="row d-flex justify-content-center"><p>Time</p></div>
+                    <div id="time" class="row display-4 justify-content-center"></div>
+                </div>
+            </div>
+        </div>
     </div>
-
     <div class="row">
         <div class="col-lg text-center">
             <figure class="highcharts-figure">

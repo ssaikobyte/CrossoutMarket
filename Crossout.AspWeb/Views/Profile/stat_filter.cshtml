@@ -1,111 +1,113 @@
 ﻿<div class="row mx-0 my-1 px-0">
+    <div id="stat_title" class="lead text-sm-center">All Matches</div>
+</div>
+<div class="row mx-0 my-1 px-0">
     <div class="col-2 px-1"></div>
     <div class="col">
-        <div id="stat_title" class="lead text-sm-center">All Matches</div>
+        <div id="filter_collapse" class="collapse">
+            <Stack direction="horizontal" gap={3}>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="game_category_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Game Category
+                    </button>
+                    <div id="game_category_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="game_type_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Game Type
+                    </button>
+                    <div id="game_type_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <input id="date_range_picker" type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="region_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Region
+                    </button>
+                    <div id="region_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="host_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Server
+                    </button>
+                    <div id="host_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="version_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Version
+                    </button>
+                    <div id="version_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="map_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Map
+                    </button>
+                    <div id="map_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Group Size
+                    </button>
+                    <div id="group_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Power Score
+                    </button>
+                    <div id="power_score_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="cabin_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cabin
+                    </button>
+                    <div id="cabin_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="weapon_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Weapon
+                    </button>
+                    <div id="weapon_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Movement
+                    </button>
+                    <div id="movement_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hardware
+                    </button>
+                    <div id="hardware_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="decor_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Decor
+                    </button>
+                    <div id="decor_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="structure_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Structure
+                    </button>
+                    <div id="structure_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="game_result_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Game Result
+                    </button>
+                    <div id="game_result_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="survived_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Survived
+                    </button>
+                    <div id="survived_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+            </Stack>
+        </div>
     </div>
     <div class="col-2 px-1">
         <button class="btn btn-secondary btn-sm float-right" id="reset_filters">Reset</button>
         <button class="btn btn-outline-secondary btn-sm float-right mr-1" type="button" data-toggle="collapse" data-target="#filter_collapse" aria-expanded="false" aria-controls="filter_collapse">Filter</button>
     </div>
-</div>
-<div id="filter_collapse" class="collapse">
-    <Stack direction="horizontal" gap={3}>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="game_category_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Game Category
-            </button>
-            <div id="game_category_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="game_type_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Game Type
-            </button>
-            <div id="game_type_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <input id="date_range_picker" type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="region_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Region
-            </button>
-            <div id="region_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="host_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Server
-            </button>
-            <div id="host_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="version_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Version
-            </button>
-            <div id="version_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="map_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Map
-            </button>
-            <div id="map_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Group Size
-            </button>
-            <div id="group_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Power Score
-            </button>
-            <div id="power_score_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="cabin_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Cabin
-            </button>
-            <div id="cabin_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="weapon_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Weapon
-            </button>
-            <div id="weapon_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Movement
-            </button>
-            <div id="movement_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Hardware
-            </button>
-            <div id="hardware_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="decor_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Decor
-            </button>
-            <div id="decor_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="structure_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Structure
-            </button>
-            <div id="structure_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="game_result_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Game Result
-            </button>
-            <div id="game_result_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-        <div class="btn-group btn-group-sm align-self-start my-1">
-            <button id="survived_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Survived
-            </button>
-            <div id="survived_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
-        </div>
-    </Stack>
 </div>
