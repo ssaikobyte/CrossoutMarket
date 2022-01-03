@@ -35,6 +35,10 @@
                             <small class="text-muted">on</small>
                             @Model.Map.map_display_name
                         </h5>
+                        <h5>
+                            <small class="text-muted">Uploaded By:</small>
+                            <a href="/profile/@Model.Uploader">@Model.Nicknames.FirstOrDefault()</a>
+                        </h5>
                     </div>
                 </div>
 

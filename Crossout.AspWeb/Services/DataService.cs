@@ -544,6 +544,14 @@ namespace Crossout.AspWeb.Services
             return matchRecord;
         }
 
+        public int SelectUploader(long id)
+        {
+            NPoco.Connection.Open();
+            int uploader_uid = NPoco.SingleById<UploadPoco>(id).uid;
+            NPoco.Connection.Close();
+            return uploader_uid;
+        }
+
         public List<RoundPoco> SelectRoundRecords(long matchId)
         {
             NPoco.Connection.Open();

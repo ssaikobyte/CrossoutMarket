@@ -28,6 +28,8 @@ namespace Crossout.AspWeb.Controllers
 
             model.Localizations = db.SelectFrontendLocalizations(lang.Id, "matchdetail");
             model.MatchRecord = db.SelectMatchRecord(id);
+            model.Uploader = db.SelectUploader(id);
+            model.Nicknames = db.SelectNicknames(model.Uploader);
             model.Map = db.SelectMap(model.MatchRecord.map_name);
             var matchId = model.MatchRecord.match_id;
             model.RoundRecords = db.SelectRoundRecords(matchId);

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Crossout.AspWeb.Pocos
 {
     [TableName("cod_upload_records")]
+    [PrimaryKey("match_id", AutoIncrement = false)]
     public class UploadPoco
     {
         [Column("uid")]

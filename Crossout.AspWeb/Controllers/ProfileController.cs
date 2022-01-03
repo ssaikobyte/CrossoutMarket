@@ -58,31 +58,6 @@ namespace Crossout.AspWeb.Controllers
 
         SqlConnector sql = new SqlConnector(ConnectionType.MySql);
 
-        //[Route("data/profile/overview_drilldowns/{id:long}")]
-        //public IActionResult OverviewDrilldownData(int id, string l)
-        //{
-        //    sql.Open(WebSettings.Settings.CreateDescription());
-
-        //    DataService db = new DataService(sql);
-
-        //    Language lang = this.VerifyLanguage(sql, l);
-
-        //    OverviewCharts model = new OverviewCharts();
-
-        //    try
-        //    {
-        //        model = db.SelectOverviewBreakdowns(id);
-
-        //        return Json(model);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("ERROR in MatchPlayerDetailDataController: " + ex.Message);
-
-        //        return StatusCode(500);
-        //    }
-        //}
-
         [Route("data/profile/mmr/{id:long}")]
         public IActionResult ReturnPlayerMmr(int id, string l)
         {
