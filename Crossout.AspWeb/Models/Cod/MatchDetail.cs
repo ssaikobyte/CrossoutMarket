@@ -14,7 +14,7 @@ namespace Crossout.AspWeb.Models.Cod
 
         public MatchPoco MatchRecord { get; set; }
 
-        public int Uploader { get; set; }
+        public List<int> Uploaders { get; set; }
 
         public List<string> Nicknames { get; set; }
 

@@ -544,10 +544,10 @@ namespace Crossout.AspWeb.Services
             return matchRecord;
         }
 
-        public int SelectUploader(long id)
+        public List<int> SelectUploaders(long id)
         {
             NPoco.Connection.Open();
-            int uploader_uid = NPoco.SingleById<UploadPoco>(id).uid;
+            List<int> uploader_uid = NPoco.Fetch<int>(@"SELECT uid FROM crossout.cod_upload_records WHERE match_id = @0 ORDER BY upload_time", id);
             NPoco.Connection.Close();
             return uploader_uid;
         }
