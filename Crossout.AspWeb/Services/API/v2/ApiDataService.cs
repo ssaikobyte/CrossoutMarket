@@ -765,7 +765,7 @@ namespace Crossout.AspWeb.Services.API.v2
                             poco_player.nickname = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(player.nickname.Replace("_", " "));
                         }
 
-                        poco_player.group_id = 0;
+                        poco_player.group_id = player.group_id;
                         poco_player.team = player.team;
                         poco_player.build_hash = player.build_hash;
                         poco_player.power_score = player.power_score;

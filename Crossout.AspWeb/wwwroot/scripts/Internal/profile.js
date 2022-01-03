@@ -685,13 +685,9 @@ $.ajax({
         filter.build_dropdowns();
         populate_profile();
 
-        populate_match_history_table();
+        
 
-        $('#gamemode_overview_card').removeClass('d-none');
-        $('#match_history_overview_card').removeClass('d-none');
-        $('#min_max_card').removeClass('d-none');
-        $('#filter_div').removeClass('d-none');
-        $('#preference_row').removeClass('d-none');
+        populate_match_history_table();
     }
 });
 
@@ -770,6 +766,8 @@ function populate_match_history_table() {
             regex: false
         },
     });
+
+    $('#match_history_overview_card').removeClass('d-none');
 }
 
 function append_match_to_history(match) {
@@ -823,6 +821,10 @@ function populate_profile() {
 
     $('#summary_row_1').removeClass('d-none');
     $('#summary_row_2').removeClass('d-none');
+    $('#gamemode_overview_card').removeClass('d-none');
+    $('#min_max_card').removeClass('d-none');
+    $('#filter_div').removeClass('d-none');
+    $('#preference_row').removeClass('d-none');
     $('#profile_loading').addClass('d-none');
 
     build_drilldown('gamemode_overview', 'Game Modes', gamemode_series, gamemode_drilldown);
