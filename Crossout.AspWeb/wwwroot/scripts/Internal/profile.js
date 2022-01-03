@@ -691,6 +691,7 @@ $.ajax({
         $('#match_history_overview_card').removeClass('d-none');
         $('#min_max_card').removeClass('d-none');
         $('#filter_div').removeClass('d-none');
+        $('#preference_row').removeClass('d-none');
     }
 });
 
@@ -722,6 +723,8 @@ $(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
         populate_profile();
     }, 350);
 });
+
+
 
 $(function () {
     $('input[name="daterange"]').daterangepicker({
@@ -796,6 +799,7 @@ function populate_profile() {
     gamemode_data = new Stats();
     $("#match_history_body tr").remove();
     $('#stat_title').text(filter.build_title());
+    $('#profile_loading').removeClass('d-none');
     
     for (var i = 0; i < match_history.length; i++) {
         if (!filter.valid_match(match_history[i]))
@@ -819,13 +823,13 @@ function populate_profile() {
 
     $('#summary_row_1').removeClass('d-none');
     $('#summary_row_2').removeClass('d-none');
+    $('#profile_loading').addClass('d-none');
 
     build_drilldown('gamemode_overview', 'Game Modes', gamemode_series, gamemode_drilldown);
     build_drilldown('weapons_overview', 'Weapons', weapon_series, weapon_drilldown);
     build_drilldown('movement_overview', 'Movement', movement_series, movement_drilldown);
 
     populate_aggregate_data();
-    
 }
 
 function append_to_drilldown(match_list) {
