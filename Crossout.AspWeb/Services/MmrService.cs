@@ -87,7 +87,7 @@ namespace Crossout.AspWeb.Services
 
             List<RankPoco> ranks = new List<RankPoco> { };
             foreach (KeyValuePair<int, int> player in mmr)
-                ranks.Add(new RankPoco { uid = player.Key, match_type = match_type, mmr = player.Value });
+                ranks.Add(new RankPoco { uid = player.Key, group_id = 0, match_type = match_type, mmr = player.Value });
 
             NPoco.InsertBulk<RankPoco>(ranks);
 

@@ -558,13 +558,33 @@ class StatFilter {
                 valid = false;
         }
 
-        if (this.cabins.some(x => x.selected === true) ||
-            this.weapons.some(x => x.selected === true) ||
-            this.movement.some(x => x.selected === true) ||
-            this.hardware.some(x => x.selected === true) ||
-            this.decor.some(x => x.selected === true) ||
-            this.structure.some(x => x.selected === true)) {
-            if (!this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).find(x => x.selected === true && match["parts"].includes(x.name)))
+        if (this.cabins.some(x => x.selected === true)) {
+            if (!this.cabins.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.weapons.some(x => x.selected === true)) {
+            if (!this.weapons.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.movement.some(x => x.selected === true)) {
+            if (!this.movement.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.hardware.some(x => x.selected === true)) {
+            if (!this.hardware.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.decor.some(x => x.selected === true)) {
+            if (!this.decor.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.structure.some(x => x.selected === true)) {
+            if (!this.structure.find(x => x.selected === true && match["parts"].includes(x.name)))
                 valid = false;
         }
 
@@ -699,6 +719,7 @@ $('#breakdown_list').on('click', 'a', function (e) {
 
 $('#reset_filters').click(function (e) {
     $("div[id*=_selection_menu] a.active").removeClass('active');
+    $("#filter_collapse").collapse("hide");
     filter.reset_selected();
     filter.populate_filters(match_history);
     populate_profile();
@@ -720,7 +741,13 @@ $(".dropdown-menu").on('click', 'a.dropdown-item', function (e) {
     }, 350);
 });
 
-
+jQuery('body').bind('click', function (e) {
+    if (jQuery(e.target).closest('#stat_filter_row').length == 0) {
+        if ($("#filter_collapse").hasClass('collapse show')) {
+            $("#filter_collapse").collapse("hide");
+        }
+    }
+});
 
 $(function () {
     $('input[name="daterange"]').daterangepicker({

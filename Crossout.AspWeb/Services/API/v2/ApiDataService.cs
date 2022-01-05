@@ -334,6 +334,11 @@ namespace Crossout.AspWeb.Services.API.v2
             public List<int> uids { get; set; }
         }
 
+        public void CalculateMMR(MatchEntry match, MatchPoco poco_match)
+        {
+            List<PlayerRoundPoco> poco_players = NPocoDB.Fetch<PlayerRoundPoco>("WHERE MATCH_ID = @0", match.match_id);
+        }
+
         public void UploadGroups(MatchEntry match, MatchPoco poco_match)
         {
             try

@@ -24,10 +24,14 @@ namespace Crossout.AspWeb.Pocos
     }
 
     [TableName("cod_mode_rank")]
+    [PrimaryKey("uid, group_id, match_type", AutoIncrement = false)]
     public class RankPoco
     {
         [Column("uid")]
         public int uid { get; set; }
+
+        [Column("group_id")]
+        public int group_id { get; set; }
 
         [Column("match_type")]
         public string match_type { get; set; }
