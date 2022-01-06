@@ -2,7 +2,7 @@
     <div id="stat_title" class="lead text-sm-center"></div>
 </div>
 <div id="stat_filter_row" class="row mx-0 my-1 px-0">
-    <div class="col-2 px-1"></div>
+    @*<div class="col-2 px-1"></div>*@
     <div class="col">
         <div id="filter_collapse" class="collapse">
             <Stack direction="horizontal" gap={3}>
@@ -62,10 +62,22 @@
                     <div id="cabin_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
                 </div>
                 <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="cabin_category_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cabin Category
+                    </button>
+                    <div id="cabin_category_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
                     <button id="weapon_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Weapon
                     </button>
                     <div id="weapon_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="weapon_category_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Weapon Category
+                    </button>
+                    <div id="weapon_category_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
                 </div>
                 <div class="btn-group btn-group-sm align-self-start my-1">
                     <button id="movement_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -74,16 +86,34 @@
                     <div id="movement_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
                 </div>
                 <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="movement_category_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Movement Category
+                    </button>
+                    <div id="movement_category_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
                     <button id="hardware_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Hardware
                     </button>
                     <div id="hardware_part_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
                 </div>
                 <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="hardware_category_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hardware Category
+                    </button>
+                    <div id="hardware_category_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
                     <button id="decor_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Decor
                     </button>
                     <div id="decor_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
+                </div>
+                <div class="btn-group btn-group-sm align-self-start my-1">
+                    <button id="decor_category_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Decor Category
+                    </button>
+                    <div id="decor_category_selection_menu" style="max-height: 800px; overflow-y: auto;" class="dropdown-menu"></div>
                 </div>
                 <div class="btn-group btn-group-sm align-self-start my-1">
                     <button id="structure_dropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

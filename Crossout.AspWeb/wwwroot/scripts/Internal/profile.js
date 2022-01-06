@@ -214,10 +214,15 @@ class StatFilter {
         this.group = [];
         this.power_score = [];
         this.hardware = [];
+        this.hardware_category = [];
         this.cabins = [];
+        this.cabin_category = [];
         this.movement = [];
+        this.movement_category = [];
         this.weapons = [];
+        this.weapon_category = [];
         this.decor = [];
+        this.decor_category = [];
         this.structure = [];
         this.game_result = [];
         this.survived = [];
@@ -246,10 +251,15 @@ class StatFilter {
         this.group.forEach(x => { x.count = 0 });
         this.power_score.forEach(x => { x.count = 0 });
         this.hardware.forEach(x => { x.count = 0 });
+        this.hardware_category.forEach(x => { x.count = 0 });
         this.cabins.forEach(x => { x.count = 0 });
+        this.cabin_category.forEach(x => { x.count = 0 });
         this.movement.forEach(x => { x.count = 0 });
+        this.movement_category.forEach(x => { x.count = 0 });
         this.weapons.forEach(x => { x.count = 0 });
+        this.weapon_category.forEach(x => { x.count = 0 });
         this.decor.forEach(x => { x.count = 0 });
+        this.decor_category.forEach(x => { x.count = 0 });
         this.structure.forEach(x => { x.count = 0 });
         this.game_result.forEach(x => { x.count = 0 });
         this.survived.forEach(x => { x.count = 0 });
@@ -268,10 +278,15 @@ class StatFilter {
         this.group.forEach(x => { x.selected = false });
         this.power_score.forEach(x => { x.selected = false });
         this.hardware.forEach(x => { x.selected = false });
+        this.hardware_category.forEach(x => { x.selected = false });
         this.cabins.forEach(x => { x.selected = false });
+        this.cabin_category.forEach(x => { x.selected = false });
         this.movement.forEach(x => { x.selected = false });
+        this.movement_category.forEach(x => { x.selected = false });
         this.weapons.forEach(x => { x.selected = false });
+        this.weapon_category.forEach(x => { x.selected = false });
         this.decor.forEach(x => { x.selected = false });
+        this.decor_category.forEach(x => { x.selected = false });
         this.structure.forEach(x => { x.selected = false });
         this.game_result.forEach(x => { x.selected = false });
         this.survived.forEach(x => { x.selected = false });
@@ -317,22 +332,27 @@ class StatFilter {
 
                 if (parts[0] === 'Cabins') {
                     this.add_or_increment(this.cabins, parts[1]);
+                    this.add_or_increment(this.cabin_category, parts[3]);
                 }
                 else
                 if (parts[0] === 'Hardware') {
                     this.add_or_increment(this.hardware, parts[1]);
+                    this.add_or_increment(this.hardware_category, parts[3]);
                 }
                 else
                 if (parts[0] === 'Movement') {
                     this.add_or_increment(this.movement, parts[1]);
+                    this.add_or_increment(this.movement_category, parts[3]);
                 }
                 else
                 if (parts[0] === 'Weapons') {
                     this.add_or_increment(this.weapons, parts[1]);
+                    this.add_or_increment(this.weapon_category, parts[3]);
                 }
                 else
                 if (parts[0] === 'Decor' || parts[0] === 'Customization') {
                     this.add_or_increment(this.decor, parts[1]);
+                    this.add_or_increment(this.decor_category, parts[3]);
                 }
                 else
                 if (parts[0] === 'Structure' || parts[0] === 'Frames') {
@@ -364,6 +384,11 @@ class StatFilter {
         this.build_dropdown_list('#structure_selection_menu', this.structure);
         this.build_dropdown_list('#game_result_selection_menu', this.game_result);
         this.build_dropdown_list('#survived_selection_menu', this.survived);
+        this.build_dropdown_list('#cabin_category_selection_menu', this.cabin_category);
+        this.build_dropdown_list('#weapon_category_selection_menu', this.weapon_category);
+        this.build_dropdown_list('#movement_category_selection_menu', this.movement_category);
+        this.build_dropdown_list('#hardware_category_selection_menu', this.hardware_category);
+        this.build_dropdown_list('#decor_category_selection_menu', this.decor_category);
     }
 
     select_filter_item(parent, item, selected) {
@@ -414,6 +439,21 @@ class StatFilter {
         }
         else if (parent === 'survived_selection_menu') {
             this.survived.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'cabin_category_selection_menu') {
+            this.cabin_category.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'weapon_category_selection_menu') {
+            this.weapon_category.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'movement_category_selection_menu') {
+            this.movement_category.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'hardware_category_selection_menu') {
+            this.hardware_category.find(x => x.name === item).selected = selected;
+        }
+        else if (parent === 'decor_category_selection_menu') {
+            this.decor_category.find(x => x.name === item).selected = selected;
         }
     }
 
@@ -487,12 +527,17 @@ class StatFilter {
             this.movement.some(x => x.selected === true) ||
             this.hardware.some(x => x.selected === true) ||
             this.decor.some(x => x.selected === true) ||
+            this.weapon_category.some(x => x.selected === true) ||
+            this.hardware_category.some(x => x.selected === true) ||
+            this.movement_category.some(x => x.selected === true) ||
+            this.cabin_category.some(x => x.selected === true) ||
+            this.decor_category.some(x => x.selected === true) ||
             this.structure.some(x => x.selected === true)) {
 
-            if (this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).filter(x => x.selected === true).length > 1)
-                title = title.concat('Using Builds Equipped With (', this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
+            if (this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.decor_category).concat(this.weapon_category).concat(this.hardware_category).concat(this.movement_category).concat(this.cabin_category).concat(this.structure).filter(x => x.selected === true).length > 1)
+                title = title.concat('Using Builds Equipped With (', this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.decor_category).concat(this.weapon_category).concat(this.hardware_category).concat(this.movement_category).concat(this.cabin_category).concat(this.structure).filter(x => x.selected === true).map(x => x.name).join(", "), ') ');
             else
-                title = title.concat('Using ', this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.structure).filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
+                title = title.concat('Using ', this.cabins.concat(this.weapons).concat(this.movement).concat(this.hardware).concat(this.decor).concat(this.decor_category).concat(this.weapon_category).concat(this.hardware_category).concat(this.movement_category).concat(this.cabin_category).concat(this.structure).filter(x => x.selected === true).map(x => x.name).join(", "), ' ');
         }
 
         if (this.game_result.some(x => x.selected === true)) {
@@ -585,6 +630,31 @@ class StatFilter {
 
         if (this.structure.some(x => x.selected === true)) {
             if (!this.structure.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.weapon_category.some(x => x.selected === true)) {
+            if (!this.weapon_category.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.movement_category.some(x => x.selected === true)) {
+            if (!this.movement_category.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.hardware_category.some(x => x.selected === true)) {
+            if (!this.hardware_category.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.cabin_category.some(x => x.selected === true)) {
+            if (!this.cabin_category.find(x => x.selected === true && match["parts"].includes(x.name)))
+                valid = false;
+        }
+
+        if (this.decor_category.some(x => x.selected === true)) {
+            if (!this.decor_category.find(x => x.selected === true && match["parts"].includes(x.name)))
                 valid = false;
         }
 
@@ -836,6 +906,7 @@ function populate_profile() {
 
     append_to_drilldown(temp_history);
     filter.populate_filters(temp_history);
+    populate_aggregate_data();
 
     $('#total_games_recorded').text(gamemode_data.games.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#total_time_recorded').text(gamemode_data.time_spent);
@@ -857,8 +928,6 @@ function populate_profile() {
     build_drilldown('gamemode_overview', 'Game Modes', gamemode_series, gamemode_drilldown);
     build_drilldown('weapons_overview', 'Weapons', weapon_series, weapon_drilldown);
     build_drilldown('movement_overview', 'Movement', movement_series, movement_drilldown);
-
-    populate_aggregate_data();
 }
 
 function append_to_drilldown(match_list) {
