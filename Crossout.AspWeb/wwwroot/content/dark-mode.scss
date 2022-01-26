@@ -256,3 +256,13 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
 .dark-mode .table-info, .table-info > th, .table-info > td {
     background-color: $table-info !important;
 }
+
+.dark-mode a.text-dark,
+.dark-mode a.text-dark:hover,
+.dark-mode a.text-dark:focus {
+    color: $dark-font-color-main !important;
+}
+
+.dark-mode .jumbotron {
+    background-color: #212529;
+}
