@@ -869,11 +869,12 @@ function populate_match_history_table() {
 
 function append_match_to_history(match) {
     var start = getAdjustedTimestamp(match["match_start"]);
+    var unixTimestamp = moment(match["match_start"]).format("X");
     var row = $("<tr>");
     var cols = "";
 
     cols += '<td>' + match["match_type"] + '</td>';
-    cols += '<td><a href="/match/' + match["match_id"] + '">' + start + '</a></td>';
+    cols += '<td data-order="' + unixTimestamp + '"><a href="/match/' + match["match_id"] + '">' + start + '</a></td>';
     cols += '<td>' + match["map"] + '</td>';
     cols += '<td>' + match["power_score"] + '</td>';
     cols += '<td>' + match["score"] + '</td>';
