@@ -294,5 +294,25 @@
       "Added new items",
       "Added new recipes"
     ]
+  },
+  {
+    "Id": 29,
+    "Name": "Update",
+    "Timestamp": "2022-04-14T11:15:00Z",
+    "Notes": [
+      "Updated community links section",
+      "Salvager now filters out 0 price items"
+    ]
+  },
+  {
+    "Id": 30,
+    "Name": "Knight Mayhem Update",
+    "Timestamp": "2022-04-22T10:00:00Z",
+    "Notes": [
+      "Added 20 new items",
+      "Added 4 new packs",
+      "Added Calendar for Brawls and Clan Wars",
+      "Packs now get sorted based on buy price instead of sell price"
+    ]
   }
 ]
