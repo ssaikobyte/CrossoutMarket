@@ -1,0 +1,198 @@
+BEGIN:VCALENDAR
+METHOD:PUBLISH
+PRODID:-//Crossout DB//NONSGML Crossout DB scheduler//EN
+VERSION:2.0
+
+BEGIN:VEVENT
+UID:689646d9@crossoutdb.com
+SUMMARY:Big Black Scorpions
+DESCRIPTION:This is a battle between 8 identical cars with special versions of PA Scorpion and unique vertical thrusters! Just one hit is enough to kill the enemy. The player, who kills the most enemies in 4 minutes, wins.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180101T000000Z
+DTEND:20180101T080000Z
+RRULE:FREQ=WEEKLY;BYDAY=MO
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:3383ce8b@crossoutdb.com
+SUMMARY:Cannon Fodder
+DESCRIPTION:A brawl for those who like their guns loud and painful. Put the biggest cannon you've got on your armoured car and join the fight! Only cannons are available.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180101T080000Z
+DTEND:20180101T160000Z
+RRULE:FREQ=WEEKLY;BYDAY=MO
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:684f4d49@crossoutdb.com
+SUMMARY:Big Black Scorpions
+DESCRIPTION:This is a battle between 8 identical cars with special versions of PA Scorpion and unique vertical thrusters! Just one hit is enough to kill the enemy. The player, who kills the most enemies in 4 minutes, wins.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180101T160000Z
+DTEND:20180101T240000Z
+RRULE:FREQ=WEEKLY;BYDAY=MO
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:3572ecb2@crossoutdb.com
+SUMMARY:Head-On!
+DESCRIPTION:Adorn your armoured car with spikes, chainsaws and drills! In this brawl, you will face the most desperate Survivors, who are used to close combat. Only melee weapons are available.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180102T000000Z
+DTEND:20180102T080000Z
+RRULE:FREQ=WEEKLY;BYDAY=TU
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:4b29a1a4@crossoutdb.com
+SUMMARY:Race(Hover)
+DESCRIPTION:There are 6 survivors in the circuit race with tricky turns and obstacles. Your objective is to pass all the checkpoints first, because there can be only one winner in a race. All weapons will be deactivated. Only vehicles on hovers are available in this mode.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180102T080000Z
+DTEND:20180102T160000Z
+RRULE:FREQ=WEEKLY;BYDAY=TU
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:1e6cf16a@crossoutdb.com
+SUMMARY:Cannon Fodder
+DESCRIPTION:A brawl for those who like their guns loud and painful. Put the biggest cannon you've got on your armoured car and join the fight! Only cannons are available.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180102T160000Z
+DTEND:20180102T240000Z
+RRULE:FREQ=WEEKLY;BYDAY=TU
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:d4473dfe@crossoutdb.com
+SUMMARY:Race(Wheels)
+DESCRIPTION:There are 8 survivors in this circuit race. Your objective is to pass all the checkpoints first, because there can be only one winner in a race. All weapons will be deactivated. Only vehicles on wheels are available in this mode.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180103T000000Z
+DTEND:20180103T080000Z
+RRULE:FREQ=WEEKLY;BYDAY=WE
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:e289c13b@crossoutdb.com
+SUMMARY:Head-On!
+DESCRIPTION:Adorn your armoured car with spikes, chainsaws and drills! In this brawl, you will face the most desperate Survivors, who are used to close combat. Only melee weapons are available.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180103T080000Z
+DTEND:20180103T160000Z
+RRULE:FREQ=WEEKLY;BYDAY=WE
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:e6552df3@crossoutdb.com
+SUMMARY:Race(Hover)
+DESCRIPTION:There are 6 survivors in the circuit race with tricky turns and obstacles. Your objective is to pass all the checkpoints first, because there can be only one winner in a race. All weapons will be deactivated. Only vehicles on hovers are available in this mode.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180103T160000Z
+DTEND:20180103T240000Z
+RRULE:FREQ=WEEKLY;BYDAY=WE
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:e58fcfa2@crossoutdb.com
+SUMMARY:Cannon Fodder
+DESCRIPTION:A brawl for those who like their guns loud and painful. Put the biggest cannon you've got on your armoured car and join the fight! Only cannons are available.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180104T000000Z
+DTEND:20180104T080000Z
+RRULE:FREQ=WEEKLY;BYDAY=TH
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:a7dd4396@crossoutdb.com
+SUMMARY:Race(Wheels)
+DESCRIPTION:There are 8 survivors in this circuit race. Your objective is to pass all the checkpoints first, because there can be only one winner in a race. All weapons will be deactivated. Only vehicles on wheels are available in this mode.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180104T080000Z
+DTEND:20180104T160000Z
+RRULE:FREQ=WEEKLY;BYDAY=TH
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:e60f0115@crossoutdb.com
+SUMMARY:Head-On!
+DESCRIPTION:Adorn your armoured car with spikes, chainsaws and drills! In this brawl, you will face the most desperate Survivors, who are used to close combat. Only melee weapons are available.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180104T160000Z
+DTEND:20180104T240000Z
+RRULE:FREQ=WEEKLY;BYDAY=TH
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:3f32a698@crossoutdb.com
+SUMMARY:Race(Hover)
+DESCRIPTION:There are 6 survivors in the circuit race with tricky turns and obstacles. Your objective is to pass all the checkpoints first, because there can be only one winner in a race. All weapons will be deactivated. Only vehicles on hovers are available in this mode.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180105T000000Z
+DTEND:20180105T080000Z
+RRULE:FREQ=WEEKLY;BYDAY=FR
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:fbc7c5a9@crossoutdb.com
+SUMMARY:Big Black Scorpions
+DESCRIPTION:This is a battle between 8 identical cars with special versions of PA Scorpion and unique vertical thrusters! Just one hit is enough to kill the enemy. The player, who kills the most enemies in 4 minutes, wins.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180105T080000Z
+DTEND:20180105T160000Z
+RRULE:FREQ=WEEKLY;BYDAY=FR
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:cd4bdfb8@crossoutdb.com
+SUMMARY:Race(Wheels)
+DESCRIPTION:There are 8 survivors in this circuit race. Your objective is to pass all the checkpoints first, because there can be only one winner in a race. All weapons will be deactivated. Only vehicles on wheels are available in this mode.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180105T160000Z
+DTEND:20180105T240000Z
+RRULE:FREQ=WEEKLY;BYDAY=FR
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:187f3b37@crossoutdb.com
+SUMMARY:Battle Royale
+DESCRIPTION:The Rat King gathers the craziest dare-devils to fight in a Battle Royale. Everybody starts in the same conditions: driving mostly harmless car that may be laterequipped with the weapons that are scattered about the map. And the storm is coming. There may only be one winner!
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180106T000000Z
+DTEND:20180107T240000Z
+RRULE:FREQ=WEEKLY;BYDAY=SA
+CATEGORIES:Crossout Brawls schedule
+END:VEVENT
+
+END:VCALENDAR

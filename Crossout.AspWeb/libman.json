@@ -24,6 +24,21 @@
         "src/js.cookie.js",
         "src/js.cookie.min.js"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "fullcalendar@5.11.0",
+      "destination": "wwwroot/lib/fullcalendar/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "@fullcalendar/icalendar@5.11.0",
+      "destination": "wwwroot/lib/fullcalendar/icalendar/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "ical.js@1.5.0",
+      "destination": "wwwroot/lib/ical.js/"
     }
   ]
 }
