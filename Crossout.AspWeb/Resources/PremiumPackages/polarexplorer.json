@@ -1,0 +1,9 @@
+﻿{
+  "Id": 53,
+  "Key": "polarexplorer",
+  "SteamAppID": 1946901,
+  "Name": "Polar Explorer",
+  "Description": "",
+  "MarketPartIDs": [ 1431, 1435, 117, 1376, 63, 63, 63, 63, 134, 134, 1447, 218, 399, 174, 174 ],
+  "RawCoins": 1500
+}

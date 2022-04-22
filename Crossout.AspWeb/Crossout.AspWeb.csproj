@@ -51,6 +51,7 @@
     <Content Remove="Resources\PremiumPackages\assaultforcebravo6lite.json" />
     <Content Remove="Resources\PremiumPackages\assaultforcecharlie7.json" />
     <Content Remove="Resources\PremiumPackages\assaultforcetango1.json" />
+    <Content Remove="Resources\PremiumPackages\barghest.json" />
     <Content Remove="Resources\PremiumPackages\bornfree.json" />
     <Content Remove="Resources\PremiumPackages\borntofly.json" />
     <Content Remove="Resources\PremiumPackages\dayofthedead.json" />
@@ -62,6 +63,9 @@
     <Content Remove="Resources\PremiumPackages\notowar.json" />
     <Content Remove="Resources\PremiumPackages\phantom.json" />
     <Content Remove="Resources\PremiumPackages\phantomdeluxe.json" />
+    <Content Remove="Resources\PremiumPackages\polarexplorer.json" />
+    <Content Remove="Resources\PremiumPackages\polarexplorerdeluxe.json" />
+    <Content Remove="Resources\PremiumPackages\polarexplorerlite.json" />
     <Content Remove="Resources\PremiumPackages\polymorph.json" />
     <Content Remove="Resources\PremiumPackages\thecreation.json" />
     <Content Remove="Resources\PremiumPackages\triadthekeeper.json" />
@@ -457,6 +461,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Events\KnightRiders2019\teutonicstripes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\barghest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\polarexplorerdeluxe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\polarexplorerlite.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\polarexplorer.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\PremiumPackages\triadtherascaldeluxe.json">
