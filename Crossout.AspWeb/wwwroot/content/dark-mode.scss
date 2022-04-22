@@ -78,8 +78,8 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
 }
 
 .dark-mode .page-link {
-    background-color: $gray-800 ;
-    border: 1px solid $dark-border-color ;
+    background-color: $gray-800;
+    border: 1px solid $dark-border-color;
 }
 
 .dark-mode .page-link:hover {
@@ -89,14 +89,14 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
 }
 
 .dark-mode .page-item.active .page-link {
-    color: $white ;
-    background-color: $gray-600 ;
-    border-color: $gray-600 ;
+    color: $white;
+    background-color: $gray-600;
+    border-color: $gray-600;
 }
 
 .dark-mode .page-item.disabled .page-link {
-    background-color: $gray-900 ;
-    border-color: $dark-border-color ;
+    background-color: $gray-900;
+    border-color: $dark-border-color;
 }
 
 .dark-mode .dropdown-menu {
@@ -219,4 +219,23 @@ $table-info-hover: rgba(23, 162, 184, 0.15);
 
 .dark-mode .faction-icon {
     filter: invert(1);
+}
+
+.dark-mode .fc .fc-timegrid-slot-label-cushion,
+.dark-mode .fc .fc-timegrid-axis-cushion,
+.dark-mode .fc .fc-event-title,
+.dark-mode .fc .fc-event-time,
+.dark-mode .fc .fc-col-header-cell-cushion {
+    color: $dark-font-color-main;
+}
+
+.dark-mode {
+    --fc-page-bg-color: $dark-bg-color;
+    --fc-neutral-text-color: $dark-font-color-main;
+    --fc-border-color: $dark-border-color;
+    --fc-button-bg-color: transparent;
+    --fc-button-border-color: #343a40;
+    --fc-button-active-bg-color: #6c757d;
+    --fc-button-active-border-color: #6c757d;
+    --fc-today-bg-color: rgba(255, 220, 40, 0.20);
 }

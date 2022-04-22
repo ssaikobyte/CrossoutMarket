@@ -142,3 +142,20 @@
 
 .dark-mode .faction-icon {
   filter: invert(1); }
+
+.dark-mode .fc .fc-timegrid-slot-label-cushion,
+.dark-mode .fc .fc-timegrid-axis-cushion,
+.dark-mode .fc .fc-event-title,
+.dark-mode .fc .fc-event-time,
+.dark-mode .fc .fc-col-header-cell-cushion {
+  color: #f8f9fa; }
+
+.dark-mode {
+  --fc-page-bg-color: #1e1e1e;
+  --fc-neutral-text-color: #f8f9fa;
+  --fc-border-color: #343a40;
+  --fc-button-bg-color: transparent;
+  --fc-button-border-color: #343a40;
+  --fc-button-active-bg-color: #6c757d;
+  --fc-button-active-border-color: #6c757d;
+  --fc-today-bg-color: rgba(255, 220, 40, 0.2); }

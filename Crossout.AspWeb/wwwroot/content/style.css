@@ -568,3 +568,15 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
 .stat-value-col {
     width: 70%;
 }
+
+:root {
+    --fc-button-text-color: #6c757d;
+    --fc-button-bg-color: transparent;
+    --fc-button-border-color: #6c757d;
+    --fc-button-active-bg-color: #6c757d;
+    --fc-button-active-border-color: #6c757d;
+}
+
+.fc-button-active {
+    color: white !important;
+}

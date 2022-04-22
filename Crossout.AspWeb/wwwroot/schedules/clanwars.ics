@@ -1,0 +1,126 @@
+BEGIN:VCALENDAR
+METHOD:PUBLISH
+PRODID:-//Crossout DB//NONSGML Crossout DB scheduler//EN
+VERSION:2.0
+
+BEGIN:VEVENT
+UID:549922aa@crossoutdb.com
+SUMMARY:Standard CW
+DESCRIPTION:Assemble a team with 3 other clanmates and defeat the enemy! The uranium rewarded for victory depends on the clan's league.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180101T110000Z
+DTEND:20180101T150000Z
+RRULE:FREQ=WEEKLY;BYDAY=MO
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:dc6904ec@crossoutdb.com
+SUMMARY:Standard CW
+DESCRIPTION:Assemble a team with 3 other clanmates and defeat the enemy! The uranium rewarded for victory depends on the clan's league.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180102T170000Z
+DTEND:20180102T210000Z
+RRULE:FREQ=WEEKLY;BYDAY=TU
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:fb72d131@crossoutdb.com
+SUMMARY:Leviathan CW
+DESCRIPTION:Leviathan CW fight
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180103T000000Z
+DTEND:20180103T040000Z
+RRULE:FREQ=WEEKLY;BYDAY=WE
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:bf47a718@crossoutdb.com
+SUMMARY:Leviathan CW
+DESCRIPTION:Leviathan CW fight
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180104T110000Z
+DTEND:20180104T150000Z
+RRULE:FREQ=WEEKLY;BYDAY=TH
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:3f3efa2a@crossoutdb.com
+SUMMARY:Leviathan CW
+DESCRIPTION:Leviathan CW fight
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180104T170000Z
+DTEND:20180104T210000Z
+RRULE:FREQ=WEEKLY;BYDAY=TH
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:d3566d95@crossoutdb.com
+SUMMARY:Standard CW
+DESCRIPTION:Assemble a team with 3 other clanmates and defeat the enemy! The uranium rewarded for victory depends on the clan's league.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180105T000000Z
+DTEND:20180105T040000Z
+RRULE:FREQ=WEEKLY;BYDAY=FR
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:5ef8aa36@crossoutdb.com
+SUMMARY:Standard CW
+DESCRIPTION:Assemble a team with 3 other clanmates and defeat the enemy! The uranium rewarded for victory depends on the clan's league.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180106T110000Z
+DTEND:20180106T150000Z
+RRULE:FREQ=WEEKLY;BYDAY=SA
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:1860a9c6@crossoutdb.com
+SUMMARY:Standard CW
+DESCRIPTION:Assemble a team with 3 other clanmates and defeat the enemy! The uranium rewarded for victory depends on the clan's league.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180106T170000Z
+DTEND:20180106T210000Z
+RRULE:FREQ=WEEKLY;BYDAY=SA
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:150b2ade@crossoutdb.com
+SUMMARY:Standard CW
+DESCRIPTION:Assemble a team with 3 other clanmates and defeat the enemy! The uranium rewarded for victory depends on the clan's league.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180107T000000Z
+DTEND:20180107T040000Z
+RRULE:FREQ=WEEKLY;BYDAY=SU
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+BEGIN:VEVENT
+UID:373c1070@crossoutdb.com
+SUMMARY:Standard CW
+DESCRIPTION:Assemble a team with 3 other clanmates and defeat the enemy! The uranium rewarded for victory depends on the clan's league.
+CLASS:PUBLIC
+DTSTAMP:20220305T161944Z
+DTSTART:20180107T110000Z
+DTEND:20180107T150000Z
+RRULE:FREQ=WEEKLY;BYDAY=SU
+CATEGORIES:Crossout Clan Wars schedule
+END:VEVENT
+
+END:VCALENDAR

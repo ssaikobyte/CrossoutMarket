@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@model Crossout.AspWeb.Models.General.CalendarModel
+
+
+<link href="/lib/fullcalendar/main.min.css" rel="stylesheet" />
+<script src="/lib/ical.js/ical.min.js"></script>
+<script src="/lib/fullcalendar/main.min.js"></script>
+<script src="/lib/fullcalendar/icalendar/main.global.min.js"></script>
+
+<partial name="header" model="@Model" />
+
+<div class="half-hd-container px-3">
+
+    @if (WebSettings.Settings.EnableAds)
+    {
+        <partial name="leaderboardad" />
+    }
+
+    <div class="my-2" id='calendar'></div>
+</div>
+
+<script>
+    var lang = Cookies.get("language");
+    if (lang === undefined || !lang.match("en|ru"))
+        lang = "en";
+
+    var calendarEl = document.getElementById("calendar");
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: lang,
+        height: "auto",
+        initialView: "timeGridDay",
+        headerToolbar: {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,timeGridDay",
+        },
+        eventSources: [{
+            url: "/schedules/brawls.ics",
+            format: "ics"
+        },
+        {
+            url: "/schedules/clanwars.ics",
+            format: "ics",
+            color: "#D46722"
+        }]
+    });
+
+    calendar.render();
+</script>
