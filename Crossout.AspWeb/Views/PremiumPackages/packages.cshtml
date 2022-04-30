@@ -44,7 +44,7 @@
     <div class="row" id="packageWrapper">
         @foreach (var package in Model.Packages)
         {
-            <div class="col-md-6 col-sm-12 pack-container @(package.AppPrices.OlderThan(180) ? "discontinued" : "available")" data-packagename="@(package.Name)" data-packagevalue="@(package.AppPrices.Prices[0].FormatBuyPriceDividedByCurrency)" data-packagecoins="@(package.RawCoins)" data-packagetotal="@(package.FormatTotalBuySum)" data-packagesum="@(package.FormatBuySum)">
+            <div class="col-md-6 col-sm-12 pack-container @(package.AppPrices.OlderThan(1440) ? "discontinued" : "available")" data-packagename="@(package.Name)" data-packagevalue="@(package.AppPrices.Prices[0].FormatBuyPriceDividedByCurrency)" data-packagecoins="@(package.RawCoins)" data-packagetotal="@(package.FormatTotalBuySum)" data-packagesum="@(package.FormatBuySum)">
                 <div class="card my-1">
                     <div class="m-1 d-flex justify-content-between align-items-center">
                         <div class="px-3">
