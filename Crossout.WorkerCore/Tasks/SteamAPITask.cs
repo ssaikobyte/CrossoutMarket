@@ -17,7 +17,6 @@ namespace Crossout.WorkerCore.Tasks
         public SteamAPITask(string key) : base(key) { }
 
         private static List<string> currencysToGet = new List<string> { "us", "de", "uk", "ru" };
-        private static HttpClient client = new HttpClient();
         private static List<int> appIDsToGet = new List<int>();
         private static Dictionary<int, Dictionary<string, PriceOverview>> appPricesCollection = new Dictionary<int, Dictionary<string, PriceOverview>>();
         private static bool isRunning = false;
@@ -88,6 +87,9 @@ namespace Crossout.WorkerCore.Tasks
 
         private async Task<AppPrices> GetAppDetailsAsync(List<int> ids, string currency)
         {
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.AllowAutoRedirect = true;
+            HttpClient client = new HttpClient(handler);
             AppPrices appDetails = new AppPrices();
             var idStringList = string.Join(',', ids);
             try

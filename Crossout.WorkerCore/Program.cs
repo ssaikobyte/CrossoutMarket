@@ -14,6 +14,7 @@ namespace Crossout.WorkerCore
     {
         static void Main(string[] args)
         {
+            Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] WorkerCore starting...");
             Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] Collecting tasks...");
             TaskCollector.CollectTasks();
             TaskCollector.GenerateDefaultSettings();
@@ -31,7 +32,7 @@ namespace Crossout.WorkerCore
             SqlConnector sql = new SqlConnector(ConnectionType.MySql);
             sql.Open(WorkerSettings.Settings.CreateDescription());
 
-            Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] Worker started!");
+            Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] WorkerCore started!");
 
             bool running = true;
             while (running)
