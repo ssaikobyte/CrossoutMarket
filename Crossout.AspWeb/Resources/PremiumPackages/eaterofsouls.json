@@ -1,0 +1,26 @@
+{
+  "Id": 57,
+  "Key": "eaterofsouls",
+  "SteamAppID": 1968801,
+  "Name": "Eater of souls",
+  "Description": "",
+  "MarketPartIDs": [
+    1462,
+    1307,
+    1453,
+    1454,
+    1454,
+    1454,
+    1454,
+    80,
+    142,
+    100,
+    129,
+    129,
+    129,
+    218,
+    396,
+    396
+  ],
+  "RawCoins": 1500
+}
