@@ -1,0 +1,25 @@
+﻿{
+  "Id": 63,
+  "Key": "catalina",
+  "SteamAppID": 2126140,
+  "Name": "Catalina",
+  "Description": "",
+  "MarketPartIDs": [
+    1616,
+    1608,
+    30,
+    30,
+    86,
+    1611,
+    1318,
+    1318,
+    1319,
+    1319,
+    80,
+    52,
+    134,
+    134,
+    218
+  ],
+  "RawCoins": 1500
+}

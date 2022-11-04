@@ -54,6 +54,9 @@
     <Content Remove="Resources\PremiumPackages\barghest.json" />
     <Content Remove="Resources\PremiumPackages\bornfree.json" />
     <Content Remove="Resources\PremiumPackages\borntofly.json" />
+    <Content Remove="Resources\PremiumPackages\catalina.json" />
+    <Content Remove="Resources\PremiumPackages\catalinadeluxe.json" />
+    <Content Remove="Resources\PremiumPackages\catalinalite.json" />
     <Content Remove="Resources\PremiumPackages\dayofthedead.json" />
     <Content Remove="Resources\PremiumPackages\explosivesanta.json" />
     <Content Remove="Resources\PremiumPackages\freshblooddeluxe.json" />
@@ -461,6 +464,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Events\KnightRiders2019\teutonicstripes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\catalina.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\catalinalite.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\catalinadeluxe.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\PremiumPackages\barghest.json">

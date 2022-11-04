@@ -1,0 +1,23 @@
+﻿{
+  "Id": 62,
+  "Key": "catalinalite",
+  "SteamAppID": 2126141,
+  "Name": "Catalina (Lite)",
+  "Description": "",
+  "MarketPartIDs": [
+    59,
+    59,
+    104,
+    104,
+    134,
+    134,
+    1615,
+    1608,
+    1611,
+    1051,
+    1051,
+    108,
+    218
+  ],
+  "RawCoins": 0
+}
