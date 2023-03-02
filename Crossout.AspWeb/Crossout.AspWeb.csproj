@@ -70,6 +70,7 @@
     <Content Remove="Resources\PremiumPackages\polarexplorerdeluxe.json" />
     <Content Remove="Resources\PremiumPackages\polarexplorerlite.json" />
     <Content Remove="Resources\PremiumPackages\polymorph.json" />
+    <Content Remove="Resources\PremiumPackages\steelshield.json" />
     <Content Remove="Resources\PremiumPackages\thecreation.json" />
     <Content Remove="Resources\PremiumPackages\triadthekeeper.json" />
     <Content Remove="Resources\PremiumPackages\triadthekeeperdeluxe.json" />
@@ -464,6 +465,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Events\KnightRiders2019\teutonicstripes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PremiumPackages\steelshield.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\PremiumPackages\catalina.json">
