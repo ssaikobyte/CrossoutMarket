@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using NLog;
 using Zicore.Settings.Json;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web
 {
@@ -39,7 +39,7 @@ namespace Crossout.Web
         public string FileStringsEnglish { get; set; } = @"Resources\Data\0.7.0\strings\english\string.txt";
 
         public string DirectoryPremiumPackages { get; set; } = @"Resources\PremiumPackages";
-        public string DirectoryKnightRiders { get; set; } = @"Resources\KnightRiders";
+        public string DirectoryKnightRiders { get; set; } = @"Resources\Events\KnightRiders";
 
         public static string Title => "Crossout DB - Crossout Market and Crafting Calculator";
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Worker.Tasks
 {

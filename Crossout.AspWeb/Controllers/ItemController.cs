@@ -8,7 +8,7 @@ using Crossout.Model.Recipes;
 using Crossout.AspWeb;
 using Crossout.AspWeb.Services;
 using Microsoft.AspNetCore.Mvc;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.AspWeb.Models.Language;
 
 namespace Crossout.AspWeb.Controllers

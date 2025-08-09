@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.AspWeb.Helper
 {

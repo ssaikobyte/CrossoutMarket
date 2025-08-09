@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Crossout.Worker</RootNamespace>
     <AssemblyName>Crossout.Worker</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -36,11 +36,11 @@
     <StartupObject>Crossout.Worker.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
+    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.5.4.0\lib\net46\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -82,9 +82,9 @@
       <Project>{831d83a0-7348-4d8c-9857-7b336f7d91ea}</Project>
       <Name>Zicore.Settings.Json</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ZicoreConnector\ZicoreConnector.csproj">
+    <ProjectReference Include="..\Zicore.Connector\Zicore.Connector.csproj">
       <Project>{c0b5a170-e453-4f2c-8532-e0bef831e586}</Project>
-      <Name>ZicoreConnector</Name>
+      <Name>Zicore.Connector</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web.Auth
 {

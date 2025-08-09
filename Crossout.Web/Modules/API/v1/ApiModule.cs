@@ -12,7 +12,7 @@ using Crossout.Web.Services.API.v1;
 using Nancy;
 using Nancy.ModelBinding;
 using Newtonsoft.Json;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web.Modules.API.v1
 {

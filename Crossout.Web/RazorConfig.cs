@@ -12,7 +12,7 @@ namespace Crossout.Web
         public IEnumerable<string> GetAssemblyNames()
         {
             yield return "Zicore.Settings.Json";
-            yield return "ZicoreConnector";
+            yield return "Zicore.Connector";
             yield return "Crossout.Model";
             yield return "Crossout.Data";
         }
@@ -20,7 +20,7 @@ namespace Crossout.Web
         public IEnumerable<string> GetDefaultNamespaces()
         {
             yield return "Zicore.Settings.Json";
-            yield return "ZicoreConnector";
+            yield return "Zicore.Connector";
             yield return "Crossout.Model";
             yield return "Crossout.Data";
         }

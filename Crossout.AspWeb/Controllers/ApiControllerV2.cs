@@ -10,7 +10,7 @@ using Crossout.AspWeb.Models.Filter;
 using Crossout.AspWeb.Services;
 using Crossout.AspWeb.Services.API.v2;
 using Microsoft.AspNetCore.Mvc;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.Web.Modules.API.v2;
 using Crossout.AspWeb.Helper;
 using Crossout.AspWeb.Models.Language;

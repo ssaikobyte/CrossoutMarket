@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using NLog;
 using Zicore.Settings.Json;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Worker
 {

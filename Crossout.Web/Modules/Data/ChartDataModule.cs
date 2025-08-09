@@ -5,7 +5,7 @@ using Crossout.Web.Cache;
 using Crossout.Web.Models;
 using Crossout.Web.Models.Charts;
 using Nancy;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web.Modules.Data
 {

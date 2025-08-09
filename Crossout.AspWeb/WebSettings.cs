@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using NLog;
 using Zicore.Settings.Json;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.AspWeb
 {
@@ -39,7 +39,7 @@ namespace Crossout.AspWeb
         public string FileStringsEnglish { get; set; } = @"Resources\Data\0.7.0\strings\english\string.txt";
 
         public string DirectoryPremiumPackages { get; set; } = @"Resources\PremiumPackages";
-        public string DirectoryKnightRiders { get; set; } = @"Resources\KnightRiders";
+        public string DirectoryKnightRiders { get; set; } = @"Resources\Events\KnightRiders";
 
         public string FileContributors { get; set; } = @"Resources\Info\contributors.json";
         public string FileUpdateNotes { get; set; } = @"Resources\Info\updates.json";

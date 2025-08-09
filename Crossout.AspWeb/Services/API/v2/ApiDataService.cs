@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Crossout.Model;
 using Crossout.AspWeb.Models.API.v2;
 using Crossout.AspWeb.Models.Filter;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.Data.PremiumPackages;
 using Crossout.AspWeb.Pocos;
 using NPoco;

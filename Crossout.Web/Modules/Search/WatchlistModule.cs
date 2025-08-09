@@ -7,7 +7,7 @@ using Crossout.Model.Items;
 using Crossout.Web.Models.General;
 using Crossout.Web.Services;
 using Nancy;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web.Modules.Search
 {

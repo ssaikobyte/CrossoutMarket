@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Crossout.AspWeb.Helper;
 using Crossout.AspWeb.Models.Stats;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.Model.Items;
 using Crossout.AspWeb.Models.Language;
 

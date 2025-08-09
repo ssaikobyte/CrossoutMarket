@@ -12,7 +12,7 @@ using Crossout.Web.Models.General;
 using Crossout.Web.Models.Items;
 using Crossout.Web.Models.Recipes;
 using Crossout.Web.Modules.Search;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.Data.PremiumPackages;
 using Crossout.Web.Models.Changes;
 

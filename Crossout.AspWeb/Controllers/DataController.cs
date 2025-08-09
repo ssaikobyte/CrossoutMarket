@@ -6,7 +6,7 @@ using Crossout.Web.Cache;
 using Crossout.AspWeb.Models;
 using Crossout.AspWeb.Models.Charts;
 using Microsoft.AspNetCore.Mvc;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Newtonsoft.Json;
 using Crossout.Model.Items;
 using Crossout.AspWeb.Helper;

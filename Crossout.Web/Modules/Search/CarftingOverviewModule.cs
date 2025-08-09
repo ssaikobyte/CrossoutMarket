@@ -11,7 +11,7 @@ using Crossout.Web.Models.Pagination;
 using Crossout.Web.Services;
 using Nancy;
 using Nancy.Responses;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.Model;
 
 namespace Crossout.Web.Modules.Search

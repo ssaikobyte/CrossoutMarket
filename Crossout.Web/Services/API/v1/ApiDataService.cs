@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Crossout.Model;
 using Crossout.Web.Models.API.v1;
 using Crossout.Web.Models.Filter;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web.Services.API.v1
 {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crossout.Model;
 using Crossout.Web.Services;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web.Auth
 {

@@ -9,7 +9,7 @@ using Crossout.Web.Models.General;
 using Crossout.Web.Services;
 using Crossout.Model.Formatter;
 using Nancy;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.Data.PremiumPackages;
 
 namespace Crossout.Web.Modules.Search

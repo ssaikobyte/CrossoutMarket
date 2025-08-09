@@ -11,7 +11,7 @@ using Nancy.TinyIoc;
 using Newtonsoft.Json;
 using SimpleAuthentication.Core;
 using SimpleAuthentication.Core.Providers;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web
 {

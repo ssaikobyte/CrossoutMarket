@@ -11,7 +11,7 @@ using Crossout.AspWeb.Models.EditRecipe;
 using Crossout.AspWeb.Models.General;
 using Crossout.AspWeb.Models.Items;
 using Crossout.AspWeb.Models.Recipes;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.Data.PremiumPackages;
 using Crossout.AspWeb.Models.Changes;
 using Crossout.AspWeb.Models.Language;

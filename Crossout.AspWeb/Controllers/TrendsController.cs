@@ -11,7 +11,7 @@ using Crossout.AspWeb.Models.General;
 using Crossout.AspWeb.Models.Pagination;
 using Crossout.AspWeb.Services;
 using Microsoft.AspNetCore.Mvc;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using System.ComponentModel;
 using Crossout.AspWeb.Models.View;
 

@@ -8,10 +8,10 @@ using Crossout.AspWeb;
 using Crossout.AspWeb.Models.Items;
 using Crossout.AspWeb.Services;
 using Microsoft.AspNetCore.Mvc;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.AspWeb.Models.Language;
 using Crossout.AspWeb.Models.Info;
-using MySql.Data.MySqlClient.Properties;
+using MySql.Data.MySqlClient;
 
 namespace Crossout.AspWeb.Controllers
 {

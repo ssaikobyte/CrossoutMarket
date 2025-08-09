@@ -6,7 +6,7 @@ using Crossout.Web.Responses;
 using Crossout.Web.Services;
 using LineChart;
 using Nancy;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Web.Modules.Embed
 {

@@ -9,7 +9,7 @@ using Crossout.Web;
 using Crossout.AspWeb.Models.General;
 using Crossout.AspWeb.Services;
 using Microsoft.AspNetCore.Mvc;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 using Crossout.AspWeb.Models.Language;
 
 namespace Crossout.AspWeb.Controllers

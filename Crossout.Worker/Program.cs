@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crossout.Worker.Tasks;
 using System.Threading;
-using ZicoreConnector.Zicore.Connector.Base;
+using Zicore.Connector.Base;
 
 namespace Crossout.Worker
 {
